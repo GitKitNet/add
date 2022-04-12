@@ -2,10 +2,10 @@
 
 # set +x
 
-# bash <(curl -L -fSs https://raw.githubusercontent.com/numbnet/WebPanel/master/bash-scripts/ssh/sshtoolkit.sh?token=GHSAT0AAAAAABRP7DSRYBIKZZUDEXEMGQFWYRHM5TQ)
-# bash -c "$(curl -L -fSs raw.githubusercontent.com/numbnet/WebPanel/master/bash-scripts/ssh/sshtoolkit.sh)"
-# bash <(wget -O - https://raw.githubusercontent.com/numbnet/WebPanel/master/bash-scripts/ssh/sshtoolkit.sh?token=GHSAT0AAAAAABRP7DSRYBIKZZUDEXEMGQFWYRHM5TQ)
-# bash -c "$(curl -fsSL raw.githubusercontent.com/numbnet/WebPanel/master/bash-scripts/ssh/sshtoolkit.sh || wget -O - raw.githubusercontent.com/numbnet/WebPanel/master/bash-scripts/ssh/sshtoolkit.sh)"
+# read LINK && bash <(curl -L -fSs $LINK)
+# read LINK && bash -c "$(curl -L -fSs $LINK)"
+# read LINK && bash <(wget -O - $LINK)
+# read LINK && bash -c "$(curl -fsSL $LINK || wget -O - $LINK)"
 
 
 function sshkeygen() {
