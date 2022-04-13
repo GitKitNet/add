@@ -77,9 +77,11 @@ THIS
 
 
 #figlet -f smslant SSH Toolkit;
-function showBanner() {
+function showBanner()
+{
 clear;
 echo -e "
+${BGBlack}
 ${BLUE}____________________${NC}${GREEN}__________________________${NC}
 ${BLUE}    ____ __ __ __  ${NC}${GREEN}______        ____   _ __  ${NC}
 ${BLUE}   / __/ __/ // / ${NC}${GREEN}/_  __/_ ___  / / /__(_) /_ ${NC}
