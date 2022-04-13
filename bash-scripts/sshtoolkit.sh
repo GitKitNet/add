@@ -9,7 +9,6 @@
 
 
 function sshkeygen() {
-title="Generate SSH Key";
 
 #  - - - - - - - - - - - - - - - - -
 #            COLOR
@@ -101,12 +100,14 @@ function LoockUP() {
    echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
    echo -en "\n${GREEN}=======================${NC}\n";
    pause && break ;;
-  [Nn]* ) echo -e "${RED}Cancel..${NC}"; break ;;
+
+  [Nn]* ) echo -e "${RED}Cancel..${NC}" && break ;;
   esac
  done
 }
 
-function ConvertPPK() {
+function ConvertPPK()
+{
 OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
 
  while true; do
@@ -150,20 +151,32 @@ function OnRUN() {
   LoockUP ;
 }
 
-#====  MENU
-function BOSSMENU() {
- echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
- echo -e -n "${Yellow}
+
+
+
+
+
+#==============================
+#           MENU
+#==============================
+
+function BOSSMENU()
+{
+echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
+echo -e -n "${Yellow}
 \t1. Create SSH key ${NC} ${Purple}
 \t2. Select 2
 \t2. Select 3      ${RED}
 \n\tq. Quit...       ${NC}";
+
 }
 
 
-##   subMENU 1
-function SUBMENUONE() {
+#   subMENU 1
+function SUBMENUONE()
+{
 M="= = = = =";
+title="Generate SSH Key";
 echo -e -n "\n\t${GREEN}${M} SSH KeyGen ${M}${NC}\n"
 echo -e -n "
 \t1. $title ${CYAN}ED25519${NC}
