@@ -152,7 +152,7 @@ function OnRUN() {
 
 #====  MENU
 function BOSSMENU() {
- echo -e -n "\n\t${GREEN}==== MENU OPTIONS ====${NC}\n"
+ echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
  echo -e -n "${Yellow}
 \t1. Create SSH key ${NC} ${Purple}
 \t2. Select 2
