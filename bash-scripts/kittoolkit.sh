@@ -2,7 +2,7 @@
 
 # set +x
 
-# LINK='raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/sshtoolkit.sh' && bash <(curl -L -fSs $LINK)
+# LINK='https://raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/kittoolkit.sh' && bash <(curl -L -fSs $LINK)
 # read LINK && bash -c "$(curl -L -fSs $LINK)"
 # read LINK && bash <(wget -O - $LINK)
 # read LINK && bash -c "$(curl -fsSL $LINK || wget -O - $LINK)"
