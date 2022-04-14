@@ -2,7 +2,7 @@
 
 # set +x
 
-# LINK='raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/sshtoolkit.sh' && bash <(curl -L -fSs $LINK)
+# LINK='raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/kitoolkit.sh' && bash <(curl -L -fSs $LINK)
 # read LINK && bash -c "$(curl -L -fSs $LINK)"
 # read LINK && bash <(wget -O - $LINK)
 # read LINK && bash -c "$(curl -fsSL $LINK || wget -O - $LINK)"
@@ -1349,7 +1349,7 @@ ${RED}\n\t0. Back ${NC}\n";
 
 ##   subMENU 2
 function SUBMENUTWO() {
-echo -e -n "\n\t ${GREEN}LEMP installation & Settings:${NC} \n"
+echo -e -n "\n\t ${GREEN}LEMP OPTIONS:${NC} \n"
 echo -e -n "
 \t1. Preinstall ${CYAN} Ngx Php7.4 Certbot ${STD}
 \t2. Install MySQL ${CYAN}With WordPress land${STD}
@@ -1359,7 +1359,7 @@ ${RED}\n\t0. Back ${NC}\n";
 
 ##   subMENU 3
 function SUBMENUTHREE() {
-  echo -e "\n\t ${GREEN}SubMENU 3 OPTIONS:${NC} \n"
+  echo -e "\n\t ${GREEN}LAMP OPTIONS:${NC} \n"
   echo -e -n "
 \t1. Install LAMP ${CYAN}With WordPress${STD}
 ${RED}\n\t0. Back ${NC}\n";
