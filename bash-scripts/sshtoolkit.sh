@@ -30,7 +30,7 @@ Blue="`tput setaf 4`"
 Cyan="`tput setaf 5`"
 Purple="`tput setaf 6`"
 White="`tput setaf 7`"
-
+ 
 BGBlack="`tput setab 0`"
 BGRed="`tput setab 1`"
 BGGreen="`tput setab 2`"
