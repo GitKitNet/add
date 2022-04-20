@@ -1210,8 +1210,7 @@ Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
 
 
 
-#=============================================
-#=============================================
+#=================================================
 function installLAMP() {
 echo -e -n "Install LAMP"
 
@@ -1221,6 +1220,8 @@ echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard
 First of all, we going to check all required packeges..."
 
 
+
+#-------------------------------------------------
 function CheckPack() {
 #Checking packages
 echo -e "${YELLOW}Checking packages...${NC}"
@@ -1315,14 +1316,13 @@ PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok i
 
   ;;
 esac
-};
-
-CheckPack
+}; CheckPack
 
 
 
-function ChangingPMA() {
 #phpmyadmin default path change
+#-------------------------------------------------
+function ChangingPMA() {
 echo -e "${YELLOW}Changing phpMyAdmin default path from /phpMyAdmin to /myadminphp...${NC}"
 
 read -r -p "Do you want to change default phpMyAdmin path to /myadminphp? [y/N] " response
@@ -1406,7 +1406,7 @@ echo -e "${YELLOW}Adding separate user & creating website home folder for secure
   mkdir /var/www/$username/$websitename/www
   chown -R $username:$username /var/www/$username/$websitename
   echo -e "${GREEN}
-  #==============================================
+  #-------------------------------------------------
   User, group and home folder were succesfully created!
   
   USERNAME: $username
@@ -1422,6 +1422,7 @@ echo -e "${YELLOW}Adding separate user & creating website home folder for secure
 
 
 #configuring apache2
+#-------------------------------------------------
 echo -e "${YELLOW}Now we going to configure apache2 for your domain name & website root folder...${NC}"
 
 read -r -p "Do you want to configure Apache2 automatically? [y/N] " response
@@ -1483,19 +1484,18 @@ EOL
 
         ;;
     *)
-
   echo -e "${RED}WARNING! Apache2 was not configured properly, you can do this manually or re run our script.${NC}"
 
         ;;
 esac
 
 #downloading WordPress, unpacking, adding basic pack of plugins, creating .htaccess with optimal & secure configuration
+#-------------------------------------------------
 echo -e "${YELLOW}On this step we going to download latest version of WordPress with EN or RUS language, set optimal & secure configuration and add basic set of plugins...${NC}"
 
 read -r -p "Do you want to install WordPress & automatically set optimal and secure configuration with basic set of plugins? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
-
   echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): "
   read wordpress_lang
 
@@ -1522,21 +1522,22 @@ case $response in
   4. Easy Watermark"
   sleep 7
   
-  SITEMAP="`curl https://wordpress.org/plugins/google-sitemap-generator/ | grep https://downloads.wordpress.org/plugin/google-sitemap-generator.*.*.*.zip | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
+  SITEMAP="`curl https://wordpress.org/plugins/google-sitemap-generator/ | grep https://downloads.wordpress.org/plugin/google-sitemap-generator.*.*.*.zip | awk '{print $2}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
   wget $SITEMAP -O /tmp/sitemap.zip
   unzip /tmp/sitemap.zip -d /tmp/sitemap
   mv /tmp/sitemap/* /var/www/$username/$websitename/www/wp-content/plugins/
 
-  wget https://downloads.wordpress.org/plugin/social-networks-auto-poster-facebook-twitter-g.zip -O /tmp/snap.zip
+  SNAP="https://downloads.wordpress.org/plugin/social-networks-auto-poster-facebook-twitter-g.zip"
+  wget $SNAP -O /tmp/snap.zip
   unzip /tmp/snap.zip -d /tmp/snap
   mv /tmp/snap/* /var/www/$username/$websitename/www/wp-content/plugins/
 
-  ADDTOANY="`curl https://wordpress.org/plugins/add-to-any/ | grep https://downloads.wordpress.org/plugin/add-to-any.*.*.zip | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
+  ADDTOANY="`curl https://wordpress.org/plugins/add-to-any/ | grep https://downloads.wordpress.org/plugin/add-to-any.*.*.zip | awk '{print $2}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
   wget $ADDTOANY -O /tmp/addtoany.zip
   unzip /tmp/addtoany.zip -d /tmp/addtoany
   mv /tmp/addtoany/* /var/www/$username/$websitename/www/wp-content/plugins/
 
-  WATERMARK="`curl https://wordpress.org/plugins/easy-watermark/ | grep https://downloads.wordpress.org/plugin/easy-watermark.*.*.*.zip | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
+  WATERMARK="`curl https://wordpress.org/plugins/easy-watermark/ | grep https://downloads.wordpress.org/plugin/easy-watermark.*.*.*.zip | awk '{print $2}' | sed -ne 's/.*\(http[^\"]*.zip\).*/\1/p'`"
   wget $WATERMARK -O /tmp/watermark.zip
   unzip /tmp/watermark.zip -d /tmp/watermark
   mv /tmp/watermark/* /var/www/$username/$websitename/www/wp-content/plugins/
@@ -1544,18 +1545,18 @@ case $response in
   rm /tmp/sitemap.zip /tmp/snap.zip /tmp/addtoany.zip /tmp/watermark.zip
   rm -rf /tmp/sitemap/ /tmp/snap/ /tmp/addtoany/ /tmp/watermark/
 
-
   echo -e "Downloading of plugins finished! All plugins were transfered into /wp-content/plugins directory.${NC}"
 
         ;;
     *)
-
   echo -e "${RED}WordPress and plugins were not downloaded & installed. You can do this manually or re run this script.${NC}"
 
         ;;
 esac
 
+
 #creating of swap
+#-------------------------------------------------
 echo -e "On next step we going to create SWAP (it should be your RAM x2)..."
 
 read -r -p "Do you need SWAP? [y/N] " response
@@ -1576,9 +1577,7 @@ case $response in
 
         ;;
     *)
-
   echo -e "${RED}You didn't create any swap for faster system working. You can do this manually or re run this script.${NC}"
-
         ;;
 esac
 
@@ -1721,7 +1720,6 @@ fail2ban configuration finished!
 fail2ban service was restarted, default confige backuped at /etc/fail2ban/jail.conf-old
 Jails were set for: ssh bruteforce, ssh ddos, apache overflows${NC}"
 sleep 5
-
 echo -e "${GREEN} Configuring apache2 prefork & worker modules...${NC}"
 sleep 3
 cat >/etc/apache2/mods-available/mpm_prefork.conf <<EOL
@@ -1747,15 +1745,12 @@ cat > /etc/apache2/mods-available/mpm_worker.conf <<EOL
 EOL
 
 a2dismod status
-
 echo -e "${GREEN}Configuration of apache mods was succesfully finished!
 Restarting Apache & MySQL services...${NC}"
-
 service apache2 restart
 service mysql restart
 echo -e "${GREEN}Services succesfully restarted!${NC}"
 sleep 3
-
 echo -e "${GREEN}Adding user & database for WordPress, setting wp-config.php...${NC}"
 echo -e "Please, set username for database: "
 read db_user
@@ -1811,9 +1806,6 @@ echo -e "Installation & configuration succesfully finished."
 
 
 
-
-
-
 #==============================
 #           MENU
 #==============================
@@ -1828,8 +1820,7 @@ echo -n -e "\n\tSelection: "
 }
 
 #   subMENU 1
-function SUBMENUONE()
-{
+function SUBMENUONE() {
 title="Generate SSH Key";
 echo -e -n "\n\t${GREEN}SSH KeyGen:${NC}\n"
 echo -e -n "
@@ -1880,7 +1871,6 @@ while :
 do
 showBanner
 SUBMENUONE
-echo -n -e "\n\tSelection: "
 read -n1 opt;
 case $opt in
       1) TKEY="ed25519" && OnRUN ;;
@@ -1900,7 +1890,6 @@ while :
 do
 showBanner
 MenuLEMP
-echo -n -e "\n\tSelection: "
 read -n1 opt;
 case $opt in
         1) first ;;
@@ -1921,7 +1910,6 @@ while :
 do
 showBanner
 MenuLAMP
-echo -n -e "\n\tSelection: "
 read -n1 opt;
 case $opt in
       1) installLAMP ;;
