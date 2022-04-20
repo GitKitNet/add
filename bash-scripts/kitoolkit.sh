@@ -1884,10 +1884,10 @@ M="= = = = =";
 title="Generate SSH Key";
 echo -e -n "\n\t${GREEN}= = = = = SSH KeyGen: = = = = =${NC}\n"
 echo -e -n "${CYAN}
-\t1. $title ED25519      ${NC}${PURPLE}
-\t2. $title RSA          ${NC}${BLUE}
+\t1. $title ED25519      ${NC}${Yellow}
+\t2. $title RSA          ${NC}${CYAN}
 \t3. $title DSA          ${NC}${GREEN}
-\t4. $title ECDSA        ${NC}${CYAN}
+\t4. $title ECDSA        ${NC}${BLUE}
 \t5. $title EdDSA ${RED}- [OFF]${NC}${RED}
 \n\t0. Back ${NC}\n";
 }
