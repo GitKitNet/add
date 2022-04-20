@@ -1871,7 +1871,7 @@ function BOSSMENU() {
 echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
 echo -e -n "${Yellow}
 \t1. Create SSH key       ${NC} ${Purple}
-\t2. Install LEMP         ${NC} ${Cyan}
+\t2. Install LEMP         ${NC} ${Blue}
 \t3. Install LAMP         ${NC} ${RED}
 \n\tq. Quit...            ${NC}";
 
