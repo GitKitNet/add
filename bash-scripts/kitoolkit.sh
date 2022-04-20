@@ -1872,7 +1872,7 @@ echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
 echo -e -n "${Yellow}
 \t1. Create SSH key ${NC} ${Purple}
 \t2. Install LEMP
-\t2. Install LAMP
+\t3. Install LAMP
 ${RED}\n\tq. Quit...       ${NC}";
 
 }
