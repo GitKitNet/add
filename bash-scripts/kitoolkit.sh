@@ -86,7 +86,8 @@ function wait() { read -p "Press [ANY] key to continue..? " -s -n 1; }
 function TIMER() { 
 if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; else T="5"; fi;
  SE="\033[0K\r"; E="$((1 * ${T}))"; while [ $E -gt 0 ]; 
-do echo -en " Please wait: ${RED}$E$SE${NC}" && sleep 1 && : $((E--)); done;
+do echo -en " Please wait: ${RED}$E$SE${NC}" && sleep 1 && : $((E--)); 
+done;
 }
 
 
@@ -98,10 +99,10 @@ do echo -en " Please wait: ${RED}$E$SE${NC}" && sleep 1 && : $((E--)); done;
 
 
 function LoockUP() {
- #while true; do
-  #read -e -p "Do you want Look UP SSH keys [y/N] .? " syn
-  #case $syn in
-  #[Yy]* ) clear;
+ while true; do
+  read -e -p "Do you want Look UP SSH keys [y/N] .? " syn
+  case $syn in
+  [Yy]* ) clear;
    echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
    echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
    echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
@@ -109,9 +110,9 @@ function LoockUP() {
    echo -en "\n${GREEN}=======================${NC}\n";
    pause && break ;;
 
-  #[Nn]* ) echo -e "${RED}Cancel..${NC}" && break ;;
-  #esac
- #done
+  [Nn]* ) echo -e "${RED}Cancel..${NC}" && break ;;
+  esac
+ done
 }
 
 function ConvertPPK()
@@ -1232,7 +1233,6 @@ echo -e -n "Install LAMP"
 #==============================
 #           MENU
 #==============================
-
 function BOSSMENU() {
 echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
 echo -e -n "${Yellow}
