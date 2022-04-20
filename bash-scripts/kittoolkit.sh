@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # set +x
-# bash <(curl -L -fSs raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/kitoolkit.sh)
-# bash <(wget -O - raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/kitoolkit.sh)
+
+# bash <(curl -L -fSs raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/kittoolkit.sh)
+# bash <(wget -O - raw.githubusercontent.com/GitKitNet/add/main/bash-scripts/kittoolkit.sh)
+
 # read LINK && bash -c "$(curl -L -fSs $LINK)"
 # read LINK && bash <(wget -O - $LINK)
 # read LINK && bash -c "$(curl -fsSL $LINK || wget -O - $LINK)"
@@ -13,34 +15,40 @@ function STARTScript() {
 #  - - - - - - - - - - - - - - - - -
 #            COLOR
 #  - - - - - - - - - - - - - - - - -
-GREEN="\033[32m";
-RED="\033[1;31m";
-BLUE="\033[1;34m";
-YELOW="\033[1;33m";
-PURPLE='\033[0;4;35m';
-CYAN='\033[4;36m';
-BLACK="\033[40m";
-NC="\033[0m";
+#GREEN="\033[32m";            # 
+#RED="\033[1;31m";            # 
+#BLUE="\033[1;34m";           # 
+#YELOW="\033[1;33m";          # 
+#PURPLE='\033[0;4;35m';       # 
+#CYAN='\033[4;36m';           # 
 
-Black="`tput setaf 0`"
-Red="`tput setaf 1`"
-Green="`tput setaf 2`"
-Yellow="`tput setaf 3`"
-Blue="`tput setaf 4`"
-Cyan="`tput setaf 5`"
-Purple="`tput setaf 6`"
-White="`tput setaf 7`"
- 
-BGBlack="`tput setab 0`"
-BGRed="`tput setab 1`"
-BGGreen="`tput setab 2`"
-BGYellow="`tput setab 3`"
-BGBlue="`tput setab 4`"
-BGCyan="`tput setab 5`"
-BGPurple="`tput setab 6`"
-BGWhite="`tput setab 7`"
+GREEN='\033[0;32m'           # Green
+RED='\033[0;31m'             # Red
+BLUE='\033[0;34m'            # Blue
+YELLOW='\033[0;33m'          # YELLOW
+PURPLE='\033[0;35m'          # PURPLE
+CYAN='\033[0;36m'            # CYAN
+BLACK='\033[0;40m';          # 
+NC='\033[0m'                 # No Color
 
-RC="`tput sgr0`"
+Red="`tput setaf 1`"         # 
+Green="`tput setaf 2`"       # 
+Yellow="`tput setaf 3`"      # 
+Blue="`tput setaf 4`"        # 
+Cyan="`tput setaf 5`"        # 
+Purple="`tput setaf 6`"      # 
+White="`tput setaf 7`"       # 
+Black="`tput setaf 0`"       # 
+
+BGBlack="`tput setab 0`"     # 
+BGRed="`tput setab 1`"       # 
+BGGreen="`tput setab 2`"     # 
+BGYellow="`tput setab 3`"    # 
+BGBlue="`tput setab 4`"      # 
+BGCyan="`tput setab 5`"      # 
+BGPurple="`tput setab 6`"    # 
+BGWhite="`tput setab 7`"     # 
+RC="`tput sgr0`"             # No Color
 
 TEXTCOLOR=$White;
 BGCOLOR=$BLACK;
@@ -62,14 +70,11 @@ function THIS() {
 }; 
 #THIS
 
-
-
-
 #figlet -f smslant SSH Toolkit;
-function showBanner()
+function showBanner() 
 {
   clear;
-  echo -e "${BGBlack}
+  echo -e "${BGCOLOR}
   ${BLUE}_______________${GREEN}________________________________${NC}
   ${BLUE}    __ ___ __  ${GREEN}  ______          ____    _ __  ${NC}
   ${BLUE}   / //_(_) /_ ${GREEN} /_  __/__  ___  / / /__ (_) /_ ${NC}
@@ -1200,11 +1205,7 @@ WPPass: ${wp_pass}
 =================================================
 Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
 -----------------------------------------------------------------------------" >> /tmp/credentials.txt
-
 }
-
-
-
 
 
 
@@ -1213,35 +1214,11 @@ Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
 #=============================================
 function installLAMP() {
 echo -e -n "Install LAMP"
-#!/bin/bash
-
-#####################################################
-#Script to confiruge Server, WebServer and WordPress#
-#####################################################
-
-
-#Colors settings
-BLUE='\033[0;34m'
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[0;33m'
-NC='\033[0m' # No Color
-
-
-
-
-
-
 
 #Welcome message
 clear
 echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard!
 First of all, we going to check all required packeges..."
-
-
-
-
-
 
 
 function CheckPack() {
@@ -1254,88 +1231,77 @@ case $response in
 
 WGET=$(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed")
   if [ "$WGET" -eq 0 ]; then
-    echo -e "${YELLOW}Installing wget${NC}"
-    apt-get install wget --yes;
+    echo -e "${YELLOW}Installing wget${NC}" && apt-get install wget --yes;
   elif [ "$WGET" -eq 1 ]; then
       echo -e "${GREEN}wget is installed!${NC}"
   fi
 
 CURL=$(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed")
   if [ "$CURL" -eq 0 ]; then
-    echo -e "${YELLOW}Installing curl${NC}"
-    apt-get install curl --yes;
+    echo -e "${YELLOW}Installing curl${NC}" && apt-get install curl --yes;
   elif [ "$CURL" -eq 1 ]; then
       echo -e "${GREEN}curl is installed!${NC}"
   fi
 
 NANO=$(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed")
   if [ "$NANO" -eq 0 ]; then
-    echo -e "${YELLOW}Installing nano${NC}"
-    apt-get install nano --yes;
+    echo -e "${YELLOW}Installing nano${NC}" && apt-get install nano --yes;
   elif [ "$NANO" -eq 1 ]; then
       echo -e "${GREEN}nano is installed!${NC}"
   fi
 
 ZIP=$(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed")
   if [ "$ZIP" -eq 0 ]; then
-    echo -e "${YELLOW}Installing zip${NC}"
-    apt-get install zip --yes;
+    echo -e "${YELLOW}Installing zip${NC}" && apt-get install zip --yes;
   elif [ "$ZIP" -eq 1 ]; then
       echo -e "${GREEN}zip is installed!${NC}"
   fi
 
 MC=$(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed")
   if [ "$MC" -eq 0 ]; then
-    echo -e "${YELLOW}Installing mc${NC}"
-    apt-get install mc --yes;
+    echo -e "${YELLOW}Installing mc${NC}" && apt-get install mc --yes;
   elif [ "$MC" -eq 1 ]; then
       echo -e "${GREEN}mc is installed!${NC}"
   fi
 
 HTOP=$(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed")
   if [ "$HTOP" -eq 0 ]; then
-    echo -e "${YELLOW}Installing htop${NC}"
-    apt-get install htop --yes;
+    echo -e "${YELLOW}Installing htop${NC}" && apt-get install htop --yes;
   elif [ "$HTOP" -eq 1 ]; then
       echo -e "${GREEN}htop is installed!${NC}"
   fi
 
 FAIL2BAN=$(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed")
   if [ "$FAIL2BAN" -eq 0 ]; then
-    echo -e "${YELLOW}Installing fail2ban${NC}"
-    apt-get install fail2ban --yes;
+    echo -e "${YELLOW}Installing fail2ban${NC}" && apt-get install fail2ban --yes;
   elif [ "$FAIL2BAN" -eq 1 ]; then
       echo -e "${GREEN}fail2ban is installed!${NC}"
   fi
 
 APACHE2=$(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed")
   if [ "$APACHE2" -eq 0 ]; then
-    echo -e "${YELLOW}Installing apache2${NC}"
-    apt-get install apache2 php5 --yes;
+    echo -e "${YELLOW}Installing apache2${NC}" && apt-get install apache2 php5 --yes;
   elif [ "$APACHE2" -eq 1 ]; then
       echo -e "${GREEN}apache2 is installed!${NC}"
   fi
 
 MYSQLSERVER=$(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed")
   if [ "$MYSQLSERVER" -eq 0 ]; then
-    echo -e "${YELLOW}Installing mysql-server${NC}"
-    apt-get install mysql-server --yes;
+    echo -e "${YELLOW}Installing mysql-server${NC}" && apt-get install mysql-server --yes;
   elif [ "$MYSQLSERVER" -eq 1 ]; then
       echo -e "${GREEN}mysql-server is installed!${NC}"
   fi
 
 PHP5CURL=$(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed")
   if [ "$PHP5CURL" -eq 0 ]; then
-    echo -e "${YELLOW}Installing php5-curl${NC}"
-    apt-get install php5-curl --yes;
+    echo -e "${YELLOW}Installing php5-curl${NC}" && apt-get install php5-curl --yes;
   elif [ "$PHP5CURL" -eq 1 ]; then
       echo -e "${GREEN}php5-curl is installed!${NC}"
   fi
 
 PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed")
   if [ "$PHPMYADMIN" -eq 0 ]; then
-    echo -e "${YELLOW}Installing phpmyadmin${NC}"
-    apt-get install phpmyadmin --yes;
+    echo -e "${YELLOW}Installing phpmyadmin${NC}" && apt-get install phpmyadmin --yes;
   elif [ "$PHPMYADMIN" -eq 1 ]; then
       echo -e "${GREEN}phpmyadmin is installed!${NC}"
   fi
@@ -1349,10 +1315,9 @@ PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok i
 
   ;;
 esac
-}; CheckPack
+};
 
-
-
+CheckPack
 
 
 
@@ -1673,7 +1638,6 @@ Options +FollowSymLinks -Indexes
 EOL
 
 chmod 644 /var/www/$username/$websitename/www/.htaccess
-
 echo -e "${GREEN}.htaccess file was succesfully created!${NC}"
 
 #cration of robots.txt
@@ -1700,9 +1664,7 @@ EOL
 echo -e "${GREEN}File robots.txt was succesfully created!
 Setting correct rights on user's home directory and 755 rights on robots.txt${NC}"
 sleep 3
-
 chmod 755 /var/www/$username/$websitename/www/robots.txt
-
 echo -e "${GREEN}Configuring fail2ban...${NC}"
 sleep 3
 cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.conf-old
@@ -1754,11 +1716,10 @@ maxretry = 5
 EOL
 
 service fail2ban restart
-
-echo -e "${GREEN}fail2ban configuration finished!
+echo -e "${GREEN}
+fail2ban configuration finished!
 fail2ban service was restarted, default confige backuped at /etc/fail2ban/jail.conf-old
 Jails were set for: ssh bruteforce, ssh ddos, apache overflows${NC}"
-
 sleep 5
 
 echo -e "${GREEN} Configuring apache2 prefork & worker modules...${NC}"
@@ -1792,14 +1753,8 @@ Restarting Apache & MySQL services...${NC}"
 
 service apache2 restart
 service mysql restart
-
 echo -e "${GREEN}Services succesfully restarted!${NC}"
 sleep 3
-
-
-
-
-
 
 echo -e "${GREEN}Adding user & database for WordPress, setting wp-config.php...${NC}"
 echo -e "Please, set username for database: "
@@ -1813,7 +1768,6 @@ CREATE DATABASE IF NOT EXISTS $db_user;
 GRANT ALL PRIVILEGES ON $db_user.* TO '$db_user'@'localhost';
 ALTER DATABASE $db_user CHARACTER SET utf8 COLLATE utf8_general_ci;
 EOF
-
 
 cat >/var/www/$username/$websitename/www/wp-config.php <<EOL
 <?php
@@ -1849,14 +1803,10 @@ if ( !defined('ABSPATH') )
 require_once(ABSPATH . 'wp-settings.php');
 EOL
 
-
-
 chown -R $username:$username /var/www/$username
 echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
 sleep 3
 echo -e "Installation & configuration succesfully finished."
-
-
 }
 
 
@@ -1874,22 +1824,22 @@ echo -e -n "${Yellow}
 \t2. Install LEMP         ${NC} ${BLUE}
 \t3. Install LAMP         ${NC} ${RED}
 \n\tq. Quit...            ${NC}";
-
+echo -n -e "\n\tSelection: "
 }
 
 #   subMENU 1
 function SUBMENUONE()
 {
-M="= = = = =";
 title="Generate SSH Key";
-echo -e -n "\n\t${GREEN}= = = = = SSH KeyGen: = = = = =${NC}\n"
-echo -e -n "${CYAN}
-\t1. $title ED25519      ${NC}${Yellow}
-\t2. $title RSA          ${NC}${CYAN}
-\t3. $title DSA          ${NC}${GREEN}
-\t4. $title ECDSA        ${NC}${BLUE}
-\t5. $title EdDSA ${RED}- [OFF]${NC}${RED}
+echo -e -n "\n\t${GREEN}SSH KeyGen:${NC}\n"
+echo -e -n "
+\t1. $title ${CYAN} ED25519      ${NC}
+\t2. $title ${Yellow} RSA        ${NC}
+\t3. $title ${BLUE} DSA          ${NC}
+\t4. $title ${GREEN} ECDSA       ${NC}
+\t5. $title ${RED} EdDSA - [OFF] ${NC}${RED}
 \n\t0. Back ${NC}\n";
+echo -n -e "\n\tSelection: "
 }
 
 ##   subMENU 2
@@ -1902,6 +1852,7 @@ echo -e -n "
 \t4. Install WordPress ${CYAN} With All Services Cloudflare ${NC}
 \t5. Instal WordPress ${CYAN} With All Services Certbot ${NC}
 ${RED}\n\t0. Back ${NC}\n";
+echo -n -e "\n\tSelection: "
 } 
 
 ##   subMENU 3
@@ -1910,6 +1861,7 @@ function MenuLAMP() {
   echo -e -n "
 \t1. Install LAMP ${CYAN}With WordPress, Apache, php7.4, phpMyAdmin ${NC}
 ${RED}\n\t0. Back ${NC}\n";
+echo -n -e "\n\tSelection: "
 } 
 
 
@@ -1918,7 +1870,6 @@ while :
 do
 showBanner
 BOSSMENU
-echo -n -e "\n\tSelection: "
 read -n1 opt
 a=true;
 case $opt in
