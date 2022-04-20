@@ -1871,7 +1871,7 @@ function BOSSMENU() {
 echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
 echo -e -n "${Yellow}
 \t1. Create SSH key       ${NC} ${Purple}
-\t2. Install LEMP         ${NC} ${Blue}
+\t2. Install LEMP         ${NC} ${BLUE}
 \t3. Install LAMP         ${NC} ${RED}
 \n\tq. Quit...            ${NC}";
 
@@ -1882,14 +1882,14 @@ function SUBMENUONE()
 {
 M="= = = = =";
 title="Generate SSH Key";
-echo -e -n "\n\t${GREEN}${M} SSH KeyGen ${M}${NC}\n"
-echo -e -n "
-\t1. $title ${CYAN}ED25519${NC}
-\t2. $title ${PURPLE}RSA${NC}
-\t3. $title ${BLUE}DSA${NC}
-\t4. $title ${GREEN}ECDSA${NC}
-\t5. $title ${RED}EdDSA${RED} - [OFF]${NC}
-${RED}\n\t0. Back ${NC}\n";
+echo -e -n "\n\t${GREEN}= = = = = SSH KeyGen: = = = = =${NC}\n"
+echo -e -n "${CYAN}
+\t1. $title ED25519      ${NC}${PURPLE}
+\t2. $title RSA          ${NC}${BLUE}
+\t3. $title DSA          ${NC}${GREEN}
+\t4. $title ECDSA        ${NC}${CYAN}
+\t5. $title EdDSA ${RED}- [OFF]${NC}${RED}
+\n\t0. Back ${NC}\n";
 }
 
 ##   subMENU 2
