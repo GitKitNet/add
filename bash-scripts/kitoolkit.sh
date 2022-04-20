@@ -90,14 +90,6 @@ do echo -en " Please wait: ${RED}$E$SE${NC}" && sleep 1 && : $((E--));
 done;
 }
 
-
-
-
-
-
-
-
-
 function LoockUP() {
  while true; do
   read -e -p "Do you want Look UP SSH keys [y/N] .? " syn
@@ -109,7 +101,6 @@ function LoockUP() {
    echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
    echo -en "\n${GREEN}=======================${NC}\n";
    pause && break ;;
-
   [Nn]* ) echo -e "${RED}Cancel..${NC}" && break ;;
   esac
  done
