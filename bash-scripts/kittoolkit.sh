@@ -1211,18 +1211,14 @@ Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
 
 
 #=================================================
-function installLAMP() {
-echo -e -n "Install LAMP"
 
+#-------------------------------------------------
+function CheckPack() {
 #Welcome message
 clear
 echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard!
 First of all, we going to check all required packeges..."
 
-
-
-#-------------------------------------------------
-function CheckPack() {
 #Checking packages
 echo -e "${YELLOW}Checking packages...${NC}"
 echo -e "List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache2 & php, mysql, php curl, phpmyadmin, wget, curl"
@@ -1316,7 +1312,7 @@ PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok i
 
   ;;
 esac
-}; CheckPack
+}; 
 
 
 
@@ -1388,12 +1384,12 @@ New phpMyAdmin path is: /myadminphp (i.e.: yourwebsite.com/myadminphp)${NC}"
 
         ;;
 esac
-}; ChangingPMA
+}; 
 
 
 
 
-
+function creatingUser() {
 #creating user
 echo -e "${YELLOW}Adding separate user & creating website home folder for secure running of your website...${NC}"
 
@@ -1412,15 +1408,16 @@ echo -e "${YELLOW}Adding separate user & creating website home folder for secure
   USERNAME: $username
   GROUP: $username
   HOME FOLDER: /var/www/$username/$websitename
-  WEBSITE FOLDER: /var/www/$username/$websitename/www
+  WEBSITE FOLDER: /var/www/$username/$websitename/www 
   
   ${NC}"
+}
 
 
 
 
 
-
+function ConfApache2() {
 #configuring apache2
 #-------------------------------------------------
 echo -e "${YELLOW}Now we going to configure apache2 for your domain name & website root folder...${NC}"
@@ -1488,7 +1485,10 @@ EOL
 
         ;;
 esac
+}
 
+
+function downWP() {
 #downloading WordPress, unpacking, adding basic pack of plugins, creating .htaccess with optimal & secure configuration
 #-------------------------------------------------
 echo -e "${YELLOW}On this step we going to download latest version of WordPress with EN or RUS language, set optimal & secure configuration and add basic set of plugins...${NC}"
@@ -1499,8 +1499,7 @@ case $response in
   echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): "
   read wordpress_lang
 
-  if [ "$wordpress_lang" == 'RUS' ];
-    then
+  if [ "$wordpress_lang" == 'RUS' ]; then
     wget https://ru.wordpress.org/latest-ru_RU.zip -O /tmp/$wordpress_lang.zip
   else
     wget https://wordpress.org/latest.zip -O /tmp/$wordpress_lang.zip
@@ -1553,16 +1552,17 @@ case $response in
 
         ;;
 esac
+}
 
 
 #creating of swap
 #-------------------------------------------------
-echo -e "On next step we going to create SWAP (it should be your RAM x2)..."
+function CreatSWAP() {
 
+echo -e "On next step we going to create SWAP (it should be your RAM x2)..."
 read -r -p "Do you need SWAP? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
-
   RAM="`free -m | grep Mem | awk '{print $2}'`"
   swap_allowed=$(($RAM * 2))
   swap=$swap_allowed"M"
@@ -1571,15 +1571,22 @@ case $response in
   mkswap /var/swap.img
   swapon /var/swap.img
 
-  echo -e "${GREEN}RAM detected: $RAM
+  echo -e "
+  ${GREEN}RAM detected: $RAM
   Swap was created: $swap${NC}"
   sleep 5
-
         ;;
     *)
   echo -e "${RED}You didn't create any swap for faster system working. You can do this manually or re run this script.${NC}"
         ;;
 esac
+}
+
+
+
+
+
+function creSECURE() {
 
 #creation of secure .htaccess
 echo -e "${YELLOW}Creation of secure .htaccess file...${NC}"
@@ -1638,6 +1645,7 @@ EOL
 
 chmod 644 /var/www/$username/$websitename/www/.htaccess
 echo -e "${GREEN}.htaccess file was succesfully created!${NC}"
+
 
 #cration of robots.txt
 echo -e "${YELLOW}Creation of robots.txt file...${NC}"
@@ -1751,6 +1759,12 @@ service apache2 restart
 service mysql restart
 echo -e "${GREEN}Services succesfully restarted!${NC}"
 sleep 3
+}
+
+
+
+
+function AddingDB() {
 echo -e "${GREEN}Adding user & database for WordPress, setting wp-config.php...${NC}"
 echo -e "Please, set username for database: "
 read db_user
@@ -1801,7 +1815,20 @@ EOL
 chown -R $username:$username /var/www/$username
 echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
 sleep 3
-echo -e "Installation & configuration succesfully finished."
+
+}
+
+function installLAMP() {
+	CheckPack
+	ChangingPMA
+	creatingUser
+	ConfApache2
+	downWP
+	CreatSWAP
+	creSECURE
+	AddingDB
+	echo -e "Installation & configuration succesfully finished."
+	sleep 3
 }
 
 
@@ -1816,7 +1843,7 @@ echo -e -n "${Yellow}
 \t2. Install LEMP         ${NC} ${BLUE}
 \t3. Install LAMP         ${NC} ${RED}
 \n\tq. Quit...            ${NC}";
-echo -n -e "\n\tSelection: "
+
 }
 
 #   subMENU 1
@@ -1830,7 +1857,7 @@ echo -e -n "
 \t4. $title ${GREEN} ECDSA       ${NC}
 \t5. $title ${RED} EdDSA - [OFF] ${NC}${RED}
 \n\t0. Back ${NC}\n";
-echo -n -e "\n\tSelection: "
+
 }
 
 ##   subMENU 2
@@ -1843,7 +1870,7 @@ echo -e -n "
 \t4. Install WordPress ${CYAN} With All Services Cloudflare ${NC}
 \t5. Instal WordPress ${CYAN} With All Services Certbot ${NC}
 ${RED}\n\t0. Back ${NC}\n";
-echo -n -e "\n\tSelection: "
+
 } 
 
 ##   subMENU 3
@@ -1852,7 +1879,7 @@ function MenuLAMP() {
   echo -e -n "
 \t1. Install LAMP ${CYAN}With WordPress, Apache, php7.4, phpMyAdmin ${NC}
 ${RED}\n\t0. Back ${NC}\n";
-echo -n -e "\n\tSelection: "
+
 } 
 
 
@@ -1861,6 +1888,7 @@ while :
 do
 showBanner
 BOSSMENU
+echo -n -e "\n\tSelection: "
 read -n1 opt
 a=true;
 case $opt in
@@ -1871,6 +1899,7 @@ while :
 do
 showBanner
 SUBMENUONE
+echo -n -e "\n\tSelection: "
 read -n1 opt;
 case $opt in
       1) TKEY="ed25519" && OnRUN ;;
@@ -1890,6 +1919,7 @@ while :
 do
 showBanner
 MenuLEMP
+echo -n -e "\n\tSelection: "
 read -n1 opt;
 case $opt in
         1) first ;;
@@ -1910,6 +1940,7 @@ while :
 do
 showBanner
 MenuLAMP
+echo -n -e "\n\tSelection: "
 read -n1 opt;
 case $opt in
       1) installLAMP ;;
