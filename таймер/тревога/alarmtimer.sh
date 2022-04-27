@@ -38,8 +38,8 @@ then
   exit 1
 fi
 
-
 alarm="$HOME/alarm.wav"
+wget -O ${alarm} github.com/GitKitNet/add/releases/download/timer/alarm.wav
 time="$1"
 start="$SECONDS"
 s=1
