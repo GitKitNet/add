@@ -1,0 +1,8 @@
+F BOOTIA32.EFI;1                                                                                                                                                                                                  	BOOTIA32.EFI
+F BOOTX64.EFI;1                                                                                                                                                                                                   	BOOTX64.EFI
+D FONTS                                                                                                                                                                                                           	fonts
+F GRUB.CFG;1                                                                                                                                                                                                      	grub.cfg
+F GRUBIA32.EFI;1                                                                                                                                                                                                  	grubia32.efi
+F GRUBX64.EFI;1                                                                                                                                                                                                   	grubx64.efi
+F MMIA32.EFI;1                                                                                                                                                                                                    	mmia32.efi
+F MMX64.EFI;1                                                                                                                                                                                                     	mmx64.efi
