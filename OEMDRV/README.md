@@ -3,11 +3,13 @@
 
 
 ```
-git clone 
+git clone https://github.com/GitKitNet/add.git 
+cd add
+cd OEMDRV
 
 
-cd ./OEMDRV/LiveOS
-wget -O ./OEMDRV/LiveOS/squashfs.img https://github.com/GitKitNet/add/releases/download/LiveOS/squashfs.img
+cd LiveOS
+wget -O squashfs.img https://github.com/GitKitNet/add/releases/download/LiveOS/squashfs.img
 
 
 ```
