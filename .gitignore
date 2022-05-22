@@ -1,7 +1,7 @@
 # Folder
-OEMDRV/Packages/*
+add/OEMDRV/Packages/*
 
 # File
-OEMDRV/images/pxeboot/initrd.img
-OEMDRV/isolinux/initrd.img
-OEMDRV/LiveOS/squashfs.img
+add/OEMDRV/images/pxeboot/initrd.img
+add/OEMDRV/isolinux/initrd.img
+add/OEMDRV/LiveOS/squashfs.img
