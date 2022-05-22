@@ -20,7 +20,6 @@ SYSTEMMAILRECIPIENT=danibieli.1185@gmail.com
 #------------------------------------------------------------------------------------
 # 2. Standart Variabeln
 #------------------------------------------------------------------------------------
-
 title="EasyEngine NGiNX - Konfiguration"
 script="nginx.sh"
 version="1.5.0"
@@ -46,7 +45,7 @@ if [ "$(id -u)" != "0" ]; then
     sleep 5
   # exit 1
 fi;
-clear
+clear;
 #------------------------------------------------------------------------------------
 # 4. NGiNX konfiguration
 #------------------------------------------------------------------------------------
@@ -106,7 +105,7 @@ wget -O /etc/php/7.2/fpm/php.ini https://raw.githubusercontent.com/PageSpeedPlus
 wget -O /etc/php/7.2/fpm/pool.d/www.conf https://raw.githubusercontent.com/PageSpeedPlus/easyengine/master/etc/php/7.2/fpm/pool.d/www.conf
 systemctl restart php7.2-fpm
 #------------------------------------------------------------------------------------
-# 7. NGiNX neu laden
+# 7. Reload NGiNX
 #------------------------------------------------------------------------------------
 systemctl restart nginx
 #------------------------------------------------------------------------------------
