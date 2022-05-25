@@ -5,7 +5,8 @@
 # read LINK && bash -c "$(curl -L -fSs $LINK)"
 # read LINK && bash <(wget -O - $LINK)
 # read LINK && bash -c "$(curl -fsSL $LINK || wget -O - $LINK)"
-# bash <(wget -O - https://raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh)
+# bash <(wget -O - raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh)
+# bash -c "$(curl -L -fSs raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh)"
 
 function STARTScript() {
 
