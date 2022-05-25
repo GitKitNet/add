@@ -1,0 +1,14 @@
+<?php
+if ( !isset( $include_path ) )
+{
+    echo "invalid access";
+    exit( );
+}
+
+$cpu_info = shell_exec("cat /proc/cpuinfo");
+echo "<h3>This is example module</h3><br><br>";
+echo "You can edit this file and make new modules based on this file<br>";
+echo "Examples and functions are on our website: <a href='http://centos-webpanel.com'>centos-webpanel.com</a><br><br>";
+echo "<h3>CPU INFO</h3><pre>".$cpu_info."</pre>";
+
+?>

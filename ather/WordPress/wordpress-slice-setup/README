@@ -1,0 +1,78 @@
+UPDATE (4/26/2011): Have started getting a number of questions from folks about if these scripts are still fresh (eg. still work). They still work great on Slicehost using latest Ubuntu and Ubuntu LTS. There are many additional features that would be great to add, however we have not done so simply as a result of relying on Wordpress less. Pull requests welcome though.
+
+
+ABOUT
+============================
+This set of script is designed to automate the deployment of Wordpress sites on a fresh server installation using an Nginx stack. The first script (vps-setup.sh) sets up and configures the server and deployment stack. The second (wordpress-setup.sh) installs a Wordpress site on this server. The Wordpress install script can be run multiple times on a given server if you would like to host multiple Wordpress sites on the same server.
+
+
+SERVER-SETUP.SH OVERVIEW
+============================
+This script requires a fresh Ubuntu server Slice. It installs and configures the required OS packages and the MySQL/Nginx/PHP/Postfix deployment stack for Wordpress. All packages are installed through aptitude for future upgrade ease.
+
+NOTE: The script disables SSH root login, sets up a sudo user, and changes the SSH port for server security. At the top of the script, you can see the variable that are to be set prior to running the script. All variable should have value, otherwise the script will not run.
+
+
+WORDPRESS-SETUP.SH OVERVIEW
+============================
+This script is meant to be run after completing the server-setup.sh script. It completely sets up a new Wordpress installation on the server. It first creates the Nginx vhost for the site, then adds a MySQL database for the site, and finally downloads and unpacks the latest version of Wordpress. From there, you can simply visit the site and use the Wordpress web interface to finish the install.
+
+
+SLICE SETUP
+============================
+Before you run the script, login into Slicemanager, click "DNS" tab and "Reverse DNS". Replace the server's record with: server.domain.com (REPLACE server.domain.com with the correct host name). The script has been tested on a 1 GB slice running Ubuntu Karmic and seems to be performing very well running 10 relatively low traffic Wordpress sites. It should work fine on any Ubuntu Slice.
+
+
+SERVER SETUP/CONFIGURATION
+============================
+1. Download the script files from the GitHub repo as a tar file. 
+2. Upload the tar file to /root. 
+3. Login to the server as root and unzip the file: 
+	- tar -xzvf wordpress-slice-setup.tar.gz
+4. Enter setup directory:
+	- cd worpress-slice-setup
+5. Edit script variables for your configuration: 
+	- nano server-setup.sh
+	- Edit the first three lines to match your needs
+	- ctrl + o to save changes, ctrl + x to exit
+5. sh server-setup.sh
+6. At the prompts, do the following:
+	- Please provide the prefix of Imagemagick installation [autodetect] : {PRESS ENTER}
+	- MySQL root password dialog: {ENTER A PASSWORD}
+	- Enter current password for root (enter for none): {ENTER THE MYSQL PASSWORD YOU JUST SETUP}
+	- Change the root password? [Y/n]: n
+	- Remove anonymous users? [Y/n]: y
+	- Disallow root login remotely? [Y/n]: y
+	- Remove test database and access to it? [Y/n]: y
+	- Reload privilege tables now? [Y/n]: y
+	- Postfix setup dialog, first prompt: select "Internet Site"
+	- Postfix setup dialog, second prompt: {REPLACE LOCALHOST WITH SERVER HOSTNAME}
+
+
+SERVER SETUP COMPLETION
+============================
+DO NOT LOG OUT of your root session. Once the script has completed, the root user can no longer SSH into the server. You need to use the login for the sudo_user you setup in the script variables. So, start a new SSH session and try to login using the account of the sudo_user. Once you have confirmed you can login successfully, you can close the root session.
+
+
+WORDPRESS INSTALLATION
+============================
+Log into the server as the sudo_user you setup in the server setup script. You will see a wp-setup folder has been added in your home directory. Go to that folder and then simply modify the script variables, su to root, and run the script.
+	- cd wp-setup
+	- nano wordpress-setup.sh (edit the variables at teh top of the script to meet your needs, then save and exit)
+	- sudo su (enter your password)
+	- sh wordpress-setup.sh
+
+	
+WORDPRESS SETUP COMPLETION
+============================
+To finish the installation, just visit the domain you just setup and follow the web-based prompts. Finished! You are running a high-performance Wordpress site.
+
+
+LICENSE
+============================
+Copyright (c) 2011 by Workpapers.com LLC 
+
+This program is free software: you can redistribute it and/or modify it under the terms of the MIT License.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+

@@ -1,0 +1,18 @@
+<?php 
+
+	/* MySQL hostname [ localhost (127.0.0.1 via TCP/IP) ] */
+	$db_host = "localhost";
+
+	/* The name of the database */
+	$db_name = "root_cwp";
+
+	/* MySQL database username */
+	$db_user = "root";
+
+	/* MySQL database password */
+	$db_pass = '';
+	
+	//Password used for encryptions (don't change)
+	$crypt_pwd = '';
+
+?>

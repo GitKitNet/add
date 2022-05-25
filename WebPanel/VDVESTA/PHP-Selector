@@ -1,0 +1,270 @@
+#!/bin/bash
+echo "PHP Selector 7.4:"
+yum install -y php74-php-imap php74-php-process php74-php-pspell php74-php-xml php74-php-xmlrpc php74-php-pdo php74-php-ldap php74-php-pecl-zip php74-php-common php74-php php74-php-mcrypt php74-php-gmp php74-php-mysqlnd php74-php-mbstring php74-php-gd php74-php-tidy php74-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php74-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector74.sh
+
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector74.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/php-selector74.tpl  
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector74.sh
+
+
+echo "PHP Selector 7.3:"
+yum install -y php73-php-imap php73-php-process php73-php-pspell php73-php-xml php73-php-xmlrpc php73-php-pdo php73-php-ldap php73-php-pecl-zip php73-php-common php73-php php73-php-mcrypt php73-php-gmp php73-php-mysqlnd php73-php-mbstring php73-php-gd php73-php-tidy php73-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php73-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector73.sh
+
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector73.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/php-selector73.tpl  
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector73.sh
+
+
+echo "PHP Selector 7.2:"
+yum install -y php72-php-imap php72-php-process php72-php-pspell php72-php-xml php72-php-xmlrpc php72-php-pdo php72-php-ldap php72-php-pecl-zip php72-php-common php72-php php72-php-mcrypt php72-php-gmp php72-php-mysqlnd php72-php-mbstring php72-php-gd php72-php-tidy php72-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php72-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector72.sh
+
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector72.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/php-selector72.tpl  
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector72.sh
+
+echo "PHP Selector 7.1:"
+yum install -y php71-php-imap php71-php-process php71-php-pspell php71-php-xml php71-php-xmlrpc php71-php-pdo php71-php-ldap php71-php-pecl-zip php71-php-common php71-php php71-php-mcrypt php71-php-gmp php71-php-mysqlnd php71-php-mbstring php71-php-gd php71-php-tidy php71-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php71-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector71.sh
+
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector71.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/php-selector71.tpl  
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector71.sh
+
+
+
+
+
+echo "PHP Selector 7.0:"
+yum install -y php70-php-imap php70-php-process php70-php-pspell php70-php-xml php70-php-xmlrpc php70-php-pdo php70-php-ldap php70-php-pecl-zip php70-php-common php70-php php70-php-mcrypt php70-php-gmp php70-php-mysqlnd php70-php-mbstring php70-php-gd php70-php-tidy php70-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php70-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector70.sh
+
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector70.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/php-selector70.tpl  
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector70.sh
+
+echo "PHP Selector 5.6:"
+yum install -y php56-php-imap php56-php-process php56-php-pspell php56-php-xml php56-php-xmlrpc php56-php-pdo php56-php-ldap php56-php-pecl-zip php56-php-common php56-php php56-php-mcrypt php56-php-mysqlnd php56-php-gmp php56-php-mbstring php56-php-gd php56-php-tidy php56-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php56-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector56.sh
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector56.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/php-selector56.tpl 
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector56.sh
+
+echo "PHP Selector 5.5:"
+yum install -y php55-php-imap php55-php-process php55-php-pspell php55-php-xml php55-php-xmlrpc php55-php-pdo php55-php-ldap php55-php-pecl-zip php55-php-common php55-php php55-php-mcrypt php55-php-mysqlnd php55-php-gmp php55-php-mbstring php55-php-gd php55-php-tidy php55-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php55-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector55.sh
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector55.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/php-selector55.tpl 
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector55.sh
+
+echo "PHP Selector 5.4:"
+yum install -y  php54-php-pspell php54-php-process php54-php-imap php54-php-xml php54-php-xmlrpc php54-php-pdo php54-php-ldap php54-php-pecl-zip php54-php-common php54-php-gmp php54-php php54-php-mcrypt php54-php-mysqlnd php54-php-mbstring php54-php-gd php54-php-tidy php54-php-pecl-memcache --enablerepo=remi 
+
+echo '#!/bin/bash
+# Adding php wrapper
+user="$1"
+domain="$2"
+ip="$3"
+home_dir="$4"
+docroot="$5"
+
+wrapper_script="#!/bin/sh
+PHPRC=/usr/local/lib
+export PHPRC
+export PHP_FCGI_MAX_REQUESTS=500
+export PHP_FCGI_CHILDREN=10
+exec  /usr/bin/php54-cgi
+"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/fcgi-starter"
+
+echo "$wrapper_script" > $wrapper_file
+chown $user:$user $wrapper_file
+chmod -f 751 $wrapper_file
+
+exit 0' > /usr/local/vesta/data/templates/web/httpd/php-selector54.sh
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/php-selector54.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl  /usr/local/vesta/data/templates/web/httpd/php-selector54.tpl  
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/php-selector54.sh
+
+
+
