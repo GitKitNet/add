@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set +x
+set +x
 
 # read LINK && bash -c "$(curl -L -fSs $LINK)"
 # read LINK && bash <(wget -O - $LINK)
@@ -14,12 +14,12 @@ function STARTScript() {
 #            COLOR
 #  - - - - - - - - - - - - - - - - -
 #BLACK='\033[1;40m';           # Black
-#RED="\033[1;31m";            # 
-#GREEN="\033[32m";            # 
-#YELLOW="\033[1;33m";          # 
-#BLUE="\033[1;34m";           # 
-#CYAN='\033[4;36m';           # 
-#PURPLE='\033[0;4;35m';       # 
+#RED="\033[1;31m";            #
+#GREEN="\033[32m";            #
+#YELLOW="\033[1;33m";          #
+#BLUE="\033[1;34m";           #
+#CYAN='\033[4;36m';           #
+#PURPLE='\033[0;4;35m';       #
 
 BLACK='\033[0;40m';           # Black
 RED='\033[0;31m'              # Red
@@ -66,7 +66,7 @@ function THIS() {
   [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
   esac
  done
-}; 
+};
 #THIS
 
 #figlet -f smslant SSH Toolkit;
@@ -74,10 +74,10 @@ function showBanner() {
   clear;
   echo -e "${BGCOLOR}
   ${BLUE}_______________${GREEN}________________________________${NC}
-  ${BLUE}    __ ___ __  ${GREEN}  ______          ____    _ __  ${NC}
-  ${BLUE}   / //_(_) /_ ${GREEN} /_  __/__  ___  / / /__ (_) /_ ${NC}
-  ${BLUE}  / ,< / / __/ ${GREEN}  / / / _ \/ _ \/ /  '_// / __/ ${NC}
-  ${BLUE} /_/|_/_/\__/  ${GREEN} /_/  \___/\___/_/_/\_\/_/\__/  ${NC}
+  ${BLUE}   ________    ${GREEN}  ______          ____    _ __  ${NC}
+  ${BLUE}  / ___/ _ \   ${GREEN} /_  __/__  ___  / / /__ (_) /_ ${NC}
+  ${BLUE} / /__/ ___/   ${GREEN}  / / / _ \/ _ \/ /  '_// / __/ ${NC}
+  ${BLUE} \___/_/       ${GREEN} /_/  \___/\___/_/_/\_\/_/\__/  ${NC}
   ${BLUE}_______________${GREEN}________________________________${NC}
   ";
 }
@@ -86,15 +86,15 @@ function showBanner() {
 function title() { clear; echo "${title} ${TKEY}"; }
 function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
 function wait() { read -p "Press [ANY] key to continue..? " -s -n 1; }
-function TIMER() { 
+function TIMER() {
   T="5";
-  SE="\033[0K\r"; 
-  E="$((1 * ${T}))"; 
+  SE="\033[0K\r";
+  E="$((1 * ${T}))";
   if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; fi;
-  while [ $E -gt 0 ]; do 
+  while [ $E -gt 0 ]; do
     echo -en " Please wait: ${RED}$E$SE${NC}";
     sleep 1;
-    : $((E--)); 
+    : $((E--));
   done;
 }
 
@@ -102,18 +102,19 @@ function LoockUP() {
  #while true; do
   #read -e -p "Do you want Look UP SSH keys [y/N] .? " syn
   #case $syn in
-  #[Yy]* ) 
-	sleep 3 && clear;
-	echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
-	if [[ -f "$HOME/.ssh/${kName}" ]]; then
+  #[Yy]* )
+        sleep 3 && clear;
+        echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
+        if [[ -f "$HOME/.ssh/${kName}" ]]; then
       echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
       echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
-	fi;
-	if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
+        fi;
+        if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
       echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
-	fi;
-	echo -en "\n${GREEN}=======================${NC}\n";
-	pause && break ;;
+        fi;
+        echo -en "\n${GREEN}=======================${NC}\n";
+        pause && break
+  # ;;
   #[Nn]* ) break ;;
   #esac
  #done
@@ -132,39 +133,39 @@ OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
     elif [[ "$OS" == fedora ]]; then dnf install putty -y;
     elif [[ "$OS" == ubuntu ]]; then apt-get install putty-tools -y;
     fi;
-    if [[ -f "$HOME/.ssh/${kName}" ]]; then 
-	  echo -en "\n${GREEN}SSH Key Exist\n ${NC}"; 
-	  puttygen ${kName} -o ${kName}.ppk; 
-	else 
-	  echo "SSH key Not Exist"; 
-	fi ;;
+    if [[ -f "$HOME/.ssh/${kName}" ]]; then
+          echo -en "\n${GREEN}SSH Key Exist\n ${NC}";
+          puttygen ${kName} -o ${kName}.ppk;
+        else
+          echo "SSH key Not Exist";
+        fi ;;
   [Nn]* ) break ;;
   esac;
  done
 }
 
 
-function AddON() { 
-  while true; do 
-  read -e -p "Do you want RUN Agent? [y/N] ?" ryn; 
-  case $ryn in 
-  [Yy]* ) clear; eval $(ssh-agent) && ssh-add -D; break ;; 
-  [Nn]* ) break;; 
-  esac; 
+function AddON() {
+  while true; do
+  read -e -p "Do you want RUN Agent? [y/N] ?" ryn;
+  case $ryn in
+  [Yy]* ) clear; eval $(ssh-agent) && ssh-add -D; break ;;
+  [Nn]* ) break;;
+  esac;
   done
 
-  while true; do  
-  read -e -p "Do you want add key to SSH Agent? [y/N]" ayn; 
-  case $ayn in 
-  [Yy]* ) local -r kName="$1"; ssh-add "$HOME/.ssh/$kName" ;; 
-  [Nn]* ) break;; 
-  esac; 
+  while true; do
+  read -e -p "Do you want add key to SSH Agent? [y/N]" ayn;
+  case $ayn in
+  [Yy]* ) local -r kName="$1"; ssh-add "$HOME/.ssh/$kName" ;;
+  [Nn]* ) break;;
+  esac;
   done
 
-  while true; do 
-  read -e -p "Add to authorized_key? [y/N]" uyn; 
-  case $uyn in 
-  [Yy]* ) cat "$HOME/.ssh/${kName}.pub" >> "$HOME/.ssh/authorized_keys";; 
+  while true; do
+  read -e -p "Add to authorized_key? [y/N]" uyn;
+  case $uyn in
+  [Yy]* ) cat "$HOME/.ssh/${kName}.pub" >> "$HOME/.ssh/authorized_keys";;
   [Nn]* ) break;;
   esac;
   done;
@@ -172,27 +173,27 @@ function AddON() {
 }
 
 function OnRUN() {
-	title;
-	read -e -p "Enter NAME ssh key: " IDK && ID="$( echo ${IDK} | sed 's/ /_/g' )";
-	read -e -p "Add comment: " COMENT && COM="$( echo ${COMENT} | sed 's/ /./g' )";
-	read -e -p "Enter password: " PASS;
-	sleep 2;
-	if [ -z "${ID}" ]; then ID="${hostname}_${USER}"; fi
-	if [ -z "${COM}" ]; then COM="${USER}"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
+        title;
+        read -e -p "Enter NAME ssh key: " IDK && ID="$( echo ${IDK} | sed 's/ /_/g' )";
+        read -e -p "Add comment: " COMENT && COM="$( echo ${COMENT} | sed 's/ /./g' )";
+        read -e -p "Enter password: " PASS;
+        sleep 2;
+        if [ -z "${ID}" ]; then ID="${hostname}_${USER}"; fi
+        if [ -z "${COM}" ]; then COM="${USER}"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
 
-	kName="$( echo ${ID} | sed 's/ /_/g' )_${TKEY}.key";
-	
-	if [ "$MKEY" == "PEM" ]; then 
-		BKEY="4096"
-		if [ -z "${ID}" ]; then ID="azureuser"; fi
-		if [ -z "${COM}" ]; then COM="azureuser"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
-		ssh-keygen -m ${MKEY} -t ${TKEY} -b ${BKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
-	elif [ -z "${MKEY}" ]; then 
-		ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
-	fi
+        kName="$( echo ${ID} | sed 's/ /_/g' )_${TKEY}.key";
 
-	LoockUP ;
-	ConvertPPK ;
+        if [ "$MKEY" == "PEM" ]; then
+                BKEY="4096"
+                if [ -z "${ID}" ]; then ID="azureuser"; fi
+                if [ -z "${COM}" ]; then COM="azureuser"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
+                ssh-keygen -m ${MKEY} -t ${TKEY} -b ${BKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
+        elif [ -z "${MKEY}" ]; then
+                ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
+        fi
+
+        LoockUP ;
+        ConvertPPK ;
 }
 
 
@@ -207,7 +208,7 @@ echo "
 "
 
 if [ ! -x /usr/bin/mysql ] ; then
-	apt install mysql-server -y && systemctl start mysql
+        apt install mysql-server -y && systemctl start mysql
 fi
 
 echo "
@@ -217,10 +218,10 @@ Please Enter root  password for authorization to mysql db
 
 read -r -p "Do you want to generated automatically ? [y/N] If not it will provide password." rootpass
 if [[ "$rootpass" =~ ^([yY][eE][sS]|[yY])$ ]] ; then
-	db_pass=$(date +%s|sha256sum|base64|head -c 30)
+        db_pass=$(date +%s|sha256sum|base64|head -c 30)
 else
-	echo "Enter DB ROOT PASSWORD: "
-	read -e db_pass
+        echo "Enter DB ROOT PASSWORD: "
+        read -e db_pass
 
 mysql_secure_installation <<EOF
 y
@@ -245,17 +246,17 @@ read -e domain
 authorization="mysql -uroot -p${db_pass}"
 read -r -p "Do you want to generated automatically? [y/N] If not it will provide password.  " answer
 if [[ "$answer" =~ ^([yY][eE][sS]|[yY])$ ]] ; then
-	dbPassword=$(date +%s|sha256sum|base64|head -c 25)
+        dbPassword=$(date +%s|sha256sum|base64|head -c 25)
 else
-	echo "Enter DB USER PASSWORD:"
-	read -e dbPassword
+        echo "Enter DB USER PASSWORD:"
+        read -e dbPassword
 fi;
 
 echo "Is everything ok, run install? [y/N]"
 read -e run
-if [ "$run" == n ] ; then exit; 
+if [ "$run" == n ] ; then exit;
 else
-	echo "
+        echo "
 ==============================================
   A robot is now installing WordPress for you.
 ==============================================
@@ -372,10 +373,10 @@ fi
 authorization="mysql -uroot -p${db_pass}"
 read -r -p "Do you want to generated automatically ? [y/N] If not it will provide password.  " answer
 if [[ "$answer" =~ ^([yY][eE][sS]|[yY])$ ]] ; then
-	dbPassword=$(date +%s|sha256sum|base64|head -c 25)
+        dbPassword=$(date +%s|sha256sum|base64|head -c 25)
 else
-	echo "Enter DB_PASSWORD:"
-	read -e dbPassword
+        echo "Enter DB_PASSWORD:"
+        read -e dbPassword
 fi
 
 echo "Is everything ok, run install? [y/N]"
@@ -476,7 +477,7 @@ apt-get update
 add-apt-repository ppa:ondrej/php -y
 apt-get update
 apt-get -y install php7.4 php7.4-fpm php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline  php7.4-imap php7.4-mbstring php7.4-xml php7.4-xmlrpc php7.4-imagick php7.4-dev php7.4-opcache php7.4-soap php7.4-gd php7.4-zip php7.4-intl php7.4-curl
-sed -i 's/;cgi.fix_pathinfo=0/	cgi.fix_pathinfo=1/g' /etc/php/7.4/fpm/php.ini
+sed -i 's/;cgi.fix_pathinfo=0/  cgi.fix_pathinfo=1/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 300M/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/post_max_size = 8M/post_max_size = 300M/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/max_execution_time = 30/max_execution_time = 300/g' /etc/php/7.4/fpm/php.ini
@@ -485,11 +486,11 @@ sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /etc/php/7.4/fpm/php.ini
 cat << 'eof' >> /etc/php/7.4/fpm/php-fpm.conf
 
 pm = dynamic
-	pm.max_children = 97
-	pm.start_servers = 20
-	pm.min_spare_servers = 10
-	pm.max_spare_servers = 20
-	pm.max_requests = 200
+        pm.max_children = 97
+        pm.start_servers = 20
+        pm.min_spare_servers = 10
+        pm.max_spare_servers = 20
+        pm.max_requests = 200
 
 eof
 sudo apt-get -y install certbot
@@ -514,17 +515,17 @@ cat << 'eof' >> /etc/nginx/sites-available/${domain}.conf
         location / {
             try_files $uri $uri/ /index.php$is_args$args;
 
-	        allow all;
+                allow all;
 
             allow 000.000.000.000; #EXAMPLE NOT BLOCK
-	        #deny all;  #Example BLOCK ALL 
+                #deny all;  #Example BLOCK ALL
 
         }
 
-	    location ^~ /(wp-admin|wp-login\.php) {
+            location ^~ /(wp-admin|wp-login\.php) {
             allow 65.108.153.183; #office
-	        deny all;
-	    }
+                deny all;
+            }
 
         location ~ "^\/([a-z0-9]{{28,32}})\.html" {
             add_header Content-Type text/plain;
@@ -645,7 +646,7 @@ apt-get update
 add-apt-repository ppa:ondrej/php -y
 apt-get update
 apt-get -y install php7.4 php7.4-fpm php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline  php7.4-imap php7.4-mbstring php7.4-xml php7.4-xmlrpc php7.4-imagick php7.4-dev php7.4-opcache php7.4-soap php7.4-gd php7.4-zip php7.4-intl php7.4-curl
-sed -i 's/;cgi.fix_pathinfo=0/	cgi.fix_pathinfo=1/g' /etc/php/7.4/fpm/php.ini
+sed -i 's/;cgi.fix_pathinfo=0/  cgi.fix_pathinfo=1/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 300M/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/post_max_size = 8M/post_max_size = 300M/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/max_execution_time = 30/max_execution_time = 300/g' /etc/php/7.4/fpm/php.ini
@@ -654,11 +655,11 @@ sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /etc/php/7.4/fpm/php.ini
 cat << 'eof' >> /etc/php/7.4/fpm/php-fpm.conf
 
 pm = dynamic
-	pm.max_children = 97
-	pm.start_servers = 20
-	pm.min_spare_servers = 10
-	pm.max_spare_servers = 20
-	pm.max_requests = 200
+        pm.max_children = 97
+        pm.start_servers = 20
+        pm.min_spare_servers = 10
+        pm.max_spare_servers = 20
+        pm.max_requests = 200
 
 eof
 sudo apt-get -y install certbot
@@ -689,18 +690,18 @@ cat << 'eof' >> /etc/nginx/sites-available/${domain}.conf
         location / {
             try_files $uri $uri/ /index.php$is_args$args;
 
-	        allow all;
+                allow all;
 
             allow 000.000.000.000; #EXAMPLE NOT BLOCK
-	        #deny all;  #Example BLOCK ALL 
+                #deny all;  #Example BLOCK ALL
 
         }
 
         location ^~ /(wp-admin|wp-login\.php) {
-	        allow all;
+                allow all;
 
             allow 000.000.000.000; #EXAMPLE NOT BLOCK
-	        #deny all;  #Example BLOCK ALL 
+                #deny all;  #Example BLOCK ALL
 
         }
 
@@ -794,7 +795,7 @@ echo "
 "
 
 if [ ! -x /usr/bin/mysql ] ; then
-	apt install mysql-server -y && systemctl start mysql
+        apt install mysql-server -y && systemctl start mysql
 fi
 
 echo "============================================================
@@ -803,10 +804,10 @@ Please Enter root  password for authorization to mysql db
 
 read -r -p "Do you want to generated automatically ? [y/N] If not it will provide password.  " rootpass
 if [[ "$rootpass" =~ ^([yY][eE][sS]|[yY])$ ]] ; then
-	db_pass=$(date +%s|sha256sum|base64|head -c 30)
+        db_pass=$(date +%s|sha256sum|base64|head -c 30)
 else
-	echo "Enter DB ROOT PASSWORD: "
-	read -e db_pass
+        echo "Enter DB ROOT PASSWORD: "
+        read -e db_pass
 
 mysql_secure_installation <<EOF
 y
@@ -926,12 +927,12 @@ apt-get update
 add-apt-repository ppa:ondrej/php -y
 apt-get update
 apt-get -y install \
-	php7.4 php7.4-fpm php7.4-mysql php-common php7.4-cli php7.4-common \
-	php7.4-json php7.4-opcache php7.4-readline php7.4-imap php7.4-mbstring \
-	php7.4-xml php7.4-xmlrpc php7.4-imagick php7.4-dev php7.4-opcache \
-	php7.4-soap php7.4-gd php7.4-zip php7.4-intl php7.4-curl
+        php7.4 php7.4-fpm php7.4-mysql php-common php7.4-cli php7.4-common \
+        php7.4-json php7.4-opcache php7.4-readline php7.4-imap php7.4-mbstring \
+        php7.4-xml php7.4-xmlrpc php7.4-imagick php7.4-dev php7.4-opcache \
+        php7.4-soap php7.4-gd php7.4-zip php7.4-intl php7.4-curl
 
-sed -i 's/;cgi.fix_pathinfo=0/	cgi.fix_pathinfo=1/g' /etc/php/7.4/fpm/php.ini
+sed -i 's/;cgi.fix_pathinfo=0/  cgi.fix_pathinfo=1/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 300M/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/post_max_size = 8M/post_max_size = 300M/g' /etc/php/7.4/fpm/php.ini
 sed -i 's/max_execution_time = 30/max_execution_time = 300/g' /etc/php/7.4/fpm/php.ini
@@ -940,11 +941,11 @@ sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /etc/php/7.4/fpm/php.ini
 cat << 'eof' >> /etc/php/7.4/fpm/php-fpm.conf
 
 pm = dynamic
-	pm.max_children = 97
-	pm.start_servers = 20
-	pm.min_spare_servers = 10
-	pm.max_spare_servers = 20
-	pm.max_requests = 200
+        pm.max_children = 97
+        pm.start_servers = 20
+        pm.min_spare_servers = 10
+        pm.max_spare_servers = 20
+        pm.max_requests = 200
 
 eof
 sudo apt-get -y install certbot
@@ -975,18 +976,18 @@ cat << 'eof' >> /etc/nginx/sites-available/${domain}.conf
         location / {
             try_files $uri $uri/ /index.php$is_args$args;
 
-	        allow all;
+                allow all;
 
             allow 000.000.000.000; #EXAMPLE NOT BLOCK
-	        #deny all;  #Example BLOCK ALL 
+                #deny all;  #Example BLOCK ALL
 
         }
 
         location ^~ /(wp-admin|wp-login\.php) {
-	        allow all;
+                allow all;
 
             allow 000.000.000.000; #EXAMPLE NOT BLOCK
-	        #deny all;  #Example BLOCK ALL 
+                #deny all;  #Example BLOCK ALL
 
         }
 
@@ -1089,7 +1090,7 @@ wget -O ./addomain_into_file.py https://scr.it.cx.ua/addomain_into_file.py && ch
 echo -e "\n ==========    Mysql Server Installation    ==========\n"
 
 if [ ! -x /usr/bin/mysql ] ; then
-	apt install mysql-server -y && systemctl start mysql
+        apt install mysql-server -y && systemctl start mysql
 fi;
 
 echo "============================================================
@@ -1098,10 +1099,10 @@ Please Enter root  password for authorization to mysql db
 
 read -r -p "Do you want to generated automatically ? [y/N] If not it will provide password.  " rootpass
 if [[ "$rootpass" =~ ^([yY][eE][sS]|[yY])$ ]] ; then
-	db_pass=$(date +%s|sha256sum|base64|head -c 30)
+        db_pass=$(date +%s|sha256sum|base64|head -c 30)
 else
-	echo "Enter DB ROOT PASSWORD: "
-	read -e db_pass
+        echo "Enter DB ROOT PASSWORD: "
+        read -e db_pass
 
 mysql_secure_installation <<EOF
 y
@@ -1207,19 +1208,19 @@ Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
 #-------------------------------------------------
 function CheckPack() {
 
-	#WELCOME MESSAGE
+        #WELCOME MESSAGE
 
 clear
 echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard!
 First of all, we going to check all required packeges..."
 
-	#CHECKING PACKAGES
-	
+        #CHECKING PACKAGES
+
 echo -e "${YELLOW}Checking packages...${NC}"
 echo -e "List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache2 & php, mysql, php curl, phpmyadmin, wget, curl"
 read -r -p "Do you want to check packeges? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY]) 
+    [yY][eE][sS]|[yY])
 
 WGET=$(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed")
   if [ "$WGET" -eq 0 ]; then
@@ -1288,8 +1289,8 @@ PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok i
   fi ;;
 
     *) echo -e "\n\t ${RED}Packeges check is ignored! \n Please be aware, that apache2, mysql, phpmyadmin and other software may not be installed! ${NC}\n" ;;
-	esac
-}; 
+        esac
+};
 
 
 
@@ -1298,14 +1299,14 @@ PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok i
 function ChangingPMA() {
     P_IP="`wget http://ipinfo.io/ip -qO -`"
 
-	echo -e "${YELLOW}Changing phpMyAdmin default path from /phpMyAdmin to /phpmyadmin...${NC}"
+        echo -e "${YELLOW}Changing phpMyAdmin default path from /phpMyAdmin to /phpmyadmin...${NC}"
 
 sleep 5
 
 # read -r -p "Do you want to change default phpMyAdmin path to /phpmyadmin? [y/N] " response
 # case $response in
-#     [yY][eE][sS]|[yY]) 
-  
+#     [yY][eE][sS]|[yY])
+
 cat >/etc/phpmyadmin/apache.conf <<EOL
 # phpMyAdmin default Apache configuration
 
@@ -1356,10 +1357,12 @@ Alias /phpmyadmin /usr/share/phpmyadmin
 EOL
 
 
-	echo -e "\n ${GREEN}Succesfully! phpMyAdmin path is: ${P_IP}/phpmyadmin (i.e.: yourwebsite.com/phpmyadmin)${NC} \n " ;;
-    *) echo -e "${RED}Path was not changed!${NC}" ;;
-#	esac
-}; 
+        echo -e "\n ${GREEN}Succesfully! phpMyAdmin path is: ${P_IP}/phpmyadmin (i.e.: yourwebsite.com/phpmyadmin)${NC} \n "
+    #;;
+    #*) echo -e "${RED}Path was not changed!${NC}"
+    #;;
+   #esac
+};
 
 
 
@@ -1375,8 +1378,8 @@ echo -e "${YELLOW}Adding separate user & creating website home folder for secure
   username="www-data";
   echo -e "${YELLOW}Enter Domain: ${NC}"
   read websitename
-  
-  
+
+
   groupadd $username
   adduser --home /var/www/${domain} --ingroup $username $username
   mkdir -p /var/www/${domain}
@@ -1384,12 +1387,12 @@ echo -e "${YELLOW}Adding separate user & creating website home folder for secure
   echo -e "${GREEN}
   #-------------------------------------------------
   User, group and home folder were succesfully created!
-  
+
   USERNAME:        $username
   GROUP:           $username
   HOME FOLDER:     /var/www/${domain}
-  WEBSITE FOLDER:  /var/www/${domain} 
-  
+  WEBSITE FOLDER:  /var/www/${domain}
+
   ${NC}"
 }
 
@@ -1404,7 +1407,7 @@ echo -e "${YELLOW}Now we going to configure apache2 for your domain name & websi
 
 read -r -p "Do you want to configure Apache2 automatically? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY]) 
+    [yY][eE][sS]|[yY])
 
   echo -e "Please, provide us with your domain name: "
   read domain_name
@@ -1444,7 +1447,7 @@ case $response in
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 EOL
-	a2dissite 000-default
+        a2dissite 000-default
     a2ensite ${domain}
     service apache2 restart
     P_IP="`wget http://ipinfo.io/ip -qO -`"
@@ -1457,10 +1460,10 @@ EOL
     OPTION INDEXES WAS SET TO:  -Indexes (to close directory listing)
     YOUR SERVER PUBLIC IP IS:   $P_IP (Please, set this IP into your domain name 'A' record)
     Website was activated & apache2 service reloaded! ${NC}" \n ;;
-	
+
     *) echo -e "${RED}WARNING! Apache2 was not configured properly, you can do this manually or re run our script.${NC}" ;;
 
-	esac
+        esac
 }
 
 
@@ -1482,8 +1485,6 @@ y
 y
 y
 EOF
-fi;
-
 
 #---------------------------------
 #   WordPress Install Script
@@ -1522,8 +1523,8 @@ wp_pass=$(date +%s|sha256sum|base64|head -c 20)
 
 apt-get install curl -y || apk add curl
 curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-	&& chmod +x /tmp/wp-cli.phar \
-	&& mv /tmp/wp-cli.phar /usr/local/bin/wp
+        && chmod +x /tmp/wp-cli.phar \
+        && mv /tmp/wp-cli.phar /usr/local/bin/wp
 
 wp core download --path=/var/www/${domain} --locale=en_US --allow-root
 wp config create --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check
@@ -1588,7 +1589,6 @@ Admin Panel Password:       ${wp_pass}
 -----------------------------------------------
 " >> /tmp/credentials.txt
 
-fi;
 
 }
 
@@ -1600,7 +1600,7 @@ echo -e "${YELLOW}Download LATEST VERSION of WordPress with EN or RUS language, 
 read -r -p "Do you want to install WordPress & automatically set optimal and secure configuration with basic set of plugins? [y/N] " response
 
 case $response in
-    [yY][eE][sS]|[yY]) 
+    [yY][eE][sS]|[yY])
   echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): "
   read wordpress_lang
 
@@ -1627,7 +1627,7 @@ case $response in
   3. Add to Any
   4. Easy Watermark"
   sleep 7
-  
+
   #SITEMAP="`curl https://wordpress.org/plugins/google-sitemap-generator/ | grep https://downloads.wordpress.org/plugin/google-sitemap-generator.*.*.*.zip | awk '{print $2}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
   SITEMAP="`curl https://wordpress.org/plugins/wp-sitemap-page/ | grep https://downloads.wordpress.org/plugin/wp-sitemap-page.*.*.*.zip | awk '{print $2}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
   wget $SITEMAP -O /tmp/sitemap.zip
@@ -1644,15 +1644,15 @@ case $response in
   unzip /tmp/addtoany.zip -d /tmp/addtoany
   mv /tmp/addtoany/* /var/www/${domain}/wp-content/plugins/
 
-	WATERMARK="`curl https://wordpress.org/plugins/easy-watermark/ | grep https://downloads.wordpress.org/plugin/easy-watermark.*.*.*.zip | awk '{print $2}' | sed -ne 's/.*\(http[^\"]*.zip\).*/\1/p'`"
-	if [ -z "$WATERMARK" ]; then 
-		echo "is ERROR";
-	else
-		echo "$WATERMARK"
-		wget $WATERMARK -O /tmp/watermark.zip
-		unzip /tmp/watermark.zip -d /tmp/watermark
-		mv /tmp/watermark/* /var/www/${domain}/wp-content/plugins/
-	fi;
+        WATERMARK="`curl https://wordpress.org/plugins/easy-watermark/ | grep https://downloads.wordpress.org/plugin/easy-watermark.*.*.*.zip | awk '{print $2}' | sed -ne 's/.*\(http[^\"]*.zip\).*/\1/p'`"
+        if [ -z "$WATERMARK" ]; then
+                echo "is ERROR";
+        else
+                echo "$WATERMARK"
+                wget $WATERMARK -O /tmp/watermark.zip
+                unzip /tmp/watermark.zip -d /tmp/watermark
+                mv /tmp/watermark/* /var/www/${domain}/wp-content/plugins/
+        fi;
 
   rm /tmp/sitemap.zip /tmp/snap.zip /tmp/addtoany.zip /tmp/watermark.zip
   rm -rf /tmp/sitemap/ /tmp/snap/ /tmp/addtoany/ /tmp/watermark/
@@ -1675,7 +1675,7 @@ function CreatSWAP() {
 echo -e "On next step we going to create SWAP (it should be your RAM x2)..."
 read -r -p "Do you need SWAP? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY]) 
+    [yY][eE][sS]|[yY])
   RAM="`free -m | grep Mem | awk '{print $2}'`"
   swap_allowed=$(($RAM * 2))
   swap=$swap_allowed"M"
@@ -1845,23 +1845,23 @@ echo -e "${GREEN} Configuring apache2 prefork & worker modules...${NC}"
 sleep 3
 cat >/etc/apache2/mods-available/mpm_prefork.conf <<EOL
 <IfModule mpm_prefork_module>
-	StartServers			 1
-	MinSpareServers		  1
-	MaxSpareServers		 3
-	MaxRequestWorkers	  10
-	MaxConnectionsPerChild   3000
+        StartServers                     1
+        MinSpareServers           1
+        MaxSpareServers          3
+        MaxRequestWorkers         10
+        MaxConnectionsPerChild   3000
 </IfModule>
 EOL
 
 cat > /etc/apache2/mods-available/mpm_worker.conf <<EOL
 <IfModule mpm_worker_module>
-	StartServers			 1
-	MinSpareThreads		 5
-	MaxSpareThreads		 15
-	ThreadLimit			 25
-	ThreadsPerChild		 5
-	MaxRequestWorkers	  25
-	MaxConnectionsPerChild   200
+        StartServers                     1
+        MinSpareThreads          5
+        MaxSpareThreads          15
+        ThreadLimit                      25
+        ThreadsPerChild          5
+        MaxRequestWorkers         25
+        MaxConnectionsPerChild   200
 </IfModule>
 EOL
 
@@ -1920,28 +1920,29 @@ define('NONCE_SALT',       '$db_user');
 define('WP_DEBUG', false);
 
 if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
+        define('ABSPATH', dirname(__FILE__) . '/');
 
 require_once(ABSPATH . 'wp-settings.php');
 EOL
 
-	chown -R $username:$username /var/www/$username
-	echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
-	sleep 3
+        chown -R $username:$username /var/www/$username
+        echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
+        sleep 3
 
 }
 
 function installLAMP() {
-	CheckPack;
-	ChangingPMA;
-	creatingUser;
-	ConfApache2;
-	downWP;
-	CreatSWAP;
-	creSECURE;
-	AddingDB;
-	echo -e "Installation & configuration succesfully finished.";
-	sleep 3
+        CheckPack;
+        ChangingPMA;
+        creatingUser;
+        ConfApache2;
+        InstallWordPress
+        #downWP;
+        CreatSWAP;
+        creSECURE;
+        AddingDB;
+        echo -e "Installation & configuration succesfully finished.";
+        sleep 3
 }
 
 
@@ -1985,94 +1986,94 @@ echo -e -n "
 \t5. Instal WordPress ${CYAN} With All Services Certbot ${NC}
 ${RED}\n\t0. Back ${NC}\n";
 
-} 
+}
 
 ##   subMENU 3
 function MenuLAMP() {
-	echo -e "\n\t ${GREEN}SubMENU 3 OPTIONS:${NC} \n"
-	echo -e -n "${Yellow}
-\t1. Install LAMP with WordPress 
+        echo -e "\n\t ${GREEN}SubMENU 3 OPTIONS:${NC} \n"
+        echo -e -n "${Yellow}
+\t1. Install LAMP with WordPress
 \t\t ${CYAN}(Apache, php7.4, phpMyAdmin with WordPress) ${NC} ${RED}
 \n\t0. Back ${NC}\n";
 
-} 
+}
 
 
 #--------------------------
 while :
 do
-	showBanner
-	BOSSMENU
-	echo -n -e "\n\tSelection: "
-	read -n1 opt
-	a=true;
-	case $opt in
+        showBanner
+        BOSSMENU
+        echo -n -e "\n\tSelection: "
+        read -n1 opt
+        a=true;
+        case $opt in
 
 # 1 SubMenu ----------------------------
-		1) echo -e "==== Create SSH key ===="
-		while :
-		do
-			showBanner
-			SUBMENUONE
-			echo -n -e "\n\tSelection: "
-			read -n1 opt;
-			case $opt in
-				1) TKEY="ed25519" && MKEY="" && OnRUN ;;
-				2) TKEY="rsa" && MKEY="" && OnRUN ;;
-				3) TKEY="rsa" && MKEY="PEM" && OnRUN ;;
-				4) TKEY="dsa" && MKEY="" && OnRUN ;;
-				5) TKEY="ecdsa" && MKEY="" && OnRUN ;;
-				6) TKEY="eddsa" && MKEY="" && OffRUN ;;
-				/q | q | 0) break ;;
-				*) ;;
-			esac
-		done
-		;;
+                1) echo -e "==== Create SSH key ===="
+                while :
+                do
+                        showBanner
+                        SUBMENUONE
+                        echo -n -e "\n\tSelection: "
+                        read -n1 opt;
+                        case $opt in
+                                1) TKEY="ed25519" && MKEY="" && OnRUN ;;
+                                2) TKEY="rsa" && MKEY="" && OnRUN ;;
+                                3) TKEY="rsa" && MKEY="PEM" && OnRUN ;;
+                                4) TKEY="dsa" && MKEY="" && OnRUN ;;
+                                5) TKEY="ecdsa" && MKEY="" && OnRUN ;;
+                                6) TKEY="eddsa" && MKEY="" && OffRUN ;;
+                                /q | q | 0) break ;;
+                                *) ;;
+                        esac
+                done
+                ;;
 
 # 2 ----------------------------
-		2) echo -e "Install LEMP: "
-		while :
-		do
-			showBanner
-			MenuLEMP
-			echo -n -e "\n\tSelection: "
-			read -n1 opt;
-			case $opt in
-				1) first ;;
-				2) second ;;
-				3) third ;;
-				4) fourth ;;
-				5) fifth ;;
-				/q | q | 0) break ;;
-				*) ;;
-			esac
-		done
-		;;
+                2) echo -e "Install LEMP: "
+                while :
+                do
+                        showBanner
+                        MenuLEMP
+                        echo -n -e "\n\tSelection: "
+                        read -n1 opt;
+                        case $opt in
+                                1) first ;;
+                                2) second ;;
+                                3) third ;;
+                                4) fourth ;;
+                                5) fifth ;;
+                                /q | q | 0) break ;;
+                                *) ;;
+                        esac
+                done
+                ;;
 
 # 3 ----------------------------
-		3) echo -e "# submenu: MEMU 3"
-		while :
-		do
-			showBanner
-			MenuLAMP
-			echo -n -e "\n\tSelection: "
-			read -n1 opt;
-			case $opt in
-				1) installLAMP ;;
-				2) echo -e "MENU 3 - SUBmenu 2" ;;
-				3) echo -e "MENU 3 - SUBmenu 3" ;;
-				/q | q | 0) break ;;
-				*) ;;
-			esac
-		done
-		;;
+                3) echo -e "# submenu: MEMU 3"
+                while :
+                do
+                        showBanner
+                        MenuLAMP
+                        echo -n -e "\n\tSelection: "
+                        read -n1 opt;
+                        case $opt in
+                                1) installLAMP ;;
+                                2) echo -e "MENU 3 - SUBmenu 2" ;;
+                                3) echo -e "MENU 3 - SUBmenu 3" ;;
+                                /q | q | 0) break ;;
+                                *) ;;
+                        esac
+                done
+                ;;
 
-		/q | q | 0) echo; break ;;
-		*) ;;
-	esac
-	done
-	echo "Quit...";
-	clear;
+                /q | q | 0) echo; break ;;
+                *) ;;
+        esac
+        done
+        echo "Quit...";
+        clear;
 };
 
 STARTScript
