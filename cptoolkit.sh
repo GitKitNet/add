@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +x
+#set +x
 
 # read LINK && bash -c "$(curl -L -fSs $LINK)"
 # read LINK && bash <(wget -O - $LINK)
