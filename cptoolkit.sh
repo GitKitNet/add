@@ -8,7 +8,7 @@
 # bash <(wget -O - raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh)
 # bash -c "$(curl -L -fSs raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh)"
 
-function STARTScript() {
+
 
 #  - - - - - - - - - - - - - - - - -
 #            COLOR
@@ -54,33 +54,17 @@ BGCOLOR=$BLACK;
 
 
 #===================================
+#       ASK START
+#===================================
+
+function THIS() { clear; while true; do echo -en "\t${Yellow}Do you want Run This script [y/N] .?${RC} "; read -e syn; case $syn in [Yy]* )clear; echo -e "\n\t${GREEN}Starting NOW..${NC}"; sleep 3; break;; [Nn]* )exit 0;; esac; done; };
+THIS
+
+#===================================
 #      VARIABLE & function
 #===================================
 
-function THIS() {
- while true; do
-  echo -e "${Yellow}Do you want Run This script [y/N] .? ${RC}"
-  read -e syn
-  case $syn in
-  [Yy]* ) break ;;
-  [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
-  esac
- done
-};
-THIS
-
-#figlet -f smslant SSH Toolkit;
-function showBanner() {
-  clear;
-  echo -e "${BGCOLOR}
-  ${BLUE}_______________${GREEN}________________________________${NC}
-  ${BLUE}   ________    ${GREEN}  ______          ____    _ __  ${NC}
-  ${BLUE}  / ___/ _ \   ${GREEN} /_  __/__  ___  / / /__ (_) /_ ${NC}
-  ${BLUE} / /__/ ___/   ${GREEN}  / / / _ \/ _ \/ /  '_// / __/ ${NC}
-  ${BLUE} \___/_/       ${GREEN} /_/  \___/\___/_/_/\_\/_/\__/  ${NC}
-  ${BLUE}_______________${GREEN}________________________________${NC}
-  ";
-}
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
 function title() { clear; echo "${title} ${TKEY}"; }
 function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
@@ -96,6 +80,27 @@ function TIMER() {
     : $((E--));
   done;
 }
+
+
+
+function STARTScript() {
+
+
+#figlet -f smslant SSH Toolkit;
+function showBanner() {
+  clear;
+  echo -e "${BGCOLOR}
+  ${BLUE}_______________${GREEN}________________________________${NC}
+  ${BLUE}   ________    ${GREEN}  ______          ____    _ __  ${NC}
+  ${BLUE}  / ___/ _ \   ${GREEN} /_  __/__  ___  / / /__ (_) /_ ${NC}
+  ${BLUE} / /__/ ___/   ${GREEN}  / / / _ \/ _ \/ /  '_// / __/ ${NC}
+  ${BLUE} \___/_/       ${GREEN} /_/  \___/\___/_/_/\_\/_/\__/  ${NC}
+  ${BLUE}_______________${GREEN}________________________________${NC}
+  ";
+}
+
+
+
 
 function LoockUP() {
  #while true; do
