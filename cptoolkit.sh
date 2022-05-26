@@ -315,12 +315,13 @@ wp config create \
     --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check
 wp core install \
     --skip-email --url=${domain} --title=${domain} --admin_user=${wp_admin} --admin_password=${wp_pass} --admin_email=admin@${domain} --allow-root --path=/var/www/${domain}
+
 # installing plugin:
 wp plugin install \
-    woocommerce
+    wp-sitemap-page
 # activating plugin:
 wp plugin activate \
-    woocommerce
+    wp-sitemap-page
 
 ###mkdir -p /var/www/${domain}/wp-content/uploads
 chmod 775 -R /var/www/${domain}/ ###wp-content/uploads
@@ -1550,14 +1551,12 @@ apt-get install curl -y || apk add curl
 curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
         && chmod +x /tmp/wp-cli.phar \
         && mv /tmp/wp-cli.phar /usr/local/bin/wp
-
-wp core download --path=/var/www/${domain} --locale=en_US --allow-root
-wp config create --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check
-wp core install --skip-email --url=${domain} --title=${domain} --admin_user=${wp_admin} --admin_password=${wp_pass} --admin_email=admin@${domain} --allow-root --path=/var/www/${domain}
-
-###mkdir -p /var/www/${domain}/wp-content/uploads
-chmod 775 -R /var/www/${domain}/ ###wp-content/uploads
-chown www-data:www-data -R /var/www/${domain}
+wp core download \
+   --path=/var/www/${domain} --locale=en_US --allow-root
+wp config create \
+    --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check
+wp core install \
+    --skip-email --url=${domain} --title=${domain} --admin_user=${wp_admin} --admin_password=${wp_pass} --admin_email=admin@${domain} --allow-root --path=/var/www/${domain}
 
 echo -e "
 Now we going to download some useful plugins:
@@ -1567,6 +1566,18 @@ Now we going to download some useful plugins:
 4. Easy Watermark
 ";
 sleep 7
+
+# installing plugin:
+wp plugin install \
+    wp-sitemap-page add-to-any easy-watermark social-networks-auto-poster-facebook-twitter-g
+# activating plugin:
+wp plugin activate \
+    wp-sitemap-page add-to-any easy-watermark social-networks-auto-poster-facebook-twitter-g
+
+
+###mkdir -p /var/www/${domain}/wp-content/uploads
+chmod 775 -R /var/www/${domain}/ ###wp-content/uploads
+chown www-data:www-data -R /var/www/${domain}
 
 # installing plugin:
 wp plugin install woocommerce
