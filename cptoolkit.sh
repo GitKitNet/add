@@ -305,13 +305,22 @@ db_pass=${db_pass} > /tmp/${db_pass}
 wp_admin=root
 wp_pass=$(date +%s|sha256sum|base64|head -c 20)
 
-apt-get install curl -y || apk add curl \
-&& curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-&& chmod +x /tmp/wp-cli.phar \
-&& mv /tmp/wp-cli.phar /usr/local/bin/wp \
-&& wp core download --path=/var/www/${domain} --locale=en_US --allow-root \
-&& wp config create --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check \
-&& wp core install --skip-email --url=${domain} --title=${domain} --admin_user=${wp_admin} --admin_password=${wp_pass} --admin_email=admin@${domain} --allow-root --path=/var/www/${domain}
+apt-get install curl -y || apk add curl
+curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x /tmp/wp-cli.phar \
+    && mv /tmp/wp-cli.phar /usr/local/bin/wp
+wp core download \
+    --path=/var/www/${domain} --locale=en_US --allow-root
+wp config create \
+    --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check
+wp core install \
+    --skip-email --url=${domain} --title=${domain} --admin_user=${wp_admin} --admin_password=${wp_pass} --admin_email=admin@${domain} --allow-root --path=/var/www/${domain}
+# installing plugin:
+wp plugin install \
+    woocommerce
+# activating plugin:
+wp plugin activate \
+    woocommerce
 
 ###mkdir -p /var/www/${domain}/wp-content/uploads
 chmod 775 -R /var/www/${domain}/ ###wp-content/uploads
