@@ -13,10 +13,10 @@ function STARTScript() {
 #  - - - - - - - - - - - - - - - - -
 #            COLOR
 #  - - - - - - - - - - - - - - - - -
-#BLACK='\033[1;40m';           # Black
+#BLACK='\033[1;40m';          # Black
 #RED="\033[1;31m";            #
 #GREEN="\033[32m";            #
-#YELLOW="\033[1;33m";          #
+#YELLOW="\033[1;33m";         #
 #BLUE="\033[1;34m";           #
 #CYAN='\033[4;36m';           #
 #PURPLE='\033[0;4;35m';       #
@@ -67,7 +67,7 @@ function THIS() {
   esac
  done
 };
-#THIS
+THIS
 
 #figlet -f smslant SSH Toolkit;
 function showBanner() {
@@ -81,7 +81,6 @@ function showBanner() {
   ${BLUE}_______________${GREEN}________________________________${NC}
   ";
 }
-
 
 function title() { clear; echo "${title} ${TKEY}"; }
 function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
@@ -2079,3 +2078,4 @@ do
 STARTScript
 
 # exit 1
+
