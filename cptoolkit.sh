@@ -1547,7 +1547,11 @@ Now we going to download some useful plugins:
 ";
 sleep 7
 
+# installing plugin:
+wp plugin install woocommerce
 
+# activating the plugin:
+wp plugin activate woocommerce
 
 
 echo -e "
