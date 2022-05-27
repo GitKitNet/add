@@ -119,7 +119,8 @@ function LoockUP() {
   #read -e -p "Do you want Look UP SSH keys [y/N] .? " syn
   #case $syn in
   #[Yy]* )
-        sleep 3 && clear;
+        sleep 3
+        clear;
         echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
         if [[ -f "$HOME/.ssh/${kName}" ]]; then
       echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
@@ -138,7 +139,8 @@ function LoockUP() {
 
 function ConvertPPK()
 {
-OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
+#OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
+OS=echo "$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
 
  while true; do
  read -e -p "Do you want PuTTy file ${kName}.ppk [y/N] ..? " syn
@@ -151,6 +153,7 @@ OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
     fi;
     if [[ -f "$HOME/.ssh/${kName}" ]]; then
           echo -en "\n${GREEN}SSH Key Exist\n ${NC}";
+          echo -en "\n\t\t${GREEN}...OK${NC}"\n;
           puttygen ${kName} -o ${kName}.ppk;
         else
           echo "SSH key Not Exist";
