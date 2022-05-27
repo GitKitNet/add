@@ -140,7 +140,10 @@ function LoockUP() {
 function ConvertPPK()
 {
 #OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
-OS=echo "$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
+#OS=echo "$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
+
+OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
+release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
 
  while true; do
  read -e -p "Do you want PuTTy file ${kName}.ppk [y/N] ..? " syn
