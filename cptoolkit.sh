@@ -1,4 +1,7 @@
-﻿#!/bin/bash
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+trap cleanup SIGINT SIGTERM ERR EXIT
 
 #set +x
 
@@ -77,6 +80,11 @@ THIS
 #===================================
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+function cleanup() {
+  trap - SIGINT SIGTERM ERR EXIT
+  # script cleanup here
+}
+
 
 function title() { clear; echo "${title} ${TKEY}"; }
 function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
@@ -2539,9 +2547,11 @@ do
         done
         echo "Quit...";
         clear;
+        cleanup;
 };
 
 STARTScript
+cleanup
 
 # exit 1
 
