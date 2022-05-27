@@ -157,10 +157,11 @@ release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{prin
  read -e -p "Do you want PuTTy file ${kName}.ppk [y/N] ..? " syn
  case $syn in
   [Yy]* ) echo -en "\n${YELLOW}Install PuTTy and Converted to *.PPK ${NC}";
-    if [[ "$OS" == arch ]]; then pacman -S putty;
-    elif [[ "$OS" == centos ]] && [[ "$OS" == rhell ]]; then yum install putty -y;
-    elif [[ "$OS" == fedora ]]; then dnf install putty -y;
-    elif [[ "$OS" == ubuntu ]]; then apt-get install putty-tools -y;
+    
+if [[ "$OS" == 'arch' ]]; then pacman -S putty;
+    elif [[ "$OS" == 'centos' ]] && [[ "$OS" == rhell ]]; then yum install putty -y;
+    elif [[ "$OS" == 'fedora' ]]; then dnf install putty -y;
+    elif [[ "$OS" == 'ubuntu' ]]; then apt-get install putty-tools -y;
     fi;
     if [[ -f "$HOME/.ssh/${kName}" ]]; then
           echo -en "\n${GREEN}SSH Key Exist\n ${NC}";
