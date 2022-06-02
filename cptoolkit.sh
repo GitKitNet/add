@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
-trap cleanup SIGINT SIGTERM ERR EXIT
-
 #set +x
+#set -Eeuo pipefail
 
-# read LINK && bash -c "$(curl -L -fSs $LINK)"
-# read LINK && bash <(wget -O - $LINK)
-# read LINK && bash -c "$(curl -fsSL $LINK || wget -O - $LINK)"
-# bash <(wget -O - raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh)
-# bash -c "$(curl -L -fSs raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh)"
+LINK="raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh";
+#  bash -c "$(wget -O - $LINK || curl -fsSL $LINK)";
+
+# bash -c "$(curl -L -fSs $LINK)"
+# bash <(wget -O - $LINK)
 
 
+#===================================
+#      VARIABLE & function
+#===================================
 
-#  - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - -
 #            COLOR
-#  - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - -
 #BLACK='\033[1;40m';          # Black
 #RED="\033[1;31m";            # Red
 #GREEN="\033[32m";            # Green
@@ -56,10 +57,9 @@ TEXTCOLOR=$White;
 BGCOLOR=$BLACK;
 
 
-#===================================
+# - - - - - - - - - - - - - - - - -
 #       ASK START
-#===================================
-
+# - - - - - - - - - - - - - - - - -
 function THIS() { 
   clear; 
   while true; do 
@@ -74,23 +74,18 @@ done;
 THIS
 
 
-
-#===================================
-#      VARIABLE & function
-#===================================
-
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+# - - - - - - - - - - - - - - - - -
 function cleanup() {
   trap - SIGINT SIGTERM ERR EXIT
-  # script cleanup here
-}
-
+  echo "script cleanup here";
+}; cleanup
 
 function title() { clear; echo "${title} ${TKEY}"; }
 function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
 function wait() { read -p "Press [ANY] key to continue..? " -s -n 1; }
 function TIMER() {
-  T="5";
+  T="6";
   SE="\033[0K\r";
   E="$((1 * ${T}))";
   if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; fi;
@@ -100,7 +95,64 @@ function TIMER() {
     : $((E--));
   done;
 }
+#########
 
+# DESC: Validate we have superuser access as root (via sudo if requested)
+# ARGS: $1 (optional): Set to any value to not attempt root access via sudo
+# OUTS: None
+function check_superuser() {
+    local superuser
+    if [[ $EUID -eq 0 ]]; then
+        superuser=true
+    elif [[ -z ${1-} ]]; then
+        # shellcheck disable=SC2310
+        if check_binary sudo; then
+            verbose_print 'Sudo: Updating cached credentials ...'
+            if ! sudo -v; then
+                verbose_print "Sudo: Couldn't acquire credentials ..." \
+                    "${fg_red-}"
+            else
+                local test_euid
+                test_euid="$(sudo -H -- "$BASH" -c 'printf "%s" "$EUID"')"
+                if [[ $test_euid -eq 0 ]]; then
+                    superuser=true
+                fi
+            fi
+        fi
+    fi
+
+    if [[ -z ${superuser-} ]]; then
+        verbose_print 'Unable to acquire superuser credentials.' "${fg_red-}"
+        return 1
+    fi
+
+    verbose_print 'Successfully acquired superuser credentials.'
+    return 0
+}
+
+# DESC: Run the requested command as root (via sudo if requested)
+# ARGS: $1 (optional): Set to zero to not attempt execution via sudo
+#       $@ (required): Passed through for execution as root user
+# OUTS: None
+function run_as_root() {
+    if [[ $# -eq 0 ]]; then
+        script_exit 'Missing required argument to run_as_root()!' 2
+    fi
+
+    if [[ ${1-} =~ ^0$ ]]; then
+        local skip_sudo=true
+        shift
+    fi
+
+    if [[ $EUID -eq 0 ]]; then
+        "$@"
+    elif [[ -z ${skip_sudo-} ]]; then
+        sudo -H -- "$@"
+    else
+        script_exit "Unable to run requested command as root: $*" 1
+    fi
+}
+#########
 
 
 function STARTScript() {
@@ -120,44 +172,33 @@ function showBanner() {
 }
 
 
-
-
 function LoockUP() {
- #while true; do
-  #read -e -p "Do you want Look UP SSH keys [y/N] .? " syn
-  #case $syn in
-  #[Yy]* )
-        sleep 3
-        clear;
-        echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
-        if [[ -f "$HOME/.ssh/${kName}" ]]; then
-      echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
-      echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
-        fi;
-        if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
-      echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
-        fi;
-        echo -en "\n${GREEN}=======================${NC}\n";
-        pause && break
-  # ;;
-  #[Nn]* ) break ;;
-  #esac
- #done
+  sleep 3 && clear;
+  echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
+
+if [[ -f "$HOME/.ssh/${kName}" ]]; then
+  echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
+  echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
+fi;
+if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
+  echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
+fi;
+  echo -en "\n${GREEN}=======================${NC}\n";
+  pause;
+  break;
 }
 
-function ConvertPPK()
-{
+# - - - - - - - - - - - - - - - - -
+function ConvertPPK() {
 #OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
 #OS=echo "$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
-
-OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
-release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
 
  while true; do
  read -e -p "Do you want PuTTy file ${kName}.ppk [y/N] ..? " syn
  case $syn in
-  [Yy]* ) echo -en "\n${YELLOW}Install PuTTy and Converted to *.PPK ${NC}";
-    
+  [Yy]* ) 
+echo -en "\n${YELLOW}Install PuTTy and Converted to *.PPK ${NC}";
+
 if [[ "$OS" == 'arch' ]]; then pacman -S putty;
     elif [[ "$OS" == 'centos' ]] && [[ "$OS" == rhell ]]; then yum install putty -y;
     elif [[ "$OS" == 'fedora' ]]; then dnf install putty -y;
@@ -169,8 +210,10 @@ if [[ "$OS" == 'arch' ]]; then pacman -S putty;
           puttygen ${kName} -o ${kName}.ppk;
         else
           echo "SSH key Not Exist";
-        fi ;;
-  [Nn]* ) break ;;
+        fi
+  ;;
+  [Nn]* ) break
+  ;;
   esac;
  done
 }
@@ -218,9 +261,10 @@ function OnRUN() {
                 BKEY="4096"
                 if [ -z "${ID}" ]; then ID="azureuser"; fi
                 if [ -z "${COM}" ]; then COM="azureuser"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
-                ssh-keygen -m ${MKEY} -t ${TKEY} -b ${BKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
+            ssh-keygen -m ${MKEY} -t ${TKEY} -b ${BKEY} -f $HOME/.ssh/${kName}.pem -C "${COM}" -N "$PASS";
+
         elif [ -z "${MKEY}" ]; then
-                ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
+            ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
         fi
 
         LoockUP ;
