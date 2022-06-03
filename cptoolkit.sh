@@ -69,7 +69,6 @@ case $syn in
 esac; 
 done;
 };
-THIS
 
 # = = = = = = = = = = = = = = = = = = = = = = 
 #      CHECK IF USER IS ROOT
@@ -308,7 +307,9 @@ function TIMER() {
 
 
 
-function STARTScript() {
+        # # # # # # # # # # # # # # # # # # # # # # #
+        #      function STARTScript() {
+        # # # # # # # # # # # # # # # # # # # # # # #
 
 # - - - - - - - - - - - - - - - - - - - - - -
 #            UFW
@@ -2622,11 +2623,11 @@ sleep 3
 
 function MAIN() {
 
-
 #==============================
 #           MENU
 #==============================
 function MAINMENU() {
+    clear;
     echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
     echo -e -n "${Yellow}
 \t1. Create SSH key     ${NC} ${Purple}
@@ -2666,11 +2667,12 @@ echo -e -n "\n\tq/0. Back ${NC}\n";
 ##   MENU 3: LAMP
 function MenuLAMP() {
     echo -e "\n\t ${GREEN}LAMP installation & Settings:${NC} \n"
-    echo -e -n "${Yellow}
-\t1. Install LAMP with WordPress
-\t\t ${CYAN}(Apache, php7.4, phpMyAdmin with WordPress) ${NC} ${RED}
-\n\t0. Back ${NC}\n";
-}
+    echo -e -n "${Yellow}";
+    echo -e -n "\t1. Install LAMP & WordPress";
+    echo -e -n "\t${BLUE}(Apache, php7.4, phpMyAdmin) ${RED} \n";
+    echo -e -n "\n\t0. Back ${NC}\n";
+    echo -e -n "";
+}; MenuLAMP
 
 ##   MENU 4: LAMP
 function MenuCPanel() {
@@ -2681,7 +2683,7 @@ function MenuCPanel() {
     echo -e "\t4. FREE                            ${RED} ";
     echo -e "\n\t0. Back                          ${NC}\n ";
 };
- MenuCPanel
+# MenuCPanel
 
 
 #--------------------------
@@ -2781,11 +2783,17 @@ do
         echo "Quit...";
         clear;
         cleanup;
-}; #MAIN
+}; 
 
-# };
-
+THIS
 MAIN
+
+
+        # # # # # # # # # # # # # # # # # # # # # # #
+        # }; 
+        # STARTScript
+        # # # # # # # # # # # # # # # # # # # # # # #
+
 
 
 # exit 1
