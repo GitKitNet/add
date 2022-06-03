@@ -214,6 +214,7 @@ function STARTScript() {
 # - - - - - - - - - - - - - - - - - - - - - -
 #            UFW
 # - - - - - - - - - - - - - - - - - - - - - -
+function UFW() {
 
 echo -e "\n${GREEN} = = = = = = = = = = \n   CONFIGURING UFW\n = = = = = = = = = = ${NC} \n"
 
@@ -241,6 +242,7 @@ ufw allow 22222                 # easyengine backend
 #ufw allow 6556                 # Librenms linux agent
 #ufw allow 10050                # Zabbix-agent
 
+];
 
 # - - - - - - - - - - - - - - - - -
 #figlet -f smslant SSH Toolkit;
