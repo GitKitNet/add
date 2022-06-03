@@ -97,8 +97,7 @@ elif [ "$(id -u)" == "0" ]; then
   sleep 5;
   fi;
 }; 
-CheckIFroot
-echo -e "\n\t${GREEN}Starting NOW..${NC}";
+# CheckIFroot
 
 
 #  MAKE SURE SUDO AVAILABLE
@@ -112,6 +111,107 @@ echo -e "\n\t${GREEN}Starting NOW..${NC}";
 # = = = = = = = = = = = = = = = = = = = = = = 
 #      VARIABLE & function
 # = = = = = = = = = = = = = = = = = = = = = = 
+
+
+# A best practices Bash script template with many useful functions. This file is suitable for sourcing into other scripts and so only contains functions which are unlikely to need modification. 
+# It omits the following functions:
+#            - main()
+#            - parse_params()
+#            - script_usage()
+
+# DESC:      Handler for unexpected errors
+# ARGS:      $1 (optional): Exit code (defaults to 1)
+# OUTS:      None
+function script_trap_err() {
+    local exit_code=1
+
+    # Disable the error trap handler to prevent potential recursion
+    trap - ERR
+
+    # Consider any further errors non-fatal to ensure we run to completion
+    set +o errexit
+    set +o pipefail
+
+    # Validate any provided exit code
+    if [[ ${1-} =~ ^[0-9]+$ ]]; then
+        exit_code="$1"
+    fi
+
+    # Output debug data if in Cron mode
+    if [[ -n ${cron-} ]]; then
+        # Restore original file output descriptors
+        if [[ -n ${script_output-} ]]; then
+            exec 1>&3 2>&4
+        fi
+
+        # Print basic debugging information
+        printf '%b\n' "$ta_none"
+        printf '***** Abnormal termination of script *****\n'
+        printf 'Script Path:            %s\n' "$script_path"
+        printf 'Script Parameters:      %s\n' "$script_params"
+        printf 'Script Exit Code:       %s\n' "$exit_code"
+
+        # Print the script log if we have it. It's possible we may not if we
+        # failed before we even called cron_init(). This can happen if bad
+        # parameters were passed to the script so we bailed out very early.
+        if [[ -n ${script_output-} ]]; then
+            # shellcheck disable=SC2312
+            printf 'Script Output:\n\n%s' "$(cat "$script_output")"
+        else
+            printf 'Script Output:          None (failed before log init)\n'
+        fi
+    fi
+
+    # Exit with failure status
+    exit "$exit_code"
+}
+
+# DESC: Handler for exiting the script
+# ARGS: None
+# OUTS: None
+function script_trap_exit() {
+    cd "$orig_cwd"
+
+    # Remove Cron mode script log
+    if [[ -n ${cron-} && -f ${script_output-} ]]; then
+        rm "$script_output"
+    fi
+
+    # Remove script execution lock
+    if [[ -d ${script_lock-} ]]; then
+        rmdir "$script_lock"
+    fi
+
+    # Restore terminal colours
+    printf '%b' "$ta_none"
+}
+
+# DESC: Exit script with the given message
+# ARGS: $1 (required): Message to print on exit
+#       $2 (optional): Exit code (defaults to 0)
+# OUTS: None
+# NOTE: The convention used in this script for exit codes is:
+#       0: Normal exit
+#       1: Abnormal exit due to external error
+#       2: Abnormal exit due to script error
+function script_exit() {
+    if [[ $# -eq 1 ]]; then
+        printf '%s\n' "$1"
+        exit 0
+    fi
+
+    if [[ ${2-} =~ ^[0-9]+$ ]]; then
+        printf '%b\n' "$1"
+        # If we've been provided a non-zero exit code run the error trap
+        if [[ $2 -ne 0 ]]; then
+            script_trap_err "$2"
+        else
+            exit 0
+        fi
+    fi
+
+    script_exit 'Missing required argument to script_exit()!' 2
+}
 
 # DESC: Validate we have superuser access as root (via sudo if requested)
 # ARGS: $1 (optional): Set to any value to not attempt root access via sudo
@@ -135,15 +235,13 @@ function check_superuser() {
                 fi
             fi
         fi
-    fi
-
+    fi;
     if [[ -z ${superuser-} ]]; then
         verbose_print 'Unable to acquire superuser credentials.' "${fg_red-}"
         return 1
-    fi
-
+    fi;
     verbose_print 'Successfully acquired superuser credentials.'
-    return 0
+    return 0;
 }
 
 
@@ -158,8 +256,11 @@ function check_superuser() {
 function script_exit() {
     if [[ $# -eq 1 ]]; then printf '%s\n' "$1"; exit 0; fi;
 
-        # If we've been provided a non-zero exit code run the error trap
-    if [[ ${2-} =~ ^[0-9]+$ ]]; then printf '%b\n' "$1"; if [[ $2 -ne 0 ]]; then script_trap_err "$2"; else exit 0; fi; fi;
+    # If we've been provided a non-zero exit code run the error trap
+    if [[ ${2-} =~ ^[0-9]+$ ]]; then printf '%b\n' "$1"; 
+      if [[ $2 -ne 0 ]]; then script_trap_err "$2"; else exit 0; fi;
+    fi;
+
     script_exit 'Missing required argument to script_exit()!' 2;
 }
 
@@ -170,19 +271,17 @@ function script_exit() {
 # OUTS: None
 # = = = = = = = = = = = = = = = = = = = = = = 
 function run_as_root() {
-    if [[ $# -eq 0 ]]; then script_exit 'Missing required argument to run_as_root()!' 2; fi;
+  if [[ $# -eq 0 ]]; then script_exit 'Missing required argument to run_as_root()!' 2; fi;
 
-    if [[ ${1-} =~ ^0$ ]]; then local skip_sudo=true; shift; fi;
+  if [[ ${1-} =~ ^0$ ]]; then local skip_sudo=true; shift; fi;
 
-    if [[ $EUID -eq 0 ]]; then "$@";
+  if [[ $EUID -eq 0 ]]; then "$@";
     elif [[ -z ${skip_sudo-} ]]; then sudo -H -- "$@";
-    else script_exit "Unable to run requested command as root: $*" 1
-    fi;
+    else script_exit "Unable to run requested command as root: $*" 1;
+  fi;
 }
 
-
-
-
+run_as_root sudo
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
@@ -2521,14 +2620,15 @@ sleep 3
 
 }
 
+function MAIN() {
 
 
 #==============================
 #           MENU
 #==============================
 function MAINMENU() {
-echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
-echo -e -n "${Yellow}
+    echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
+    echo -e -n "${Yellow}
 \t1. Create SSH key     ${NC} ${Purple}
 \t2. Install LEMP       ${NC} ${BLUE}
 \t3. Install LAMP       ${NC} ${Yellow}
@@ -2552,37 +2652,36 @@ echo -e -n "
 
 }
 
-##   subMENU 2
+##   LEMP MENU 
 function MenuLEMP() {
 echo -e -n "\n\t ${GREEN}LEMP installation & Settings:${NC} \n"
-echo -e -n "
-\t1. Install Mysql-Server ${CYAN}With WordPress LAND ${NC}
-\t2. Add one more WordPress LAND ${CYAN}With New user ${NC}
-\t3. PreInstall ${CYAN} Ngx Php7.4 Certbot ${NC}
-\t4. Install WordPress ${CYAN} With All Services Cloudflare ${NC}
-\t5. Instal WordPress ${CYAN} With All Services Certbot ${NC}
-${RED}\n\t0. Back ${NC}\n";
+echo -e -n "\t1. Install Mysql-Server ${CYAN}With WordPress LAND ${NC}"
+echo -e -n "\t2. Add one more WordPress LAND ${CYAN}With New user ${NC}"
+echo -e -n "\t3. PreInstall ${CYAN} Ngx Php7.4 Certbot ${NC}"
+echo -e -n "\t4. Install WordPress ${CYAN} With All Services Cloudflare ${NC}"
+echo -e -n "\t5. Instal WordPress ${CYAN} With All Services Certbot ${NC} ${RED}"
+echo -e -n "\n\tq/0. Back ${NC}\n";
 }
 
-##   subMENU 3
+##   MENU 3: LAMP
 function MenuLAMP() {
-echo -e "\n\t ${GREEN}LAMP installation & Settings:${NC} \n"
-echo -e -n "${Yellow}
+    echo -e "\n\t ${GREEN}LAMP installation & Settings:${NC} \n"
+    echo -e -n "${Yellow}
 \t1. Install LAMP with WordPress
 \t\t ${CYAN}(Apache, php7.4, phpMyAdmin with WordPress) ${NC} ${RED}
 \n\t0. Back ${NC}\n";
 }
 
-function MenuCONTROLPANEL() {
-  echo -e "\n\t ${GREEN}MAIN MENU 4 OPTIONS:${NC} \n"
-  echo -e -n "${Yellow}
-\t1. Install OwnCloud      ${NC} ${RED}
-\t2. Install               ${NC} ${RED}
-\t3. Install               ${NC} ${RED}
-\t4. Install               ${NC} ${RED}
-\n\t0. Back                ${NC}\n
-";
-}
+##   MENU 4: LAMP
+function MenuCPanel() {
+    echo -e "\n\t ${GREEN}Menu 4: CONTROL PANEL ${Yellow} \n";
+    echo -e "\t1. Install OwnCloud       ${PURPLE} ";
+    echo -e "\t2. FREE                            ${PURPLE} ";
+    echo -e "\t3. FREE                            ${PURPLE} ";
+    echo -e "\t4. FREE                            ${RED} ";
+    echo -e "\n\t0. Back                          ${NC}\n ";
+};
+ MenuCPanel
 
 
 #--------------------------
@@ -2658,7 +2757,7 @@ do
                 while :
                 do
                         showBanner
-                        MenuCONTROLPANEL
+                        MenuCPanel
                         echo -n -e "\n\tSelection: "
                         read -n1 opt;
                         case $opt in
@@ -2682,10 +2781,12 @@ do
         echo "Quit...";
         clear;
         cleanup;
-};
+}; #MAIN
 
-STARTScript
-cleanup
+# };
+
+MAIN
+
 
 # exit 1
 
