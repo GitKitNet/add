@@ -59,7 +59,6 @@ BGCOLOR=$BLACK;
 #       ASK START
 # - - - - - - - - - - - - - - - - - - - - - -
 function THIS() { 
-
   clear; 
   while true; do 
     echo -en "\t${Yellow}Do you want Run This script [y/N] .?${RC} "; 
@@ -69,28 +68,32 @@ function THIS() {
       [Nn]* ) exit 0;;
     esac; 
   done;
-
+}; THIS
 
 # = = = = = = = = = = = = = = = = = = = = = = 
 #      CHECK IF USER IS ROOT
 # = = = = = = = = = = = = = = = = = = = = = = 
-    [ "$(id -u)" != "0" ] && {
-      while true; do 
-        clear;
-        echo -e "\t${RED}ERROR: You must be root user to install the software. ${NC}\n"; 
-        echo -e "\n\t${RED}\n Use 'sudo su - root' to login as root ${NC} \n"; 
-        echo -e "\n\t${Yellow}Do you want Run This script as root [y/N] .? ${NC}"; 
-        read -e syn; 
-        case $syn in 
-          [Yy]* ) echo -e "\n\t${GREEN}Run Script as root ${NC}" && sleep 3;
-            sudo su - root; break ;; 
-          [Nn]* ) exit 1 ;;
-      esac; 
-    done;
+function CheckIFroot() {
+[ "$(id -u)" != "0" ] && {
+    while true; do 
+    clear;
+    echo -ne "${Blue}
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =           ${RED}
+ ERROR:\t You must be ${CYAN}[root user]${RED} to install the software. ${RED}
+\t Use 'sudo su - root' to login as root!                               ${GREEN}
+\n\tDo you want Run ${CYAN}as root ${GREEN} script [y/N] ..?            ${Blue}
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =           ${NC}
+";
 
-    }
+  read -e syn; 
+    case $syn in 
+      [Yy]* ) sleep 3; sudo su - root ;; 
+      [Nn]* ) exit 1 ;;
+    esac; 
+  done;
+};
 
-}; THIS
+}; CheckIFroot
 
 #  MAKE SURE SUDO AVAILABLE
 [ -z "$(command -v sudo)" ] && { apt-get -y install sudo >>/dev/null 2>&1; }
@@ -196,63 +199,41 @@ echo -e "\n${GREEN} = = = = = = = = = = \n   CONFIGURING UFW\n = = = = = = = = =
 if [ ! -d /etc/ufw ]; then apt-get install ufw -y; fi;
 CURRENT_SSH_PORT=$(grep "Port" /etc/ssh/sshd_config | awk -F " " '{print $2}')
 
-# define firewall rules
-ufw logging low
+ufw logging low                 # define firewall rules
 ufw default allow outgoing
 ufw default deny incoming
+ufw allow 22                    # default ssh port
+if [ "$CURRENT_SSH_PORT" != "22" ]; then ufw allow "$CURRENT_SSH_PORT" && echo "UFW allow custom SSH port"; fi;
+ufw allow 53                    # dns
+ufw allow http                  # nginx
+ufw allow https                 # 
+ufw allow 123                   # ntp   
+ufw allow 68                    # dhcp client
+ufw allow 546                   # dhcp ipv6 client
+ufw allow 873                   # rsync
+ufw allow 22222                 # easyengine backend
 
-# default ssh port
-ufw allow 22
-# custom ssh port
-if [ "$CURRENT_SSH_PORT" != "22" ]; then ufw allow "$CURRENT_SSH_PORT"; fi;
-# dns
-ufw allow 53
-# nginx
-ufw allow http
-ufw allow https
-
-# ntp
-ufw allow 123
-
-# dhcp client
-ufw allow 68
-
-# dhcp ipv6 client
-ufw allow 546
-
-# rsync
-ufw allow 873
-
-# easyengine backend
-ufw allow 22222
-
-# optional for monitoring
-
-# SNMP UDP port
-#ufw allow 161
-
-# Netdata web interface
-#ufw allow 1999
-
-# Librenms linux agent
-#ufw allow 6556
-
-# Zabbix-agent
-#ufw allow 10050
+## OPTIONAL FOR MONITORING
+#ufw allow 161                  # SNMP UDP port
+#ufw allow 1999                 # Netdata web interface
+#ufw allow 6556                 # Librenms linux agent
+#ufw allow 10050                # Zabbix-agent
 
 
 # - - - - - - - - - - - - - - - - -
 #figlet -f smslant SSH Toolkit;
 function showBanner() {
-  clear;
-  echo -e "${BGCOLOR}
-  ${BLUE}_______________${GREEN}________________________________${NC}
-  ${BLUE}   ________    ${GREEN}  ______          ____    _ __  ${NC}
-  ${BLUE}  / ___/ _ \   ${GREEN} /_  __/__  ___  / / /__ (_) /_ ${NC}
-  ${BLUE} / /__/ ___/   ${GREEN}  / / / _ \/ _ \/ /  '_// / __/ ${NC}
-  ${BLUE} \___/_/       ${GREEN} /_/  \___/\___/_/_/\_\/_/\__/  ${NC}
-  ${BLUE}_______________${GREEN}________________________________${NC}
-  ";
+
+clear && echo -e "
+${BGRed}
+${BLUE}_______________${GREEN}________________________________
+${BLUE}   ________    ${GREEN}  ______          ____    _ __  
+${BLUE}  / ___/ _ \   ${GREEN} /_  __/__  ___  / / /__ (_) /_ 
+${BLUE} / /__/ ___/   ${GREEN}  / / / _ \/ _ \/ /  '_// / __/ 
+${BLUE} \___/_/       ${GREEN} /_/  \___/\___/_/_/\_\/_/\__/  
+${BLUE}_______________${GREEN}________________________________
+${NC}";
+
 }
 
 
