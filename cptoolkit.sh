@@ -55,9 +55,9 @@ BGCOLOR=$BLACK;
 
 
 
-# - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - -
 #       ASK START
-# - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - -
 function THIS() { 
 
   clear; 
@@ -71,9 +71,9 @@ function THIS() {
   done;
 
 
-#===================================
+# = = = = = = = = = = = = = = = = = = = = = = 
 #      CHECK IF USER IS ROOT
-#===================================
+# = = = = = = = = = = = = = = = = = = = = = = 
     [ "$(id -u)" != "0" ] && {
       while true; do 
         clear;
@@ -100,9 +100,9 @@ function THIS() {
 
 
 
-#===================================
+# = = = = = = = = = = = = = = = = = = = = = = 
 #      VARIABLE & function
-#===================================
+# = = = = = = = = = = = = = = = = = = = = = = 
 
 # DESC: Validate we have superuser access as root (via sudo if requested)
 # ARGS: $1 (optional): Set to any value to not attempt root access via sudo
@@ -141,6 +141,7 @@ function check_superuser() {
 # ARGS: $1 (optional): Set to zero to not attempt execution via sudo
 #       $@ (required): Passed through for execution as root user
 # OUTS: None
+# = = = = = = = = = = = = = = = = = = = = = = 
 function run_as_root() {
     if [[ $# -eq 0 ]]; then script_exit 'Missing required argument to run_as_root()!' 2; fi;
 
@@ -161,7 +162,7 @@ function run_as_root() {
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
-# - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - -
 function cleanup() {
   trap - SIGINT SIGTERM ERR EXIT
   echo "script cleanup here";
@@ -181,14 +182,66 @@ function TIMER() {
     : $((E--));
   done;
 }
-#########
 
-#########
 
 
 function STARTScript() {
 
+# - - - - - - - - - - - - - - - - - - - - - -
+#            UFW
+# - - - - - - - - - - - - - - - - - - - - - -
 
+echo -e "\n${GREEN} = = = = = = = = = = \n   CONFIGURING UFW\n = = = = = = = = = = ${NC} \n"
+
+if [ ! -d /etc/ufw ]; then apt-get install ufw -y; fi;
+CURRENT_SSH_PORT=$(grep "Port" /etc/ssh/sshd_config | awk -F " " '{print $2}')
+
+# define firewall rules
+ufw logging low
+ufw default allow outgoing
+ufw default deny incoming
+
+# default ssh port
+ufw allow 22
+# custom ssh port
+if [ "$CURRENT_SSH_PORT" != "22" ]; then ufw allow "$CURRENT_SSH_PORT"; fi;
+# dns
+ufw allow 53
+# nginx
+ufw allow http
+ufw allow https
+
+# ntp
+ufw allow 123
+
+# dhcp client
+ufw allow 68
+
+# dhcp ipv6 client
+ufw allow 546
+
+# rsync
+ufw allow 873
+
+# easyengine backend
+ufw allow 22222
+
+# optional for monitoring
+
+# SNMP UDP port
+#ufw allow 161
+
+# Netdata web interface
+#ufw allow 1999
+
+# Librenms linux agent
+#ufw allow 6556
+
+# Zabbix-agent
+#ufw allow 10050
+
+
+# - - - - - - - - - - - - - - - - -
 #figlet -f smslant SSH Toolkit;
 function showBanner() {
   clear;
