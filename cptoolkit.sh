@@ -4,15 +4,11 @@
 #set -Eeuo pipefail
 
 LINK="raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh";
-#  bash -c "$(wget -O - $LINK || curl -fsSL $LINK)";
+#bash -c "$(wget -O - $LINK || curl -fsSL $LINK)";
+#bash -c "$(curl -L -fSs $LINK)"
+#bash <(wget -O - $LINK)
 
-# bash -c "$(curl -L -fSs $LINK)"
-# bash <(wget -O - $LINK)
 
-
-#===================================
-#      VARIABLE & function
-#===================================
 
 # - - - - - - - - - - - - - - - - -
 #            COLOR
@@ -57,45 +53,56 @@ TEXTCOLOR=$White;
 BGCOLOR=$BLACK;
 
 
+
+
 # - - - - - - - - - - - - - - - - -
 #       ASK START
 # - - - - - - - - - - - - - - - - -
 function THIS() { 
+
   clear; 
   while true; do 
     echo -en "\t${Yellow}Do you want Run This script [y/N] .?${RC} "; 
     read -e syn; 
     case $syn in 
       [Yy]* ) clear; echo -e "\n\t${GREEN}Starting NOW..${NC}"; sleep 3; break;; 
-      [Nn]* )exit 0;;
-  esac; 
-done;
-};
-THIS
-
-
-script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
-# - - - - - - - - - - - - - - - - -
-function cleanup() {
-  trap - SIGINT SIGTERM ERR EXIT
-  echo "script cleanup here";
-}; cleanup
-
-function title() { clear; echo "${title} ${TKEY}"; }
-function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
-function wait() { read -p "Press [ANY] key to continue..? " -s -n 1; }
-function TIMER() {
-  T="6";
-  SE="\033[0K\r";
-  E="$((1 * ${T}))";
-  if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; fi;
-  while [ $E -gt 0 ]; do
-    echo -en " Please wait: ${RED}$E$SE${NC}";
-    sleep 1;
-    : $((E--));
+      [Nn]* ) exit 0;;
+    esac; 
   done;
-}
-#########
+
+
+#===================================
+#      CHECK IF USER IS ROOT
+#===================================
+    [ "$(id -u)" != "0" ] && {
+      while true; do 
+        clear;
+        echo -e "\t${RED}ERROR: You must be root user to install the software. ${NC}\n"; 
+        echo -e "\n\t${RED}\n Use 'sudo su - root' to login as root ${NC} \n"; 
+        echo -e "\n\t${Yellow}Do you want Run This script as root [y/N] .? ${NC}"; 
+        read -e syn; 
+        case $syn in 
+          [Yy]* ) echo -e "\n\t${GREEN}Run Script as root ${NC}" && sleep 3;
+            sudo su - root; break ;; 
+          [Nn]* ) exit 1 ;;
+      esac; 
+    done;
+
+    }
+
+}; THIS
+
+#  MAKE SURE SUDO AVAILABLE
+[ -z "$(command -v sudo)" ] && { apt-get -y install sudo >>/dev/null 2>&1; }
+[ -z "$(command -v curl)" ] && { apt-get -y install curl >>/dev/null 2>&1; }
+
+
+
+
+
+#===================================
+#      VARIABLE & function
+#===================================
 
 # DESC: Validate we have superuser access as root (via sudo if requested)
 # ARGS: $1 (optional): Set to any value to not attempt root access via sudo
@@ -135,14 +142,9 @@ function check_superuser() {
 #       $@ (required): Passed through for execution as root user
 # OUTS: None
 function run_as_root() {
-    if [[ $# -eq 0 ]]; then
-        script_exit 'Missing required argument to run_as_root()!' 2
-    fi
+    if [[ $# -eq 0 ]]; then script_exit 'Missing required argument to run_as_root()!' 2; fi;
 
-    if [[ ${1-} =~ ^0$ ]]; then
-        local skip_sudo=true
-        shift
-    fi
+    if [[ ${1-} =~ ^0$ ]]; then local skip_sudo=true; shift; fi;
 
     if [[ $EUID -eq 0 ]]; then
         "$@"
@@ -150,8 +152,37 @@ function run_as_root() {
         sudo -H -- "$@"
     else
         script_exit "Unable to run requested command as root: $*" 1
-    fi
+    fi;
 }
+
+
+
+
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+
+# - - - - - - - - - - - - - - - - -
+function cleanup() {
+  trap - SIGINT SIGTERM ERR EXIT
+  echo "script cleanup here";
+}; cleanup
+
+function title() { clear; echo "${title} ${TKEY}"; }
+function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
+function wait() { read -p "Press [ANY] key to continue..? " -s -n 1; }
+function TIMER() {
+  T="6";
+  SE="\033[0K\r";
+  E="$((1 * ${T}))";
+  if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; fi;
+  while [ $E -gt 0 ]; do
+    echo -en " Please wait: ${RED}$E$SE${NC}";
+    sleep 1;
+    : $((E--));
+  done;
+}
+#########
+
 #########
 
 
