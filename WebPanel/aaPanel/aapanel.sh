@@ -48,7 +48,6 @@ if [ "$OS" == 'centos' ]; then
   yum install -y wget
   wait
     bash <(wget -O - raw.githubusercontent.com/numbnet/WebPanel/master/aaPanel/lib/install_6.0_en.sh)
-    #bash <(wget https://raw.githubusercontent.com/numbnet/WebPanel/master/aaPanel/lib/install_6.0_en.sh)
 else
   echo "Not centos..."
   ## === Ubuntu/Deepin:
