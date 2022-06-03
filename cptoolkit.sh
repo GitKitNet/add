@@ -13,21 +13,21 @@ LINK="raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh";
 # - - - - - - - - - - - - - - - - -
 #            COLOR
 # - - - - - - - - - - - - - - - - -
-#BLACK='\033[1;40m';          # Black
-#RED="\033[1;31m";            # Red
-#GREEN="\033[32m";            # Green
-#YELLOW="\033[1;33m";         # Yellow
-#BLUE="\033[1;34m";           # Blue
-#CYAN='\033[4;36m';           # Cyan
-#PURPLE='\033[0;4;35m';       # Purple
+#BLACK='\033[1;40m';           # Black
+#RED='\033[7;31m';             # Red
+#GREEN='\033[7;32m';           # Green
+#YELLOW='\033[1;33m';          # Yellow
+#BLUE='\033[7;34m';            # Blue
+#PURPLE='\033[1;35m';          # Purple
+#CYAN='\033[4;36m';            # Cyan
 
 BLACK='\033[0;40m';           # Black
 RED='\033[0;31m'              # Red
 GREEN='\033[0;32m'            # Green
 YELLOW='\033[0;33m'           # Yellow
 BLUE='\033[0;34m'             # Blue
-CYAN='\033[0;36m'             # Cyan
 PURPLE='\033[0;35m'           # Purple
+CYAN='\033[0;36m'             # Cyan
 NC='\033[0m'                  # No Color
 
 Black="`tput setaf 0`"        # Black
@@ -59,41 +59,47 @@ BGCOLOR=$BLACK;
 #       ASK START
 # - - - - - - - - - - - - - - - - - - - - - -
 function THIS() { 
-  clear; 
-  while true; do 
-    echo -en "\t${Yellow}Do you want Run This script [y/N] .?${RC} "; 
-    read -e syn; 
-    case $syn in 
-      [Yy]* ) clear; echo -e "\n\t${GREEN}Starting NOW..${NC}"; sleep 3; break;; 
-      [Nn]* ) exit 0;;
-    esac; 
-  done;
-}; THIS
+clear;
+while true; do 
+echo -en "\t${Yellow}Do you want Run This script [y/N] .?${RC} "; 
+read -e syn; 
+case $syn in 
+[Yy]* ) clear; echo -e "\n\t${GREEN}Starting NOW..${NC}"; sleep 3 && break ;; 
+[Nn]* ) exit 0;;
+esac; 
+done;
+};
+THIS
 
 # = = = = = = = = = = = = = = = = = = = = = = 
 #      CHECK IF USER IS ROOT
 # = = = = = = = = = = = = = = = = = = = = = = 
 function CheckIFroot() {
-[ "$(id -u)" != "0" ] && {
-    while true; do 
-    clear;
-    echo -ne "${Blue}
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =           ${RED}
- ERROR:\t You must be ${CYAN}[root user]${RED} to install the software. ${RED}
-\t Use 'sudo su - root' to login as root!                               ${GREEN}
-\n\tDo you want Run ${CYAN}as root ${GREEN} script [y/N] ..?            ${Blue}
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =           ${NC}
-";
-
+  if [ "$(id -u)" != "0" ]; then
+  while true; do 
+  clear && \
+  echo -en "
+${Blue}# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =           
+${RED} ERROR:\t You must be ${CYAN} [root user] ${RED} to install the software. 
+${RED}\t Use 'sudo su - root' to login as root!                               
+${Blue}\n# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+${GREEN}\n\tDo you want Run ${CYAN}as root ${GREEN}script [ y/N ] ..? ${RC}";
   read -e syn; 
-    case $syn in 
-      [Yy]* ) sleep 3; sudo su - root ;; 
-      [Nn]* ) exit 1 ;;
-    esac; 
+  case $syn in 
+    [Yy]* ) sleep 3; 
+    sudo su; 
+    break ;; 
+    [Nn]* ) exit 1 ;;
+  esac; 
   done;
-};
+elif [ "$(id -u)" == "0" ]; then
+  echo -e "\n\t${YELLOW}Checking ROOT ${GREEN}IS - OK! \n ${RC}";
+  sleep 5;
+  fi;
+}; 
+CheckIFroot
+echo -e "\n\t${GREEN}Starting NOW..${NC}";
 
-}; CheckIFroot
 
 #  MAKE SURE SUDO AVAILABLE
 [ -z "$(command -v sudo)" ] && { apt-get -y install sudo >>/dev/null 2>&1; }
@@ -140,6 +146,24 @@ function check_superuser() {
     return 0
 }
 
+
+#  DESC:  Exit script with the given message
+#  ARGS:  $1 (required): Message to print on exit
+#         $2 (optional): Exit code (defaults to 0)
+#  OUTS:  None
+#  NOTE:  The convention used in this script for exit codes is:
+#         0: Normal exit
+#         1: Abnormal exit due to external error
+#         2: Abnormal exit due to script error
+function script_exit() {
+    if [[ $# -eq 1 ]]; then printf '%s\n' "$1"; exit 0; fi;
+
+        # If we've been provided a non-zero exit code run the error trap
+    if [[ ${2-} =~ ^[0-9]+$ ]]; then printf '%b\n' "$1"; if [[ $2 -ne 0 ]]; then script_trap_err "$2"; else exit 0; fi; fi;
+    script_exit 'Missing required argument to script_exit()!' 2;
+}
+
+
 # DESC: Run the requested command as root (via sudo if requested)
 # ARGS: $1 (optional): Set to zero to not attempt execution via sudo
 #       $@ (required): Passed through for execution as root user
@@ -150,12 +174,9 @@ function run_as_root() {
 
     if [[ ${1-} =~ ^0$ ]]; then local skip_sudo=true; shift; fi;
 
-    if [[ $EUID -eq 0 ]]; then
-        "$@"
-    elif [[ -z ${skip_sudo-} ]]; then
-        sudo -H -- "$@"
-    else
-        script_exit "Unable to run requested command as root: $*" 1
+    if [[ $EUID -eq 0 ]]; then "$@";
+    elif [[ -z ${skip_sudo-} ]]; then sudo -H -- "$@";
+    else script_exit "Unable to run requested command as root: $*" 1
     fi;
 }
 
@@ -197,6 +218,7 @@ function STARTScript() {
 echo -e "\n${GREEN} = = = = = = = = = = \n   CONFIGURING UFW\n = = = = = = = = = = ${NC} \n"
 
 if [ ! -d /etc/ufw ]; then apt-get install ufw -y; fi;
+
 CURRENT_SSH_PORT=$(grep "Port" /etc/ssh/sshd_config | awk -F " " '{print $2}')
 
 ufw logging low                 # define firewall rules
