@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #set +x
-#set -Eeuo pipefail
+set -Eeuo pipefail
 
 LINK="raw.githubusercontent.com/GitKitNet/add/main/cptoolkit.sh";
 #bash -c "$(wget -O - $LINK || curl -fsSL $LINK)";
