@@ -2784,7 +2784,12 @@ function MENU_MAIN() {
 \t1. Create SSH key     ${NC} ${Purple}
 \t2. Install LEMP       ${NC} ${BLUE}
 \t3. Install LAMP       ${NC} ${Yellow}
-\t4. Control Panel      ${NC} ${RED}
+\t4. Control Panel      ${NC} ${MAGENTO}
+\t5. Free               ${NC} ${RED}
+\t6. Free               ${NC} ${RED}
+\t7. Free               ${NC} ${MAGENTO}
+\t8. FTP & Ather        ${NC} ${RED}
+
 \n\tq. Quit...          ${NC}";
 
 }
