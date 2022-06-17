@@ -100,8 +100,8 @@ elif [ "$(id -u)" == "0" ]; then
 
 
 #  MAKE SURE SUDO AVAILABLE
-[ -z "$(command -v sudo)" ] && { apt-get -y install sudo >>/dev/null 2>&1; }
-[ -z "$(command -v curl)" ] && { apt-get -y install curl >>/dev/null 2>&1; }
+#[ -z "$(command -v sudo)" ] && { apt-get -y install sudo >>/dev/null 2>&1; }
+#[ -z "$(command -v curl)" ] && { apt-get -y install curl >>/dev/null 2>&1; }
 
 
 
@@ -280,9 +280,9 @@ function run_as_root() {
   fi;
 }
 
-run_as_root sudo
+#run_as_root sudo
 
-script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+#script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
 # - - - - - - - - - - - - - - - - - - - - - -
 function cleanup() {
@@ -315,7 +315,6 @@ function TIMER() {
 #            UFW
 # - - - - - - - - - - - - - - - - - - - - - -
 function UFW() {
-
 echo -e "\n${GREEN} = = = = = = = = = = \n   CONFIGURING UFW\n = = = = = = = = = = ${NC} \n"
 
 if [ ! -d /etc/ufw ]; then apt-get install ufw -y; fi;
@@ -342,12 +341,11 @@ ufw allow 22222                 # easyengine backend
 #ufw allow 6556                 # Librenms linux agent
 #ufw allow 10050                # Zabbix-agent
 
-];
+};
 
 # - - - - - - - - - - - - - - - - -
 #figlet -f smslant SSH Toolkit;
 function showBanner() {
-
 clear && echo -e "
 ${BGRed}
 ${BLUE}_______________${GREEN}________________________________
