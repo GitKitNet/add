@@ -2783,7 +2783,7 @@ function title {
 
 ##=========================
 # Install Ubuntu, Debian, Centos 
-function Inst_VESTA {
+function Inst_VESTA() {
   title
   read -p "Enter Domain name: " domainname
   read -p "Enter Email admina: " AdminEmail
@@ -2886,7 +2886,7 @@ function MenuLAMP() {
 function Menu_CPanel() {
     echo -e "\n\t ${GREEN}Menu 4: CONTROL PANEL ${Yellow} \n";
     echo -e "\t1. Install OwnCloud       ${PURPLE} ";
-    echo -e "\t2. FREE                   ${PURPLE} ";
+    echo -e "\t2. Install Vesta          ${BLUE} ";
     echo -e "\t3. FREE                   ${PURPLE} ";
     echo -e "\t4. FREE                   ${RED} ";
     echo -e "\n\tq/0. Back               ${NC}\n ";
@@ -2982,7 +2982,7 @@ do
                         read -n1 opt;
                         case $opt in
                                 1) OWNCLOUD ;;
-                                2) echo -e "FREE $opt" ;;
+                                2) Inst_VESTA ;;
                                 3) echo -e "FREE $opt"  ;;
                                 4) echo -e "FREE $opt"  ;;
                                 5) echo -e "FREE $opt"  ;;
@@ -3014,25 +3014,22 @@ do
 
 # END ----------------------------
 
-                /q | q | 0) echo; break ;;
-                *) ;;
-        esac
-        done
-        echo "Quit...";
-        clear;
-        cleanup;
+       /q | q | 0) echo; break ;;
+       *) ;;
+    esac
+  done
+
+# ----------- END MENU -----------
+
+  echo "Quit..." && sleep 3;
+  clear;
+  cleanup;
 }; 
 
 THIS
 MAIN
 
-
-        # # # # # # # # # # # # # # # # # # # # # # #
-        # }; 
-        # STARTScript
-        # # # # # # # # # # # # # # # # # # # # # # #
-
-
+# # # # # # # # # # # # # # # # # # # # # # #
 
 # exit 1
 
