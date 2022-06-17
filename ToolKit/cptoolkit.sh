@@ -2786,9 +2786,12 @@ function title {
 function Inst_VESTA() {
   title
   read -p "Enter Domain name: " domainname
-  read -p "Enter Email admina: " AdminEmail
-  read -p "Enter Admin Password: " AdminPassword
-  
+  read -p "Enter Email admina: " AdminEmail;
+  if [ -z ${AdminEmail} ]; then
+    AdminEmail='webmaster@"${domainname}"'
+  fi;
+  #read -p "Enter Admin Password: " AdminPassword
+  AdminPassword="$(</dev/urandom tr -dc 'A-Za-z0-9%&?@' |head -c 12 )";
   # Download installation script
   curl -O http://vestacp.com/pub/vst-install.sh
 
@@ -2808,6 +2811,7 @@ function Inst_VESTA() {
     --hostname ${domainname} \
     --email ${AdminEmail} \
     --password ${AdminPassword}
+    --force
   echo -en "\t===== Installation is END =====\n"
   echo -en "Domain name: ${domainname}\n ADMIN PASSWORD: ${AdminPassword}\n ADMIN MAIL:  ${AdminEmail}"
   wait
