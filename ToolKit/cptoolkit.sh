@@ -2787,8 +2787,12 @@ function Inst_VESTA() {
   title
   read -p "Enter Domain name: " domainname
   read -p "Enter Email admina: " AdminEmail;
+
+  if [ -z ${domainname} ]; then
+    domainname="domainname.com"
+  fi;
   if [ -z ${AdminEmail} ]; then
-    AdminEmail='webmaster@"${domainname}"'
+    AdminEmail="webmaster@${domainname}"
   fi;
   #read -p "Enter Admin Password: " AdminPassword
   AdminPassword="$(</dev/urandom tr -dc 'A-Za-z0-9%&?@' |head -c 12 )";
