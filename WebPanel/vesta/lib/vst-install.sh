@@ -69,4 +69,4 @@ if [ -e '/usr/bin/curl' ]; then
     fi
 fi
 
-exit
+#exit
