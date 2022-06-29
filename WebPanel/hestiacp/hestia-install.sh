@@ -1,4 +1,9 @@
 #!/bin/bash
+
+#-------------------------------------------#
+#               Debian + Ubuntu             #
+#-------------------------------------------#
+
 # Hestia installation wrapper
 # https://www.hestiacp.com
 
@@ -63,7 +68,7 @@ no_support_message(){
     echo "****************************************************"
     echo "  Debian 9, 10, 11"
     echo "  Ubuntu 18.04, 20.04 LTS"
-    echo ""
+    echo "";
     exit 1;
 }
 
@@ -74,33 +79,33 @@ fi
 check_wget_curl(){
     # Check wget
     if [ -e '/usr/bin/wget' ]; then
-        wget -q https://raw.githubusercontent.com/numbnet/WebPanel/master/hestiacp/hst-install-$type.sh -O hst-install-$type.sh
-#        wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
+        echo "
+        wget -q https://raw.githubusercontent.com/GitKitNet/add/main/WebPanel/hestiacp/hst-install-$type.sh -O hst-install-$type.sh"
         if [ "$?" -eq '0' ]; then
             bash hst-install-$type.sh $*
             exit
         else
             echo "Error: hst-install-$type.sh download failed."
-            exit 1
+           exit 1
         fi
-    fi
-
+    fi;
     # Check curl
     if [ -e '/usr/bin/curl' ]; then
-        curl -s -O https://raw.githubusercontent.com/numbnet/WebPanel/master/hestiacp/hst-install-$type.sh
-#        curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
+        echo "curl -s -O https://raw.githubusercontent.com/GitKitNet/add/main/WebPanel/hestiacp/hst-install-$type.sh"
         if [ "$?" -eq '0' ]; then
             bash hst-install-$type.sh $*
-            exit
+           exit
         else
             echo "Error: hst-install-$type.sh download failed."
             exit 1
         fi
-    fi
+    fi;
 }
 
-# Check for supported operating system before proceeding with download
-# of OS-specific installer, and throw error message if unsupported OS detected.
+# Check for supported operating system before 
+# proceeding with download of OS-specific installer,
+# and throw error message if unsupported OS detected.
+#
 if [[ "$release" =~ ^(9|10|11|18.04|20.04)$ ]]; then
     check_wget_curl $*
 else
