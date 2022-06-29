@@ -17,7 +17,7 @@
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then
     echo 'Error: this script can only be executed by root'
-    exit 1
+    #exit 1
 fi
 
 # Check admin user account
@@ -27,7 +27,7 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ -z "$1" ]; then
     echo 'Please remove admin user before proceeding.'
     echo 'If you want to do it automatically run installer with -f option:'
     echo "Example: bash $0 --force"
-    exit 1
+    #exit 1
 fi
 
 # Check admin group
@@ -37,7 +37,7 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ -z "$1" ]; then
     echo 'Please remove admin group before proceeding.'
     echo 'If you want to do it automatically run installer with -f option:'
     echo "Example: bash $0 --force"
-    exit 1
+    #exit 1
 fi
 
 # Detect OS
@@ -51,7 +51,7 @@ if [ -e "/etc/os-release" ]; then
         else
             echo "lsb_release is currently not installed, please install it:"
             echo "apt-get update && apt-get install lsb_release"
-            exit 1
+            #exit 1
         fi
     elif [ "$type" = "debian" ]; then
         release=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
@@ -68,8 +68,8 @@ no_support_message(){
     echo "****************************************************"
     echo "  Debian 9, 10, 11"
     echo "  Ubuntu 18.04, 20.04 LTS"
-    echo ""
-    exit 1;
+    echo "";
+    #exit 1;
 }
 
 if [ "$type" = "NoSupport" ]; then
@@ -80,25 +80,25 @@ check_wget_curl(){
     # Check wget
     if [ -e '/usr/bin/wget' ]; then
         echo "
-        wget -q https://raw.githubusercontent.com/numbnet/WebPanel/master/hestiacp/hst-install-$type.sh -O hst-install-$type.sh"
+        wget -q https://raw.githubusercontent.com/GitKitNet/add/main/WebPanel/hestiacp/hst-install-$type.sh -O hst-install-$type.sh"
         if [ "$?" -eq '0' ]; then
 #            bash hst-install-$type.sh $*
-            exit
+            #exit
         else
             echo "Error: hst-install-$type.sh download failed."
-#            exit 1
+#            #exit 1
         fi
     fi
 
     # Check curl
     if [ -e '/usr/bin/curl' ]; then
-        echo "curl -s -O https://raw.githubusercontent.com/numbnet/WebPanel/master/hestiacp/hst-install-$type.sh"
+        echo "curl -s -O https://raw.githubusercontent.com/GitKitNet/add/main/WebPanel/hestiacp/hst-install-$type.sh"
 #        if [ "$?" -eq '0' ]; then
 #            bash hst-install-$type.sh $*
-#            exit
+#            #exit
         else
             echo "Error: hst-install-$type.sh download failed."
-#            exit 1
+#            #exit 1
         fi
     fi
 }
@@ -111,4 +111,4 @@ else
     no_support_message
 fi
 
-exit
+#exit
