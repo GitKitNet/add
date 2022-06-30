@@ -18,6 +18,11 @@ if ! (return 0 2> /dev/null); then
     set -o pipefail     # Use last non-zero exit code in a pipeline
 fi
 
+
+function pause() {
+    read -p "Press [Enter] key to continue..." fackEnterKey;
+}
+
 # Enable errtrace or the error trap handler will not work as expected
 set -o errtrace         # Ensure the error trap handler is inherited
 
@@ -458,6 +463,8 @@ function parse_params() {
 # ARGS: $@ (optional): Arguments provided to the script
 # OUTS: None
 function main() {
+    echo "Starting...."
+    pause
     trap script_trap_err ERR
     trap script_trap_exit EXIT
 
@@ -466,6 +473,8 @@ function main() {
     cron_init
     colour_init
     #lock_init system
+    echo "....end."
+    pause
 }
 
 # Invoke main with args if not sourced
