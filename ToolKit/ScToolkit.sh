@@ -99,7 +99,8 @@ function THIS() {
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 filename='ScToolkit.sh'
-updpath='https://raw.githubusercontent.com/GitKitNet/add/main/ToolKit/ScToolkit.sh' 
+updpath='https://raw.githubusercontent.com/GitKitNet/add/main/ToolKit/' 
+
 function CleanUP_() {
   trap - SIGINT SIGTERM ERR EXIT ;
   echo "Script CleanUP here..." && sleep 2;
@@ -2740,8 +2741,9 @@ fi
 
 #Обновить Script
 function SCriptUPDATE() {
-	echo "обновляю..."
+	echo "обновляю..." && sleep 2;
 	wget $updpath/$filename -r -N -nd --no-check-certificate
+
 	chmod 777 $filename
 	chmod +x $filename
 	echo "обновляю..."
