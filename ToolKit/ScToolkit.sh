@@ -98,225 +98,11 @@ function THIS() {
 # = = = = = = = = = = = = = = = = = = = =
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
-
-
-
-
-# = = = = = = = = = = = = = = = = = = = =
-#      CHECK IF USER IS ROOT
-# = = = = = = = = = = = = = = = = = = = =
-function CheckIFroot() {
-	if [ "$(id -u)" != "0" ]; then
-		while true; do 
-		clear && \
-		echo -en "
-${Blue}# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =           
-${RED} ERROR:\t You must be ${CYAN} [root user] ${RED} to install the software. 
-${RED}\t Use 'sudo su - root' to login as root!                               
-${Blue}\n# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-${GREEN}\n\tDo you want Run ${CYAN}as root ${GREEN}script [ y/N ] ..? ${RC}";
-		read -e syn; 
-		case $syn in 
-			[Yy]* ) sleep 3; sudo su; break ;; 
-			[Nn]* ) exit 1 ;;
-		esac; 
-		done;
-	elif [ "$(id -u)" == "0" ]; then
-		echo -e "\n\t${YELLOW}Checking ROOT ${GREEN}IS - OK! \n ${RC}"; sleep 5;
-	fi;
-};
-
-
-#  MAKE SURE SUDO AVAILABLE
-[ -z "$(command -v sudo)" ] && { apt-get -y install sudo >>/dev/null 2>&1; }
-[ -z "$(command -v curl)" ] && { apt-get -y install curl >>/dev/null 2>&1; }
-
-
-
-
-
-
-# A best practices Bash script template with many useful functions. This file is suitable for sourcing into other scripts and so only contains functions which are unlikely to need modification. 
-# It omits the following functions:
-#            - main()
-#            - parse_params()
-#            - script_usage()
-
-# DESC:      Handler for unexpected errors
-# ARGS:      $1 (optional): Exit code (defaults to 1)
-# OUTS:      None
-# = = = = = = = = = = = = = = = = = = = =
-function script_trap_err() {
-    local exit_code=1
-
-    # Disable the error trap handler to prevent potential recursion
-    trap - ERR
-
-    # Consider any further errors non-fatal to ensure we run to completion
-    set +o errexit
-    set +o pipefail
-
-    # Validate any provided exit code
-    if [[ ${1-} =~ ^[0-9]+$ ]]; then
-        exit_code="$1"
-    fi
-
-    # Output debug data if in Cron mode
-    if [[ -n ${cron-} ]]; then
-        # Restore original file output descriptors
-        if [[ -n ${script_output-} ]]; then
-            exec 1>&3 2>&4
-        fi
-
-        # Print basic debugging information
-        printf '%b\n' "$ta_none"
-        printf '***** Abnormal termination of script *****\n'
-        printf 'Script Path:            %s\n' "$script_path"
-        printf 'Script Parameters:      %s\n' "$script_params"
-        printf 'Script Exit Code:       %s\n' "$exit_code"
-
-        # Print the script log if we have it. It's possible we may not if we
-        # failed before we even called cron_init(). This can happen if bad
-        # parameters were passed to the script so we bailed out very early.
-        if [[ -n ${script_output-} ]]; then
-            # shellcheck disable=SC2312
-            printf 'Script Output:\n\n%s' "$(cat "$script_output")"
-        else
-            printf 'Script Output:          None (failed before log init)\n'
-        fi
-    fi
-
-    # Exit with failure status
-    exit "$exit_code"
-}
-
-# DESC: Handler for exiting the script
-# ARGS: None
-# OUTS: None
-# = = = = = = = = = = = = = = = = = = = = = = 
-function script_trap_exit() {
-    cd "$orig_cwd"
-
-    # Remove Cron mode script log
-    if [[ -n ${cron-} && -f ${script_output-} ]]; then
-        rm "$script_output"
-    fi
-
-    # Remove script execution lock
-    if [[ -d ${script_lock-} ]]; then
-        rmdir "$script_lock"
-    fi
-
-    # Restore terminal colours
-    printf '%b' "$ta_none"
-}
-
-# DESC: Exit script with the given message
-# ARGS: $1 (required): Message to print on exit
-#       $2 (optional): Exit code (defaults to 0)
-# OUTS: None
-# NOTE: The convention used in this script for exit codes is:
-#       0: Normal exit
-#       1: Abnormal exit due to external error
-#       2: Abnormal exit due to script error
-# = = = = = = = = = = = = = = = = = = = =
-function script_exit() {
-    if [[ $# -eq 1 ]]; then
-        printf '%s\n' "$1"
-        exit 0
-    fi
-
-    if [[ ${2-} =~ ^[0-9]+$ ]]; then
-        printf '%b\n' "$1"
-        # If we've been provided a non-zero exit code run the error trap
-        if [[ $2 -ne 0 ]]; then
-            script_trap_err "$2"
-        else
-            exit 0
-        fi
-    fi
-
-    script_exit 'Missing required argument to script_exit()!' 2
-}
-
-# DESC: Validate we have superuser access as root (via sudo if requested)
-# ARGS: $1 (optional): Set to any value to not attempt root access via sudo
-# OUTS: None
-# = = = = = = = = = = = = = = = = = = = =
-function check_superuser() {
-    local superuser
-    if [[ $EUID -eq 0 ]]; then
-        superuser=true
-    elif [[ -z ${1-} ]]; then
-        # shellcheck disable=SC2310
-        if check_binary sudo; then
-            verbose_print 'Sudo: Updating cached credentials ...'
-            if ! sudo -v; then
-                verbose_print "Sudo: Couldn't acquire credentials ..." \
-                    "${fg_red-}"
-            else
-                local test_euid
-                test_euid="$(sudo -H -- "$BASH" -c 'printf "%s" "$EUID"')"
-                if [[ $test_euid -eq 0 ]]; then
-                    superuser=true
-                fi
-            fi
-        fi
-    fi;
-    if [[ -z ${superuser-} ]]; then
-        verbose_print 'Unable to acquire superuser credentials.' "${fg_red-}"
-        return 1
-    fi;
-    verbose_print 'Successfully acquired superuser credentials.'
-    return 0;
-}
-
-
-#  DESC:  Exit script with the given message
-#  ARGS:  $1 (required): Message to print on exit
-#         $2 (optional): Exit code (defaults to 0)
-#  OUTS:  None
-#  NOTE:  The convention used in this script for exit codes is:
-#         0: Normal exit
-#         1: Abnormal exit due to external error
-#         2: Abnormal exit due to script error
-# = = = = = = = = = = = = = = = = = = = =
-function script_exit() {
-    if [[ $# -eq 1 ]]; then printf '%s\n' "$1"; exit 0; fi;
-
-    # If we've been provided a non-zero exit code run the error trap
-    if [[ ${2-} =~ ^[0-9]+$ ]]; then printf '%b\n' "$1"; 
-      if [[ $2 -ne 0 ]]; then script_trap_err "$2"; else exit 0; fi;
-    fi;
-
-    script_exit 'Missing required argument to script_exit()!' 2;
-}
-
-
-# DESC: Run the requested command as root (via sudo if requested)
-# ARGS: $1 (optional): Set to zero to not attempt execution via sudo
-#       $@ (required): Passed through for execution as root user
-# OUTS: None
-# = = = = = = = = = = = = = = = = = = = =
-function run_as_root() {
-  if [[ $# -eq 0 ]]; then script_exit 'Missing required argument to run_as_root()!' 2; fi;
-
-  if [[ ${1-} =~ ^0$ ]]; then local skip_sudo=true; shift; fi;
-
-  if [[ $EUID -eq 0 ]]; then "$@";
-    elif [[ -z ${skip_sudo-} ]]; then sudo -H -- "$@";
-    else script_exit "Unable to run requested command as root: $*" 1;
-  fi;
-}
-
-#run_as_root sudo
-
-
-# = = = = = = = = = = = = = = = = = = = =
+filename='ScToolkit.sh'
+updpath='https://raw.githubusercontent.com/GitKitNet/add/main/ToolKit/ScToolkit.sh' 
 function CleanUP_() {
   trap - SIGINT SIGTERM ERR EXIT ;
-  echo "Script CleanUP here...";
-  sleep 1;
+  echo "Script CleanUP here..." && sleep 2;
 };
 
 function title() { clear; echo "${title} ${TKEY}"; }
@@ -367,7 +153,7 @@ ufw allow 22222                 # easyengine backend
 
 };
 
-
+# = = = = = = = = = = = = = = = = = = = =
 function LookUP() {
 	sleep 3 && clear;
 	echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
@@ -386,86 +172,100 @@ function LookUP() {
 }
 
 # - - - - - - - - - - - - - - - - -
+# = = = = = = = = = = = = = = = = = = = =
 function ConvertPPK() {
-#OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
-#OS=echo "$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
+	#OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
+	#OS=echo "$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
 
- while true; do
- read -e -p "Do you want PuTTy file ${kName}.ppk [y/N] ..? " syn
- case $syn in
-  [Yy]* ) 
-echo -en "\n${YELLOW}Install PuTTy and Converted to *.PPK ${NC}";
+	while true; do
+	read -e -p "Do you want PuTTy file ${kName}.ppk [y/N] ..? " syn
+	case $syn in
+		[Yy]* ) echo -en "\n${YELLOW}Install PuTTy and Converted to *.PPK ${NC}";
 
-if [[ "$OS" == 'arch' ]]; then pacman -S putty;
-    elif [[ "$OS" == 'centos' ]] && [[ "$OS" == rhell ]]; then yum install putty -y;
-    elif [[ "$OS" == 'fedora' ]]; then dnf install putty -y;
-    elif [[ "$OS" == 'ubuntu' ]]; then apt-get install putty-tools -y;
-    fi;
-    if [[ -f "$HOME/.ssh/${kName}" ]]; then
-          echo -en "\n${GREEN}SSH Key Exist\n ${NC}";
-          echo -en "\n\t\t${GREEN}...OK${NC}"\n;
-          puttygen ${kName} -o ${kName}.ppk;
-        else
-          echo "SSH key Not Exist";
-        fi
-  ;;
-  [Nn]* ) break
-  ;;
-  esac;
- done
+	if [[ "$OS" == 'arch' ]]; then 
+		pacman -S putty;
+	elif [[ "$OS" == 'centos' ]] && [[ "$OS" == rhell ]]; then 
+		yum install putty -y;
+	elif [[ "$OS" == 'fedora' ]]; then 
+		dnf install putty -y;
+	elif [[ "$OS" == 'ubuntu' ]]; then 
+		apt-get install putty-tools -y;
+	fi;
+
+	if [[ -f "$HOME/.ssh/${kName}" ]]; then
+		echo -e "${GREEN}\n SSH Key Exist\n ${NC}";
+		puttygen "$HOME/.ssh/${kName}" -o "$HOME/.ssh/${kName}.ppk";
+	else
+		echo "SSH key Not Exist"; 
+	fi;
+
+if [[ -f "$HOME/.ssh/${kName}.ppk" ]]; then 
+	echo -en "\n${GREEN}SSH Key Convert for PuTTy \n${NC}"; 
+elif [[ -z "$HOME/.ssh/${kName}.ppk" ]]; then 
+	echo -en "NOT Converted to *.PPK ${NC}"; 
+fi;
+
+	;;
+	[Nn]* ) break ;;
+	esac;
+	done;
 }
 
 
+# = = = = = = = = = = = = = = = = = = = =
 function AddON() {
   while true; do
   read -e -p "Do you want RUN Agent? [y/N] ?" ryn;
   case $ryn in
-  [Yy]* ) clear; eval $(ssh-agent) && ssh-add -D; break ;;
-  [Nn]* ) break;;
+	  [Yy]* ) clear; eval $(ssh-agent) && ssh-add -D; break ;;
+	  [Nn]* ) break;;
   esac;
-  done
+  done;
 
   while true; do
   read -e -p "Do you want add key to SSH Agent? [y/N]" ayn;
   case $ayn in
-  [Yy]* ) local -r kName="$1"; ssh-add "$HOME/.ssh/$kName" ;;
-  [Nn]* ) break;;
+	  [Yy]* ) local -r kName="$1"; ssh-add "$HOME/.ssh/$kName" ;;
+	  [Nn]* ) break;;
   esac;
-  done
+  done;
 
   while true; do
   read -e -p "Add to authorized_key? [y/N]" uyn;
   case $uyn in
-  [Yy]* ) cat "$HOME/.ssh/${kName}.pub" >> "$HOME/.ssh/authorized_keys";;
-  [Nn]* ) break;;
+	  [Yy]* ) cat "$HOME/.ssh/${kName}.pub" >> "$HOME/.ssh/authorized_keys";;
+	  [Nn]* ) break;;
   esac;
   done;
 
 }
 
 function OnRUN() {
-        title;
-        read -e -p "Enter NAME ssh key: " IDK && ID="$( echo ${IDK} | sed 's/ /_/g' )";
-        read -e -p "Add comment: " COMENT && COM="$( echo ${COMENT} | sed 's/ /./g' )";
-        read -e -p "Enter password: " PASS;
-        sleep 2;
-        if [ -z "${ID}" ]; then ID="${hostname}_${USER}"; fi
-        if [ -z "${COM}" ]; then COM="${USER}"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
+	title;
+	read -e -p "Enter NAME ssh key: " IDK && ID="$( echo ${IDK} | sed 's/ /_/g' )";
+	read -e -p "Add comment: " COMENT && COM="$( echo ${COMENT} | sed 's/ /./g' )";
+	read -e -p "Enter password: " PASS;
+	sleep 2;
+	if [ -z "${ID}" ]; then ID="${hostname}_${USER}"; fi
+	if [ -z "${COM}" ]; then COM="${USER}"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
 
-        kName="$( echo ${ID} | sed 's/ /_/g' )_${TKEY}.key";
+	kName="$( echo ${ID} | sed 's/ /_/g' )_${TKEY}";
+	PriSSHkey="${kName}.pem";
+	PubSSHkey="${kName}.pub";
 
-        if [ "$MKEY" == "PEM" ]; then
-                BKEY="4096"
-                if [ -z "${ID}" ]; then ID="azureuser"; fi
-                if [ -z "${COM}" ]; then COM="azureuser"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
-            ssh-keygen -m ${MKEY} -t ${TKEY} -b ${BKEY} -f $HOME/.ssh/${kName}.pem -C "${COM}" -N "$PASS";
+	if [ "$MKEY" == "PEM" ]; then
+			BKEY="4096"
+			if [ -z "${ID}" ]; then ID="azureuser"; fi
+			if [ -z "${COM}" ]; then COM="azureuser"@"$( echo ${IDK} | sed 's/ /./g' )"; fi;
+		ssh-keygen -m ${MKEY} -t ${TKEY} -b ${BKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
 
-        elif [ -z "${MKEY}" ]; then
-            ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
-        fi
+	elif [ -z "${MKEY}" ]; then
+		ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
+	fi;
 
-        LookUP ;
-        ConvertPPK ;
+
+	LookUP ;
+	ConvertPPK ;
 }
 
 
@@ -2940,9 +2740,6 @@ fi
 
 #Обновить Script
 function SCriptUPDATE() {
-	filename='breeze.sh'
-	updpath='raw.githubusercontent.com/GitKitNet/add/main/ToolKit/ScToolkit.sh' 
-
 	echo "обновляю..."
 	wget $updpath/$filename -r -N -nd --no-check-certificate
 	chmod 777 $filename
