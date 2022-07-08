@@ -3,10 +3,9 @@
 #set +x
 #set -Eeuo pipefail
 
-LINK="raw.githubusercontent.com/GitKitNet/add/main/ToolKit/cptoolkit.sh";
-#bash -c "$(wget -O - $LINK || curl -fsSL $LINK)";
-#bash -c "$(curl -L -fSs $LINK)"
-#bash <(wget -O - $LINK)
+LINK="raw.githubusercontent.com/GitKitNet/add/main/ToolKit/SCToolkit.sh";  #bash -c "$(curl -L -fSs ${LINK})"
+#bash <(wget -O - ${LINK})
+#bash -c "$(wget -O - ${LINK} || curl -fsSL ${LINK})";
 
 
 
@@ -283,10 +282,11 @@ function run_as_root() {
 #script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
 # - - - - - - - - - - - - - - - - - - - - - -
-function cleanup() {
-  trap - SIGINT SIGTERM ERR EXIT
-  echo "script cleanup here";
-}; cleanup
+function CleanUP_() {
+  trap - SIGINT SIGTERM ERR EXIT ;
+  echo "Script CleanUP here";
+  sleep 2;
+};
 
 function title() { clear; echo "${title} ${TKEY}"; }
 function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
@@ -3222,13 +3222,14 @@ do
 
 # ==== END MENU ==============================
 
-	echo "Quit..." && sleep 3;
-	clear;
-	cleanup;
+	echo "Quit..." && sleep 3 && clear;
+	CleanUP_;
 }; 
 
 THIS
 MAIN
+
+CleanUP_;
 
 # # # # # # # # # # # # # # # # # # # # # # #
 
