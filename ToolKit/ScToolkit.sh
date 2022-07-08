@@ -3,7 +3,7 @@
 #set +x
 #set -Eeuo pipefail
 
-LINK="raw.githubusercontent.com/GitKitNet/add/main/ToolKit/ScToolkit.sh";  #bash -c "$(curl -L -fSs ${LINK})"
+LINK="raw.githubusercontent.com/GitKitNet/add/main/ToolKit/SCToolkit.sh";  #bash -c "$(curl -L -fSs ${LINK})"
 #bash <(wget -O - ${LINK})
 #bash -c "$(wget -O - ${LINK} || curl -fsSL ${LINK})";
 
@@ -77,46 +77,53 @@ showBANNER
 
 
 
-# - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - -
 #       ASK START
-# - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - -
 function THIS() { 
-clear;
-while true; do 
-echo -en "\t${Yellow}Do you want Run This script [y/N] .?${RC} "; 
-read -e syn; 
-case $syn in 
-[Yy]* ) clear; echo -e "\n\t${GREEN}Starting NOW..${NC}"; sleep 3 && break ;; 
-[Nn]* ) exit 0;;
-esac; 
-done;
+	clear;
+	while true; do 
+	echo -en "\t${Yellow}Do you want Run This script [y/N] .?${RC} "; 
+	read -e syn; 
+	case $syn in 
+		[Yy]* ) echo -e "\n\t${GREEN}Starting NOW..${NC}"; sleep 2 && break ;; 
+		[Nn]* ) exit 0 ;;
+	esac; 
+	done;
+	clear; 
 };
 
-# = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = =
+#      VARIABLE & function
+# = = = = = = = = = = = = = = = = = = = =
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+
+
+
+
+# = = = = = = = = = = = = = = = = = = = =
 #      CHECK IF USER IS ROOT
-# = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = =
 function CheckIFroot() {
-  if [ "$(id -u)" != "0" ]; then
-  while true; do 
-  clear && \
-  echo -en "
+	if [ "$(id -u)" != "0" ]; then
+		while true; do 
+		clear && \
+		echo -en "
 ${Blue}# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =           
 ${RED} ERROR:\t You must be ${CYAN} [root user] ${RED} to install the software. 
 ${RED}\t Use 'sudo su - root' to login as root!                               
 ${Blue}\n# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 ${GREEN}\n\tDo you want Run ${CYAN}as root ${GREEN}script [ y/N ] ..? ${RC}";
-  read -e syn; 
-  case $syn in 
-    [Yy]* ) sleep 3; 
-    sudo su; 
-    break ;; 
-    [Nn]* ) exit 1 ;;
-  esac; 
-  done;
-elif [ "$(id -u)" == "0" ]; then
-  echo -e "\n\t${YELLOW}Checking ROOT ${GREEN}IS - OK! \n ${RC}";
-  sleep 5;
-  fi;
+		read -e syn; 
+		case $syn in 
+			[Yy]* ) sleep 3; sudo su; break ;; 
+			[Nn]* ) exit 1 ;;
+		esac; 
+		done;
+	elif [ "$(id -u)" == "0" ]; then
+		echo -e "\n\t${YELLOW}Checking ROOT ${GREEN}IS - OK! \n ${RC}"; sleep 5;
+	fi;
 };
 
 
@@ -128,9 +135,6 @@ elif [ "$(id -u)" == "0" ]; then
 
 
 
-# = = = = = = = = = = = = = = = = = =
-#      VARIABLE & function
-# = = = = = = = = = = = = = = = = = =
 
 # A best practices Bash script template with many useful functions. This file is suitable for sourcing into other scripts and so only contains functions which are unlikely to need modification. 
 # It omits the following functions:
@@ -141,6 +145,7 @@ elif [ "$(id -u)" == "0" ]; then
 # DESC:      Handler for unexpected errors
 # ARGS:      $1 (optional): Exit code (defaults to 1)
 # OUTS:      None
+# = = = = = = = = = = = = = = = = = = = =
 function script_trap_err() {
     local exit_code=1
 
@@ -188,6 +193,7 @@ function script_trap_err() {
 # DESC: Handler for exiting the script
 # ARGS: None
 # OUTS: None
+# = = = = = = = = = = = = = = = = = = = = = = 
 function script_trap_exit() {
     cd "$orig_cwd"
 
@@ -213,6 +219,7 @@ function script_trap_exit() {
 #       0: Normal exit
 #       1: Abnormal exit due to external error
 #       2: Abnormal exit due to script error
+# = = = = = = = = = = = = = = = = = = = =
 function script_exit() {
     if [[ $# -eq 1 ]]; then
         printf '%s\n' "$1"
@@ -235,6 +242,7 @@ function script_exit() {
 # DESC: Validate we have superuser access as root (via sudo if requested)
 # ARGS: $1 (optional): Set to any value to not attempt root access via sudo
 # OUTS: None
+# = = = = = = = = = = = = = = = = = = = =
 function check_superuser() {
     local superuser
     if [[ $EUID -eq 0 ]]; then
@@ -272,6 +280,7 @@ function check_superuser() {
 #         0: Normal exit
 #         1: Abnormal exit due to external error
 #         2: Abnormal exit due to script error
+# = = = = = = = = = = = = = = = = = = = =
 function script_exit() {
     if [[ $# -eq 1 ]]; then printf '%s\n' "$1"; exit 0; fi;
 
@@ -288,7 +297,7 @@ function script_exit() {
 # ARGS: $1 (optional): Set to zero to not attempt execution via sudo
 #       $@ (required): Passed through for execution as root user
 # OUTS: None
-# = = = = = = = = = = = = = = = = = = = = = = 
+# = = = = = = = = = = = = = = = = = = = =
 function run_as_root() {
   if [[ $# -eq 0 ]]; then script_exit 'Missing required argument to run_as_root()!' 2; fi;
 
@@ -302,9 +311,8 @@ function run_as_root() {
 
 #run_as_root sudo
 
-#script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
-# - - - - - - - - - - - - - - - - - - - - - -
+# = = = = = = = = = = = = = = = = = = = =
 function CleanUP_() {
   trap - SIGINT SIGTERM ERR EXIT ;
   echo "Script CleanUP here...";
@@ -327,14 +335,9 @@ function TIMER() {
 }
 
 
-# = = = = = = = = = = = = = = = = = =
-# # # # # # # # # # # # # # # # # # #
-#      function STARTScript() {
-# # # # # # # # # # # # # # # # # # #
-
-# - - - - - - - - - - - - - - - - - -
+# = = = = = = = = = = = = = = = = = = = =
 #            UFW
-# - - - - - - - - - - - - - - - - - -
+# = = = = = = = = = = = = = = = = = = = =
 function UFW() {
 echo -e "\n${GREEN} = = = = = = = = = = \n   CONFIGURING UFW\n = = = = = = = = = = ${NC} \n"
 
@@ -365,20 +368,21 @@ ufw allow 22222                 # easyengine backend
 };
 
 
-function LoockUP() {
-  sleep 3 && clear;
-  echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
+function LookUP() {
+	sleep 3 && clear;
+	echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
+	if [[ -f "$HOME/.ssh/${kName}" ]]; then
+		echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
+		echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
+	fi;
 
-if [[ -f "$HOME/.ssh/${kName}" ]]; then
-  echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
-  echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
-fi;
-if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
-  echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
-fi;
-  echo -en "\n${GREEN}=======================${NC}\n";
-  pause;
-  break;
+	if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
+		echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
+	fi;
+
+	echo -en "\n${GREEN}=======================${NC}\n";
+	pause;
+	break;
 }
 
 # - - - - - - - - - - - - - - - - -
@@ -460,7 +464,7 @@ function OnRUN() {
             ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
         fi
 
-        LoockUP ;
+        LookUP ;
         ConvertPPK ;
 }
 
@@ -468,7 +472,7 @@ function OnRUN() {
 
 #=============================================
 #=============================================
-function first(){
+function Inst_MySQLWP(){
 echo "
 ============================================
       Mysql Server Installation
@@ -630,7 +634,7 @@ fi;
 
 #=============================================
 #=============================================
-function second(){
+function Add_WPiNUSER(){
 
 echo "============================================
       WordPress Install Script
@@ -740,7 +744,7 @@ fi
 
 #=============================================
 #=============================================
-function third(){
+function PreIns_NPhpCert(){
 
 #set -x
 
@@ -909,7 +913,7 @@ touch dm && wget https://scr.devkong.work/addomain_into_file.py && chmod +x addo
 
 #=============================================
 #=============================================
-function fourth(){
+function Inst_WPiCF(){
 #set -x
 
 echo "============================================
@@ -1190,7 +1194,7 @@ Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
 
 #=============================================
 #=============================================
-function fifth(){
+function Inst_WPiCRT(){
 #set -x
 
 echo "============================================
@@ -2934,6 +2938,19 @@ fi
 }
 
 
+#Обновить Script
+function SCriptUPDATE() {
+	filename='breeze.sh'
+	updpath='raw.githubusercontent.com/GitKitNet/add/main/ToolKit/ScToolkit.sh' 
+
+	echo "обновляю..."
+	wget $updpath/$filename -r -N -nd --no-check-certificate
+	chmod 777 $filename
+	chmod +x $filename
+	echo "обновляю..."
+};
+
+
 
 # =============================
 #       END MAIN SCRIPT
@@ -2961,7 +2978,6 @@ function MENU_MAIN() {
 \t7. Free               ${NC} ${MAGENTO}
 \t8. FTP & Ather        ${NC} ${MAGENTO}
 \t9. Script         ${NC} ${RED}
-
 \n\tq. Quit...          ${NC}";
 
 }
@@ -2971,25 +2987,26 @@ function Men_SSH() {
 	title="Generate Key SSH";
 	echo -e -n "\n\t${GREEN}SSH KeyGen:${NC}\n"
 	echo -e -n "
-  \t1. $title ${GREEN} ED25519       ${NC}
-  \t2. $title ${Yellow} RSA          ${NC}
-  \t3. $title ${CYAN}2 RSA [PEM]     ${NC}
-  \t4. $title ${BLUE} DSA            ${NC}
-  \t5. $title ${Purple} ECDSA        ${NC}
-  \t6. $title ${RED} EdDSA - [OFF]   ${RED}
-  \t0. Back                        ${NC}
+    \t1. $title ${GREEN} ED25519       ${NC}
+    \t2. $title ${Yellow} RSA          ${NC}
+    \t3. $title ${CYAN}2 RSA [PEM]     ${NC}
+    \t4. $title ${BLUE} DSA            ${NC}
+    \t5. $title ${Purple} ECDSA        ${NC}
+    \t6. $title ${RED} EdDSA - [OFF]   ${RED}
+    \n\t0. Back                        ${NC}
 ";
 }
 
 ##   LEMP MENU 
 function MENU_LEMP() {
-echo -e -n "\n\t ${GREEN}LEMP installation & Settings:${NC} \n"
-echo -e -n "\t1. Install Mysql-Server ${CYAN}With WordPress LAND ${NC}"
-echo -e -n "\t2. Add one more WordPress LAND ${CYAN}With New user ${NC}"
-echo -e -n "\t3. PreInstall ${CYAN} Ngx Php7.4 Certbot ${NC}"
-echo -e -n "\t4. Install WordPress ${CYAN} With All Services Cloudflare ${NC}"
-echo -e -n "\t5. Instal WordPress ${CYAN} With All Services Certbot ${NC} ${RED}"
-echo -e -n "\n\tq/0. Back ${NC}\n";
+	echo -e -n "\n\t ${GREEN}LEMP, WordPress installation & Settings:${NC} \n"
+echo -e "
+\t1. Install MySQL With ${CYAN} WordPress ${NC}
+\t2. Add one more ${CYAN}WordPress With New user ${NC}
+\t3. PreInstall ${CYAN}NGinX + Php-7.4 + Certbot${NC}
+\t4. Install ${CYAN}WordPress With All Services Cloudflare ${NC}
+\t5. Instal ${CYAN}WordPress With All Services Certbot ${NC}${RED}
+\n\tq/0. Back ${NC}\n";
 }
 
 ##   MENU 3: LAMP
@@ -3003,7 +3020,7 @@ function MENU_LAMP() {
 }; 
 
 ##   MENU 4: Web Control Panel
-function MENU_CPanel() {
+function MENU_CPANEL() {
     echo -e "\n\t ${GREEN}Menu 4: CONTROL PANEL ${Yellow} \n";
     echo -e "\t1. Install OwnCloud       ${PURPLE} ";
     echo -e "\t2. Install Vesta          ${BLUE} ";
@@ -3072,11 +3089,11 @@ do
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
-			1) first ;;
-			2) second ;;
-			3) third ;;
-			4) fourth ;;
-			5) fifth ;;
+			1) Inst_MySQLWP ;;
+			2) Add_WPiNUSER ;;
+			3) PreIns_NPhpCert ;;
+			4) Inst_WPiCF ;;
+			5) Inst_WPiCRT ;;
 			/q | q | 0) break ;;
 			*) ;;
 		esac
@@ -3106,7 +3123,7 @@ do
 		while :
 		do
 		showBANNER
-		MENU_CPanel
+		MENU_CPANEL
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
@@ -3151,10 +3168,10 @@ do
 		read -n1 opt;
 		case $opt in
 			1) PUREFTP_RUN ;;
-			2) echo -e "FREE $opt" ;;
-			3) echo -e "FREE $opt"  ;;
-			4) echo -e "FREE $opt"  ;;
-			5) echo -e "FREE $opt"  ;;
+			2) echo -e "FREE $opt" && sleep 3 ;;
+			3) echo -e "FREE $opt" && sleep 3 ;;
+			4) echo -e "FREE $opt" && sleep 3 ;;
+			5) echo -e "FREE $opt" && sleep 3 ;;
 			/q | q | 0) break ;;
 			*) ;;
 		esac
@@ -3172,10 +3189,10 @@ do
 			read -n1 opt;
 			case $opt in
 				1) PUREFTP_RUN ;;
-				2) echo -e "FREE $opt" ;;
-				3) echo -e "FREE $opt"  ;;
-				4) echo -e "FREE $opt"  ;;
-				5) echo -e "FREE $opt"  ;;
+				2) echo -e "FREE $opt" && sleep 3 ;;
+				3) echo -e "FREE $opt" && sleep 3 ;;
+				4) echo -e "FREE $opt" && sleep 3 ;;
+				5) echo -e "FREE $opt" && sleep 3 ;;
 				/q | q | 0) break ;;
 				*) ;;
 			esac
@@ -3193,10 +3210,10 @@ do
 			read -n1 opt;
 			case $opt in
 				1) PUREFTP_RUN ;;
-				2) echo -e "FREE $opt" ;;
-				3) echo -e "FREE $opt"  ;;
-				4) echo -e "FREE $opt"  ;;
-				5) echo -e "FREE $opt"  ;;
+				2) echo -e "FREE $opt" && sleep 3 ;;
+				3) echo -e "FREE $opt" && sleep 3 ;;
+				4) echo -e "FREE $opt" && sleep 3 ;;
+				5) echo -e "FREE $opt" && sleep 3 ;;
 				/q | q | 0) break ;;
 				*) ;;
 			esac
@@ -3213,11 +3230,11 @@ do
 			echo -n -e "\n\tSelection: "
 			read -n1 opt;
 			case $opt in
-				1) echo -e "Update this Script" ;;
-				2) echo -e "FREE $opt" ;;
-				3) echo -e "FREE $opt"  ;;
-				4) echo -e "FREE $opt"  ;;
-				5) echo -e "FREE $opt"  ;;
+				1) SCriptUPDATE ;;
+				2) echo -e "FREE $opt" && sleep 3 ;;
+				3) echo -e "FREE $opt" && sleep 3 ;;
+				4) echo -e "FREE $opt" && sleep 3 ;;
+				5) echo -e "FREE $opt" && sleep 3 ;;
 				/q | q | 0) break ;;
 				*) ;;
 			esac
@@ -3233,7 +3250,6 @@ do
 # ==== END MENU ==============================
 
 	echo "Quit..." && sleep 3 && clear;
-	CleanUP_;
 }; 
 
 THIS
