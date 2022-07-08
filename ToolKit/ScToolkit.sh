@@ -3029,6 +3029,38 @@ function MENU_CPANEL() {
     echo -e "\n\tq/0. Back               ${NC}\n ";
 };
 
+##   MENU 5: Web Control Panel
+function MENU_5() {
+    echo -e "\n\t ${GREEN}Menu 5: FREE ${Yellow} \n";
+    echo -e "\t1. FREE                            ${PURPLE} ";
+    echo -e "\t2. FREE                            ${PURPLE} ";
+    echo -e "\t3. FREE                            ${PURPLE} ";
+    echo -e "\t4. FREE                            ${RED} ";
+    echo -e "\n\t0. Back                          ${NC}\n ";
+};
+
+
+##   MENU 6: Web Control Panel
+function MENU_6() {
+    echo -e "\n\t ${GREEN}Menu 6: FREE ${Yellow} \n";
+    echo -e "\t1. FREE                            ${PURPLE} ";
+    echo -e "\t2. FREE                            ${PURPLE} ";
+    echo -e "\t3. FREE                            ${PURPLE} ";
+    echo -e "\t4. FREE                            ${RED} ";
+    echo -e "\n\t0. Back                          ${NC}\n ";
+};
+
+##   MENU 7: Web Control Panel
+function MENU_7() {
+    echo -e "\n\t ${GREEN}Menu 7: FREE ${Yellow} \n";
+    echo -e "\t1. FREE                            ${PURPLE} ";
+    echo -e "\t2. FREE                            ${PURPLE} ";
+    echo -e "\t3. FREE                            ${PURPLE} ";
+    echo -e "\t4. FREE                            ${RED} ";
+    echo -e "\n\t0. Back                          ${NC}\n ";
+};
+
+
 ##   MENU 8: Modules & Components
 function MENU_MODandCOMPON() {
     echo -e "\n\t ${GREEN}Menu 8: Modules & Components ${Yellow} \n";
@@ -3050,8 +3082,8 @@ function MENU_ScriptCOMPON() {
 };
 
 # ============================================
-while :
-do
+	while :
+	do
     showBANNER
     MENU_MAIN
     echo -n -e "\n\tSelection: "
@@ -3143,11 +3175,11 @@ do
 		while :
 		do
 		showBANNER
-		MENU_MODandCOMPON
+		MENU_5
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
-			1) PUREFTP_RUN ;;
+			1) echo -e "FREE $opt" ;;
 			2) echo -e "FREE $opt" ;;
 			3) echo -e "FREE $opt"  ;;
 			4) echo -e "FREE $opt"  ;;
@@ -3188,7 +3220,7 @@ do
 			echo -n -e "\n\tSelection: "
 			read -n1 opt;
 			case $opt in
-				1) PUREFTP_RUN ;;
+				1) echo -e "FREE $opt" && sleep 3 ;;
 				2) echo -e "FREE $opt" && sleep 3 ;;
 				3) echo -e "FREE $opt" && sleep 3 ;;
 				4) echo -e "FREE $opt" && sleep 3 ;;
@@ -3200,12 +3232,12 @@ do
 		;;
 
 # ==== 8 =====================================
-		8) #FREE
+		8) #COMPONENTS
 			echo -e "Menu 8: "
 			while :
 			do
 			showBANNER
-			MENU_8
+			MENU_MODandCOMPON
 			echo -n -e "\n\tSelection: "
 			read -n1 opt;
 			case $opt in
