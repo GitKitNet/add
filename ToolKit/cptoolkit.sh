@@ -342,8 +342,8 @@ ufw allow 22222                 # easyengine backend
 };
 
 # - - - - - - - - - - - - - - - - -
-#figlet -f smslant SSH Toolkit;
 function showBanner() {
+#figlet -f smslant SSH Toolkit;
  clear && echo -e "
  ${BGRed}
  ${BLUE}_______________${GREEN}________________________________
@@ -3027,17 +3027,26 @@ function MenuMODandCOMPON() {
     echo -e "\t4. FREE                            ${RED} ";
     echo -e "\n\t0. Back                          ${NC}\n ";
 };
-# MenuCPanel
+
+##   MENU 9: Script Components
+function MenuScriptCOMPON() {
+    echo -e "\n\t ${GREEN}Menu 9: Script Components ${BLUE} \n";
+    echo -e "\t1. Update Script                   ${PURPLE} ";
+    echo -e "\t2. FREE                            ${PURPLE} ";
+    echo -e "\t3. FREE                            ${PURPLE} ";
+    echo -e "\t4. FREE                            ${RED} ";
+    echo -e "\n\t0. Back                          ${NC}\n ";
+};
 
 #--------------------------
 while :
 do
-        showBanner
-        MENU_MAIN
-        echo -n -e "\n\tSelection: "
-        read -n1 opt
-        a=true;
-        case $opt in
+    showBanner
+    MENU_MAIN
+    echo -n -e "\n\tSelection: "
+    read -n1 opt
+    a=true;
+    case $opt in
 
 # 1 SubMenu ----------------------------
                 1) echo -e "==== Create SSH key ===="
@@ -3128,6 +3137,26 @@ do
                         read -n1 opt;
                         case $opt in
                                 1) PUREFTP_RUN ;;
+                                2) echo -e "FREE $opt" ;;
+                                3) echo -e "FREE $opt"  ;;
+                                4) echo -e "FREE $opt"  ;;
+                                5) echo -e "FREE $opt"  ;;
+                                /q | q | 0) break ;;
+                                *) ;;
+                        esac
+                done
+                ;;
+
+# 8 ----------------------------
+                9) echo -e "Script Components: "
+                while :
+                do
+                        showBanner
+                        MenuScriptCOMPON
+                        echo -n -e "\n\tSelection: "
+                        read -n1 opt;
+                        case $opt in
+                                1) echo -e "Update this Script" ;;
                                 2) echo -e "FREE $opt" ;;
                                 3) echo -e "FREE $opt"  ;;
                                 4) echo -e "FREE $opt"  ;;
