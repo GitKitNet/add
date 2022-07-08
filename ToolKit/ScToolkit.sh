@@ -2739,14 +2739,15 @@ fi
 }
 
 
-#Обновить Script
+# Update Script
 function SCriptUPDATE() {
-	echo "обновляю..." && sleep 2;
+	echo -en "\n Updating SCRIPT $filename ..." && sleep 2;
 	wget $updpath/$filename -r -N -nd --no-check-certificate
 
 	chmod 777 $filename
 	chmod +x $filename
-	echo "обновляю..."
+
+	echo -en "\n\t...script is upgradet.\n" && sleep 3;
 };
 
 
