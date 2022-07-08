@@ -2621,145 +2621,129 @@ sleep 3
 #      Pure-FTP
 #==============================
 function PUREFTP_RUN() {
-  clear
-  echo -e "\n\n${GREEN}Welcome to Pure-FTP Auto Installer Script${NC}\n\n"
+	clear
+	echo -e "\n\n${GREEN}Welcome to Pure-FTP Auto Installer Script${NC}\n\n"
 
-if [ "$(whoami)" != "root" ]; then
-  echo -e "${RED}This script must be run as root${NC}"
-  sleep 5
-  exit
-fi
+	if [ "$(whoami)" != "root" ]; then
+		echo -e "${RED}This script must be run as root${NC}"
+		sleep 5
+		exit
+	fi
 
-# =============================
-#          Var & Func
-# =============================
+	# =============================
+	#      PURE FTP Var & Func 
+	# =============================
 
-function PUREFTP_AddNewUser() {
-   read -p "Enter a Username: " -e ADDUSERNAME
-   read -p "Enter $ADDUSERNAME’s password: " -e ADDPASSWORD
-   read -p "Enter $ADDUSERNAME’s directory: " -e -i /home/$ADDUSERNAME ADDUSERDIR
-   read -p "Is this an http user? [y/n]: " -e HTTP
-   echo -e "\n${GREEN}The User is creating now... Please wait.\n\n"
-   if [ "$HTTP" = "y" ]; then
-     echo -e "$ADDPASSWORD\\n$ADDPASSWORD" | pure-pw useradd $ADDUSERNAME -u www-data -d $ADDUSERDIR
-   else
-     if [ "$HTTP" = "n" ]; then
-        echo -e "$ADDPASSWORD\\n$ADDPASSWORD" | pure-pw useradd $ADDUSERNAME -u $ADDUSERNAME -d $ADDUSERDIR
-     else
-        echo "${YELOW}Please enter [y/n] ...${NC}"
-     fi;
-   fi;
-   pure-pw mkdb
-   if [ -e /etc/init.d/pure-ftpd ]; then
-      /etc/init.d/pure-ftpd restart
-   else
-     echo "\n\n${RED}Pure-FTP is not working properly. Please remove and Re-install it.${NC}\n"
-   fi
-};
+	function PUREFTP_AddNewUser() {
+		read -p "Enter a Username: " -e ADDUSERNAME
+		read -p "Enter $ADDUSERNAME’s password: " -e ADDPASSWORD
+		#read -p "Enter $ADDUSERNAME’s directory: " -e -i /home/$ADDUSERNAME ADDUSERDIR
+		ADDUSERDIR="/home/$ADDUSERNAME"
+		read -p "Is this an http user? [y/n]: " -e HTTP
+		echo -e "\n${GREEN}The User is creating now... Please wait.\n\n" && sleep 2;
+		
+		if [ "$HTTP" = "y" ]; then
+			echo -e "$ADDPASSWORD\\n$ADDPASSWORD" | pure-pw useradd $ADDUSERNAME -u www-data -d $ADDUSERDIR
+		else
+			if [ "$HTTP" = "n" ]; then
+				echo -e "$ADDPASSWORD\\n$ADDPASSWORD" | pure-pw useradd $ADDUSERNAME -u $ADDUSERNAME -d $ADDUSERDIR
+			else
+				echo "${YELOW}Please enter [y/n] ...${NC}"
+			fi;
+		fi;
+		
+		pure-pw mkdb
+		if [ -e /etc/init.d/pure-ftpd ]; then
+			/etc/init.d/pure-ftpd restart
+		else
+			echo "\n\n${RED}Pure-FTP is not working properly. Please remove and Re-install it.${NC}\n"
+		fi;
+	};
 
-function PUREFTP_ChangeUserPass() {
-    read -p "Enter the username: " -e CHNUSERNAME
-    read -p "Enter password: " -e CHNPASSWORD
-    echo -e "$CHNPASSWORD\\n$CHNPASSWORD" | pure-pw passwd $CHNUSERNAME -m
-    pure-pw mkdb
-}
+	function PUREFTP_ChangeUserPass() {
+		read -p "Enter the username: " -e CHNUSERNAME
+		read -p "Enter password: " -e CHNPASSWORD
+		echo -e "$CHNPASSWORD\\n$CHNPASSWORD" | pure-pw passwd $CHNUSERNAME -m
+		pure-pw mkdb
+	}
 
-function PUREFTP_DelUser() {
-    read -p "Enter the username: " -e DELUSERNAME
-          read -p "Are you sure? [y/n]: " -e -i n TTT
-          if [ "$TTT" = "y" ]; then
-            pure-pw userdel $DELUSERNAME -m
-            pure-pw mkdb
-          else
-            echo "Closing now.."
-            
-          fi
-}
+	function PUREFTP_DelUser() {
+		read -p "Enter the username: " -e DELUSERNAME
+		read -p "Are you sure? [y/n]: " -e -i n TTT
+		if [ "$TTT" = "y" ]; then
+			pure-pw userdel $DELUSERNAME -m
+			pure-pw mkdb
+		else
+			echo "Closing now.."
+		fi
+	}
 
-function PUREFTP_Remove() {
-    read -p "Are you sure? [y/n]: " -e -i n TTTT
-          if [ "$TTTT" = "y" ]; then
-            apt-get remove —purge —yes pure-ftpd
-            apt-get —yes autoremove
-          if [ -e /etc/pure-ftpd ]; then
-            rm -rf /etc/pure-ftpd
-          fi
-          else
-            echo "Closing now.." && exit
-          fi
-}
-function PUREFTP_Install() {
-      apt-get update -y && apt-get upgrade -y
-      apt-get install pure-ftpd -y
-      IP=$(curl ip.mtak.nl -4)
-      cd /etc/pure-ftpd/conf
-      touch ForcePassiveIP
-      touch PassivePortRange
-      echo -e "$IP" | tee -a /etc/pure-ftpd/conf/ForcePassiveIP
-      echo -e "10110 10210" | tee -a /etc/pure-ftpd/conf/PassivePortRange
-      perl -pi -e "s/1000/1/g" /etc/pure-ftpd/conf/MinUID
-      perl -pi -e "s/yes/no/g" /etc/pure-ftpd/conf/PAMAuthentication
-      ln -s /etc/pure-ftpd/conf/PureDB /etc/pure-ftpd/auth/50pure
-}
+	function PUREFTP_Remove() {
+		read -p "Are you sure? [y/n]: " -e -i n TTTT
+		if [ "$TTTT" = "y" ]; then
+			apt-get remove —purge —yes pure-ftpd
+			apt-get —yes autoremove
+			if [ -e /etc/pure-ftpd ]; then rm -rf /etc/pure-ftpd; fi;
+		else
+			echo "Closing now.." && exit
+		fi;
+	}
+	
+	function PUREFTP_Install() {
+		apt-get update -y && apt-get upgrade -y
+		apt-get install pure-ftpd -y
+		IP=$(curl ip.mtak.nl -4)
+		cd /etc/pure-ftpd/conf
+		touch ForcePassiveIP
+		touch PassivePortRange
+		echo -e "$IP" | tee -a /etc/pure-ftpd/conf/ForcePassiveIP
+		echo -e "10110 10210" | tee -a /etc/pure-ftpd/conf/PassivePortRange
+		perl -pi -e "s/1000/1/g" /etc/pure-ftpd/conf/MinUID
+		perl -pi -e "s/yes/no/g" /etc/pure-ftpd/conf/PAMAuthentication
+		ln -s /etc/pure-ftpd/conf/PureDB /etc/pure-ftpd/auth/50pure
+	}
 
-function PUREFTP_mainMENU() {
-
-echo -en "${GREEN}\nPure-FTP IS already INSTALLED.\n${NC}"
-echo ""
-echo -en "\n1) ${YELOW}Add a new user${NC}"
-echo -en "\n2) ${YELOW}Change a user password${NC}"
-echo -en "\n3) ${RED}Delete a user${NC}"
-echo -en "\n4) ${PURPLE}Remove Pure-FTP and configurations${NC}"
-echo -en "\n5) ${RED}Exit... ${NC}"
-echo -en "\n\n${BLUE} Select an Option: ${NC}"
-};
-
+	function PUREFTP_mainMENU() {
+		echo -en "${GREEN}\nPure-FTP IS already INSTALLED.\n${NC}"
+		echo -en "\n1) ${YELOW}Add a new user${NC}"
+		echo -en "\n2) ${YELOW}Change a user password${NC}"
+		echo -en "\n3) ${RED}Delete a user${NC}"
+		echo -en "\n4) ${PURPLE}Remove Pure-FTP and configurations${NC}"
+		echo -en "\n5) ${RED}Exit... ${NC}"
+		echo -en "\n\n${BLUE} Select an Option: ${NC}"
+	};
 
 
-function PUREFTP_Option() {
-  if [ -e /etc/pure-ftpd ]; then
-    while :
-    do
-      PUREFTP_mainMENU
-      read option
-      case $option in
-      
-        1) # ADD NEW USER
-         PUREFTP_AddNewUser ;;
-        2) #Change a user password
-         PUREFTP_ChangeUserPass ;;
-        3) #Delete a user
-         PUREFTP_DelUser;;
-        4) # Remove Pure-FTP
-          PUREFTP_Remove ;;
-        0) exit ;;
 
-      esac
-    done;
+	function PUREFTP_Option() {
+		if [ -e /etc/pure-ftpd ]; then
+			while :
+			do
+			PUREFTP_mainMENU
+			read option
+				case $option in
+					1) echo "ADD NEW USER"; PUREFTP_AddNewUser ;;
+					2) echo "Change a user password"; PUREFTP_ChangeUserPass ;;
+					3) echo "Delete a user"; PUREFTP_DelUser;;
+					4) echo "Remove Pure-FTP"; PUREFTP_Remove ;;
+					0) exit ;;
+				esac
+			done;
+		else
+			echo -e "\n\t {RED}Pure-FTP is not installed.{NC}\n"
+			read -p "Install now Pure-FTP..? [y/n]: " -e -i y TT
+			if [ "$TT" = "y" ]; then PUREFTP_Install; else echo -e "${YELOW}Closing now..${NC}" && sleep 5; fi;
+			echo -e "\n${GREEN}Pure-FTP is installed. Please Re-open this script for create user.\n Closing now.. ${NC}\n" && sleep 5;
+		fi;
+	}
 
-  else
-   echo -e "\n\t {RED}Pure-FTP is not installed.{NC}\n"
-   read -p "Install now Pure-FTP..? [y/n]: " -e -i y TT
+	if [ -e /etc/debian_version ]; then
+	  PUREFTP_Option
+	else
+	  echo -e "${YELOW}This script must be run on Debian or Ubuntu.${NC}"
+	fi;
 
-    if [ "$TT" = "y" ]; then
-     PUREFTP_Install;
-    else
-      echo -e "${YELOW}Closing now..${NC}";
-      sleep 5;
-    fi;
-
-    echo -e "\n${GREEN}Pure-FTP is installed. Please Re-open this script for create user.\n Closing now.. ${NC}\n"
-    sleep 5;
-  fi;
-}
-
-if [ -e /etc/debian_version ]; then
-  PUREFTP_Option
-else
-  echo -e "${YELOW}This script must be run on Debian or Ubuntu.${NC}"
-fi;
-
-echo -e "${GREEN}End installation${NC}"
+	echo -e "${GREEN}End installation${NC}"
 
 };
 
@@ -2987,7 +2971,7 @@ function Men_SSH() {
 }
 
 ##   LEMP MENU 
-function Menu_LEMP() {
+function MENU_LEMP() {
 echo -e -n "\n\t ${GREEN}LEMP installation & Settings:${NC} \n"
 echo -e -n "\t1. Install Mysql-Server ${CYAN}With WordPress LAND ${NC}"
 echo -e -n "\t2. Add one more WordPress LAND ${CYAN}With New user ${NC}"
@@ -2998,7 +2982,7 @@ echo -e -n "\n\tq/0. Back ${NC}\n";
 }
 
 ##   MENU 3: LAMP
-function Menu_LAMP() {
+function MENU_LAMP() {
     echo -e "\n\t ${GREEN}LAMP installation & Settings:${NC} \n"
     echo -e -n "${Yellow}";
     echo -e -n "\t1. Install LAMP & WordPress";
@@ -3008,7 +2992,7 @@ function Menu_LAMP() {
 }; 
 
 ##   MENU 4: Web Control Panel
-function Menu_CPanel() {
+function MENU_CPanel() {
     echo -e "\n\t ${GREEN}Menu 4: CONTROL PANEL ${Yellow} \n";
     echo -e "\t1. Install OwnCloud       ${PURPLE} ";
     echo -e "\t2. Install Vesta          ${BLUE} ";
@@ -3018,7 +3002,7 @@ function Menu_CPanel() {
 };
 
 ##   MENU 8: Modules & Components
-function Menu_MODandCOMPON() {
+function MENU_MODandCOMPON() {
     echo -e "\n\t ${GREEN}Menu 8: Modules & Components ${Yellow} \n";
     echo -e "\t1. Install Pure-FTP       ${PURPLE} ";
     echo -e "\t2. FREE                            ${PURPLE} ";
@@ -3028,7 +3012,7 @@ function Menu_MODandCOMPON() {
 };
 
 ##   MENU 9: Script Components
-function Menu_ScriptCOMPON() {
+function MENU_ScriptCOMPON() {
     echo -e "\n\t ${GREEN}Menu 9: Script Components ${BLUE} \n";
     echo -e "\t1. Update Script                   ${PURPLE} ";
     echo -e "\t2. FREE                            ${PURPLE} ";
@@ -3073,7 +3057,7 @@ do
 		while :
 		do
 		showBANNER
-		Menu_LEMP
+		MENU_LEMP
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
@@ -3093,7 +3077,7 @@ do
 		while :
 		do
 		showBANNER
-		Menu_LAMP
+		MENU_LAMP
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
@@ -3111,7 +3095,7 @@ do
 		while :
 		do
 		showBANNER
-		Menu_CPanel
+		MENU_CPanel
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
@@ -3131,7 +3115,7 @@ do
 		while :
 		do
 		showBANNER
-		Menu_MODandCOMPON
+		MENU_MODandCOMPON
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
@@ -3151,7 +3135,7 @@ do
 		while :
 		do
 		showBANNER
-		Menu_6
+		MENU_6
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
@@ -3167,67 +3151,69 @@ do
 		;;
 
 # ==== 7 =====================================
-		7) echo -e "Menu 7: "
-		while :
-		do
-		showBANNER
-		Menu_7
-		echo -n -e "\n\tSelection: "
-		read -n1 opt;
-		case $opt in
-			1) PUREFTP_RUN ;;
-			2) echo -e "FREE $opt" ;;
-			3) echo -e "FREE $opt"  ;;
-			4) echo -e "FREE $opt"  ;;
-			5) echo -e "FREE $opt"  ;;
-			/q | q | 0) break ;;
-			*) ;;
-		esac
-		done
+		7) #FREE
+			echo -e "Menu 7: "
+			while :
+			do
+			showBANNER
+			MENU_7
+			echo -n -e "\n\tSelection: "
+			read -n1 opt;
+			case $opt in
+				1) PUREFTP_RUN ;;
+				2) echo -e "FREE $opt" ;;
+				3) echo -e "FREE $opt"  ;;
+				4) echo -e "FREE $opt"  ;;
+				5) echo -e "FREE $opt"  ;;
+				/q | q | 0) break ;;
+				*) ;;
+			esac
+			done
 		;;
 
 # ==== 8 =====================================
-		8) echo -e "Menu 8: "
-		while :
-		do
-		showBANNER
-		Menu_8
-		echo -n -e "\n\tSelection: "
-		read -n1 opt;
-		case $opt in
-			1) PUREFTP_RUN ;;
-			2) echo -e "FREE $opt" ;;
-			3) echo -e "FREE $opt"  ;;
-			4) echo -e "FREE $opt"  ;;
-			5) echo -e "FREE $opt"  ;;
-			/q | q | 0) break ;;
-			*) ;;
-		esac
-		done
+		8) #FREE
+			echo -e "Menu 8: "
+			while :
+			do
+			showBANNER
+			MENU_8
+			echo -n -e "\n\tSelection: "
+			read -n1 opt;
+			case $opt in
+				1) PUREFTP_RUN ;;
+				2) echo -e "FREE $opt" ;;
+				3) echo -e "FREE $opt"  ;;
+				4) echo -e "FREE $opt"  ;;
+				5) echo -e "FREE $opt"  ;;
+				/q | q | 0) break ;;
+				*) ;;
+			esac
+			done
 		;;
 
 # ==== 9 =====================================
-		9) echo -e "Script Components: "
-		while :
-		do
-		showBANNER
-		Menu_ScriptCOMPON
-		echo -n -e "\n\tSelection: "
-		read -n1 opt;
-		case $opt in
-			1) echo -e "Update this Script" ;;
-			2) echo -e "FREE $opt" ;;
-			3) echo -e "FREE $opt"  ;;
-			4) echo -e "FREE $opt"  ;;
-			5) echo -e "FREE $opt"  ;;
-			/q | q | 0) break ;;
-			*) ;;
-		esac
-		done
+		9) #
+			echo -e "Script Components: "
+			while :
+			do
+			showBANNER
+			MENU_ScriptCOMPON
+			echo -n -e "\n\tSelection: "
+			read -n1 opt;
+			case $opt in
+				1) echo -e "Update this Script" ;;
+				2) echo -e "FREE $opt" ;;
+				3) echo -e "FREE $opt"  ;;
+				4) echo -e "FREE $opt"  ;;
+				5) echo -e "FREE $opt"  ;;
+				/q | q | 0) break ;;
+				*) ;;
+			esac
+			done
 		;;
 
 # ==== END ===================================
-
 		/q | q | 0) echo; break ;;
 		*) ;;
 	esac
