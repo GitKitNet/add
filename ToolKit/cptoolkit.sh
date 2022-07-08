@@ -342,18 +342,17 @@ ufw allow 22222                 # easyengine backend
 };
 
 # - - - - - - - - - - - - - - - - -
-function showBanner() {
-#figlet -f smslant SSH Toolkit;
- clear && echo -e "
- ${BGRed}
- ${BLUE}_______________${GREEN}________________________________
- ${BLUE}   ________    ${GREEN}  ______          ____    _ __  
- ${BLUE}  / ___/ _ \   ${GREEN} /_  __/__  ___  / / /__ (_) /_ 
- ${BLUE} / /__/ ___/   ${GREEN}  / / / _ \/ _ \/ /  '_// / __/ 
- ${BLUE} \___/_/       ${GREEN} /_/  \___/\___/_/_/\_\/_/\__/  
- ${BLUE}_______________${GREEN}________________________________
- ${NC}";
-}
+function showBANNER() {
+#figlet -f smslant SC Toolkit;
+    clear;
+    echo -e "${BLUE}   ================${GREEN}================================"
+    echo -e "${BLUE}     ____ _____   ${GREEN} ______          ____    _ __    "
+    echo -e "${BLUE}    / __// ___/  ${GREEN} /_  __/__  ___  / / /__ (_) /_   "
+    echo -e "${BLUE}   _\ \ / /__   ${GREEN}   / / / _ \/ _ \/ /  '_// / __/   "
+    echo -e "${BLUE}  /___/ \___/  ${GREEN}   /_/  \___/\___/_/_/\_\/_/\__/    "
+    echo -e "${BLUE}==============${GREEN}==================================   "
+   echo -e "${NC}";
+};
 
 
 function LoockUP() {
@@ -2965,29 +2964,30 @@ function MENU_MAIN() {
 \t5. Free               ${NC} ${RED}
 \t6. Free               ${NC} ${RED}
 \t7. Free               ${NC} ${MAGENTO}
-\t8. FTP & Ather        ${NC} ${RED}
+\t8. FTP & Ather        ${NC} ${MAGENTO}
+\t9. Script         ${NC} ${RED}
 
 \n\tq. Quit...          ${NC}";
 
 }
 
 #   Menu SSH
-function MenuSSH() {
-title="Generate Key SSH";
-echo -e -n "\n\t${GREEN}SSH KeyGen:${NC}\n"
-echo -e -n "
-\t1. $title ${GREEN} ED25519       ${NC}
-\t2. $title ${Yellow} RSA          ${NC}
-\t3. $title ${CYAN}2 RSA [PEM]     ${NC}
-\t4. $title ${BLUE} DSA            ${NC}
-\t5. $title ${Purple} ECDSA        ${NC}
-\t6. $title ${RED} EdDSA - [OFF]   ${NC}${RED}
-\n\t0. Back ${NC}\n";
-
+function Men_SSH() {
+	title="Generate Key SSH";
+	echo -e -n "\n\t${GREEN}SSH KeyGen:${NC}\n"
+	echo -e -n "
+  \t1. $title ${GREEN} ED25519       ${NC}
+  \t2. $title ${Yellow} RSA          ${NC}
+  \t3. $title ${CYAN}2 RSA [PEM]     ${NC}
+  \t4. $title ${BLUE} DSA            ${NC}
+  \t5. $title ${Purple} ECDSA        ${NC}
+  \t6. $title ${RED} EdDSA - [OFF]   ${RED}
+  \t0. Back                        ${NC}
+";
 }
 
 ##   LEMP MENU 
-function MenuLEMP() {
+function Menu_LEMP() {
 echo -e -n "\n\t ${GREEN}LEMP installation & Settings:${NC} \n"
 echo -e -n "\t1. Install Mysql-Server ${CYAN}With WordPress LAND ${NC}"
 echo -e -n "\t2. Add one more WordPress LAND ${CYAN}With New user ${NC}"
@@ -2998,7 +2998,7 @@ echo -e -n "\n\tq/0. Back ${NC}\n";
 }
 
 ##   MENU 3: LAMP
-function MenuLAMP() {
+function Menu_LAMP() {
     echo -e "\n\t ${GREEN}LAMP installation & Settings:${NC} \n"
     echo -e -n "${Yellow}";
     echo -e -n "\t1. Install LAMP & WordPress";
@@ -3006,7 +3006,6 @@ function MenuLAMP() {
     echo -e -n "\n\tq/0. Back ${NC}\n";
     echo -e -n "";
 }; 
-#MenuLAMP
 
 ##   MENU 4: Web Control Panel
 function Menu_CPanel() {
@@ -3019,7 +3018,7 @@ function Menu_CPanel() {
 };
 
 ##   MENU 8: Modules & Components
-function MenuMODandCOMPON() {
+function Menu_MODandCOMPON() {
     echo -e "\n\t ${GREEN}Menu 8: Modules & Components ${Yellow} \n";
     echo -e "\t1. Install Pure-FTP       ${PURPLE} ";
     echo -e "\t2. FREE                            ${PURPLE} ";
@@ -3029,7 +3028,7 @@ function MenuMODandCOMPON() {
 };
 
 ##   MENU 9: Script Components
-function MenuScriptCOMPON() {
+function Menu_ScriptCOMPON() {
     echo -e "\n\t ${GREEN}Menu 9: Script Components ${BLUE} \n";
     echo -e "\t1. Update Script                   ${PURPLE} ";
     echo -e "\t2. FREE                            ${PURPLE} ";
@@ -3038,147 +3037,207 @@ function MenuScriptCOMPON() {
     echo -e "\n\t0. Back                          ${NC}\n ";
 };
 
-#--------------------------
+# ============================================
 while :
 do
-    showBanner
+    showBANNER
     MENU_MAIN
     echo -n -e "\n\tSelection: "
     read -n1 opt
     a=true;
     case $opt in
 
-# 1 SubMenu ----------------------------
-                1) echo -e "==== Create SSH key ===="
-                while :
-                do
-                        showBanner
-                        MenuSSH
-                        echo -n -e "\n\tSelection: "
-                        read -n1 opt;
-                        case $opt in
-                                1) TKEY="ed25519" && MKEY="" && OnRUN ;;
-                                2) TKEY="rsa" && MKEY="" && OnRUN ;;
-                                3) TKEY="rsa" && MKEY="PEM" && OnRUN ;;
-                                4) TKEY="dsa" && MKEY="" && OnRUN ;;
-                                5) TKEY="ecdsa" && MKEY="" && OnRUN ;;
-                                6) TKEY="eddsa" && MKEY="" && OffRUN ;;
-                                /q | q | 0) break ;;
-                                *) ;;
-                        esac
-                done
-                ;;
+# ==== 1 SubMenu =============================
+		1) echo -e "==== Create SSH key ===="
+		while :
+		do
+		showBANNER
+		Men_SSH
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) TKEY="ed25519" && MKEY="" && OnRUN ;;
+			2) TKEY="rsa" && MKEY="" && OnRUN ;;
+			3) TKEY="rsa" && MKEY="PEM" && OnRUN ;;
+			4) TKEY="dsa" && MKEY="" && OnRUN ;;
+			5) TKEY="ecdsa" && MKEY="" && OnRUN ;;
+			6) TKEY="eddsa" && MKEY="" && OffRUN ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-# 2 ----------------------------
-                2) echo -e "Install LEMP: "
-                while :
-                do
-                        showBanner
-                        MenuLEMP
-                        echo -n -e "\n\tSelection: "
-                        read -n1 opt;
-                        case $opt in
-                                1) first ;;
-                                2) second ;;
-                                3) third ;;
-                                4) fourth ;;
-                                5) fifth ;;
-                                /q | q | 0) break ;;
-                                *) ;;
-                        esac
-                done
-                ;;
+# ==== 2 =====================================
+		2) echo -e "Install LEMP: "
+		while :
+		do
+		showBANNER
+		Menu_LEMP
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) first ;;
+			2) second ;;
+			3) third ;;
+			4) fourth ;;
+			5) fifth ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-# 3 ----------------------------
-                3) echo -e "# submenu: MEMU 3"
-                while :
-                do
-                        showBanner
-                        MenuLAMP
-                        echo -n -e "\n\tSelection: "
-                        read -n1 opt;
-                        case $opt in
-                                1) installLAMP ;;
-                                2) echo -e "MENU 3 - SUBmenu 2" ;;
-                                3) echo -e "MENU 3 - SUBmenu 3" ;;
-                                /q | q | 0) break ;;
-                                *) ;;
-                        esac
-                done
-                ;;
+# ==== 3 =====================================
+		3) echo -e "# submenu: MEMU 3"
+		while :
+		do
+		showBANNER
+		Menu_LAMP
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) installLAMP ;;
+			2) echo -e "MENU 3 - SUBmenu 2" ;;
+			3) echo -e "MENU 3 - SUBmenu 3" ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-# 4 ----------------------------
-                4) echo -e "Control Panell: "
-                while :
-                do
-                        showBanner
-                        Menu_CPanel
-                        echo -n -e "\n\tSelection: "
-                        read -n1 opt;
-                        case $opt in
-                                1) OWNCLOUD ;;
-                                2) Inst_VESTA ;;
-                                3) INS_HESTIA ;;
-                                4) echo -e "FREE $opt"  ;;
-                                5) echo -e "FREE $opt"  ;;
-                                /q | q | 0) break ;;
-                                *) ;;
-                        esac
-                done
-                ;;
+# ==== 4 =====================================
+		4) echo -e "Control Panell: "
+		while :
+		do
+		showBANNER
+		Menu_CPanel
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) OWNCLOUD ;;
+			2) Inst_VESTA ;;
+			3) INS_HESTIA ;;
+			4) echo -e "FREE $opt"  ;;
+			5) echo -e "FREE $opt"  ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-# 8 ----------------------------
-                8) echo -e "Modules & Components: "
-                while :
-                do
-                        showBanner
-                        MenuMODandCOMPON
-                        echo -n -e "\n\tSelection: "
-                        read -n1 opt;
-                        case $opt in
-                                1) PUREFTP_RUN ;;
-                                2) echo -e "FREE $opt" ;;
-                                3) echo -e "FREE $opt"  ;;
-                                4) echo -e "FREE $opt"  ;;
-                                5) echo -e "FREE $opt"  ;;
-                                /q | q | 0) break ;;
-                                *) ;;
-                        esac
-                done
-                ;;
+# ==== 5 =====================================
+		5) echo -e "Modules & Components: "
+		while :
+		do
+		showBANNER
+		Menu_MODandCOMPON
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) PUREFTP_RUN ;;
+			2) echo -e "FREE $opt" ;;
+			3) echo -e "FREE $opt"  ;;
+			4) echo -e "FREE $opt"  ;;
+			5) echo -e "FREE $opt"  ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-# 8 ----------------------------
-                9) echo -e "Script Components: "
-                while :
-                do
-                        showBanner
-                        MenuScriptCOMPON
-                        echo -n -e "\n\tSelection: "
-                        read -n1 opt;
-                        case $opt in
-                                1) echo -e "Update this Script" ;;
-                                2) echo -e "FREE $opt" ;;
-                                3) echo -e "FREE $opt"  ;;
-                                4) echo -e "FREE $opt"  ;;
-                                5) echo -e "FREE $opt"  ;;
-                                /q | q | 0) break ;;
-                                *) ;;
-                        esac
-                done
-                ;;
+# ==== 6 =====================================
+		6) echo -e "Menu 6: "
+		while :
+		do
+		showBANNER
+		Menu_6
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) PUREFTP_RUN ;;
+			2) echo -e "FREE $opt" ;;
+			3) echo -e "FREE $opt"  ;;
+			4) echo -e "FREE $opt"  ;;
+			5) echo -e "FREE $opt"  ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-# END ----------------------------
+# ==== 7 =====================================
+		7) echo -e "Menu 7: "
+		while :
+		do
+		showBANNER
+		Menu_7
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) PUREFTP_RUN ;;
+			2) echo -e "FREE $opt" ;;
+			3) echo -e "FREE $opt"  ;;
+			4) echo -e "FREE $opt"  ;;
+			5) echo -e "FREE $opt"  ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-       /q | q | 0) echo; break ;;
-       *) ;;
-    esac
-  done
+# ==== 8 =====================================
+		8) echo -e "Menu 8: "
+		while :
+		do
+		showBANNER
+		Menu_8
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) PUREFTP_RUN ;;
+			2) echo -e "FREE $opt" ;;
+			3) echo -e "FREE $opt"  ;;
+			4) echo -e "FREE $opt"  ;;
+			5) echo -e "FREE $opt"  ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-# ----------- END MENU -----------
+# ==== 9 =====================================
+		9) echo -e "Script Components: "
+		while :
+		do
+		showBANNER
+		Menu_ScriptCOMPON
+		echo -n -e "\n\tSelection: "
+		read -n1 opt;
+		case $opt in
+			1) echo -e "Update this Script" ;;
+			2) echo -e "FREE $opt" ;;
+			3) echo -e "FREE $opt"  ;;
+			4) echo -e "FREE $opt"  ;;
+			5) echo -e "FREE $opt"  ;;
+			/q | q | 0) break ;;
+			*) ;;
+		esac
+		done
+		;;
 
-  echo "Quit..." && sleep 3;
-  clear;
-  cleanup;
+# ==== END ===================================
+
+		/q | q | 0) echo; break ;;
+		*) ;;
+	esac
+	done
+
+# ==== END MENU ==============================
+
+	echo "Quit..." && sleep 3;
+	clear;
+	cleanup;
 }; 
 
 THIS
