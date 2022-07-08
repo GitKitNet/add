@@ -2939,6 +2939,7 @@ function MAIN() {
 #==============================
 function MENU_MAIN() {
     clear;
+    showBANNER
     echo -e -n "\n\t${GREEN}${BGBlack}==== MAIN MENU ====${NC}\n"
     echo -e -n "${Yellow}
 \t1. Create SSH key     ${NC} ${Purple}
