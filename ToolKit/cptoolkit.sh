@@ -48,8 +48,31 @@ BGPurple="`tput setab 6`"     # Purple
 BGWhite="`tput setab 7`"      # White
 RC="`tput sgr0`"              # Reset Color
 
-TEXTCOLOR=$White;
-BGCOLOR=$BLACK;
+FGCOLOR=$Red;
+FGCOLOR_Bla=$Black;
+FGCOLOR_Blu=$Blue;
+
+BGCOLOR=$BGBlack;
+BGCOLOR_Red=$BGRed;
+BGCOLOR_Blu=$BGBlue;
+BGCOLOR_Wh=$BGWhite;
+
+
+
+# - - - - - - - - - - - - - - - - -
+function showBANNER() {
+#figlet -f smslant S c Toolkit;
+    clear;
+    echo -e "${BLUE}==================${GREEN}=================================="
+    echo -e "${BLUE}     ____ _____  ${GREEN}______            __ __    _  __   "
+    echo -e "${BLUE}    / __// ___/ ${GREEN}/_  __/___  ___   / // /__ (_)/ /_  "
+    echo -e "${BLUE}   _\ \ / /__  ${GREEN}  / /  / _ \/ _ \ / //  '_// // __/  "
+    echo -e "${BLUE}  /___/ \___/ ${GREEN}  /_/   \___/\___//_//_/\_\/_/ \__/   "
+    echo -e "";
+    echo -e "${BLUE}==============${GREEN}======================================"
+    echo -e "${BGCOLOR}${FGCOLOR}";
+};
+showBANNER
 
 
 
@@ -94,7 +117,7 @@ elif [ "$(id -u)" == "0" ]; then
   echo -e "\n\t${YELLOW}Checking ROOT ${GREEN}IS - OK! \n ${RC}";
   sleep 5;
   fi;
-}; 
+};
 
 
 #  MAKE SURE SUDO AVAILABLE
@@ -284,8 +307,8 @@ function run_as_root() {
 # - - - - - - - - - - - - - - - - - - - - - -
 function CleanUP_() {
   trap - SIGINT SIGTERM ERR EXIT ;
-  echo "Script CleanUP here";
-  sleep 2;
+  echo "Script CleanUP here...";
+  sleep 1;
 };
 
 function title() { clear; echo "${title} ${TKEY}"; }
@@ -339,19 +362,6 @@ ufw allow 22222                 # easyengine backend
 #ufw allow 6556                 # Librenms linux agent
 #ufw allow 10050                # Zabbix-agent
 
-};
-
-# - - - - - - - - - - - - - - - - -
-function showBANNER() {
-#figlet -f smslant SC Toolkit;
-    clear;
-    echo -e "${BLUE}   ================${GREEN}================================"
-    echo -e "${BLUE}     ____ _____   ${GREEN} ______          ____    _ __    "
-    echo -e "${BLUE}    / __// ___/  ${GREEN} /_  __/__  ___  / / /__ (_) /_   "
-    echo -e "${BLUE}   _\ \ / /__   ${GREEN}   / / / _ \/ _ \/ /  '_// / __/   "
-    echo -e "${BLUE}  /___/ \___/  ${GREEN}   /_/  \___/\___/_/_/\_\/_/\__/    "
-    echo -e "${BLUE}==============${GREEN}==================================   "
-   echo -e "${NC}";
 };
 
 
