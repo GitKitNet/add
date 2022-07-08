@@ -3,7 +3,7 @@
 #set +x
 #set -Eeuo pipefail
 
-LINK="raw.githubusercontent.com/GitKitNet/add/main/ToolKit/SCToolkit.sh";  #bash -c "$(curl -L -fSs ${LINK})"
+LINK="raw.githubusercontent.com/GitKitNet/add/main/ToolKit/ScToolkit.sh";  #bash -c "$(curl -L -fSs ${LINK})"
 #bash <(wget -O - ${LINK})
 #bash -c "$(wget -O - ${LINK} || curl -fsSL ${LINK})";
 
@@ -61,7 +61,7 @@ BGCOLOR_Wh=$BGWhite;
 
 # - - - - - - - - - - - - - - - - -
 function showBANNER() {
-#figlet -f smslant S c Toolkit;
+    #figlet -f smslant S c Toolkit;
     clear;
     echo -e "${BLUE}==================${GREEN}=================================="
     echo -e "${BLUE}     ____ _____  ${GREEN}______            __ __    _  __   "
@@ -69,13 +69,9 @@ function showBANNER() {
     echo -e "${BLUE}   _\ \ / /__  ${GREEN}  / /  / _ \/ _ \ / //  '_// // __/  "
     echo -e "${BLUE}  /___/ \___/ ${GREEN}  /_/   \___/\___//_//_/\_\/_/ \__/   "
     echo -e "";
-    echo -e "${BLUE}==============${GREEN}======================================"
-    echo -e "====================  TEST ==================================";
+    echo -e "${BLUE}==============${GREEN}======================================";
     echo -e "${BGCOLOR}${FGCOLOR}";
 };
-showBANNER
-
-
 
 
 # - - - - - - - - - - - - - - - - - - - -
@@ -103,7 +99,8 @@ filename='ScToolkit.sh'
 updpath='https://raw.githubusercontent.com/GitKitNet/add/main/ToolKit/' 
 
 function CleanUP_() {
-  trap - SIGINT SIGTERM ERR EXIT ;
+  trap - SIGINT SIGTERM ERR EXIT
+  trap - SIGINT SIGTRAP SIGTERM ERR EXIT
   echo "Script CleanUP here..." && sleep 2;
 };
 
