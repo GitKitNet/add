@@ -5,7 +5,7 @@
 
 
 # - - - - - - - - - - - - - - - - -
-#            INF for RUN
+#            INF RUN for SSH
 # - - - - - - - - - - - - - - - - -
 LINK="raw.githubusercontent.com/GitKitNet/add/main/ToolKit/ScToolkit.sh";  #bash -c "$(curl -L -fSs ${LINK})"
 #bash <(wget -O - ${LINK})
