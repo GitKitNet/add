@@ -2,6 +2,7 @@
 
 cd /tmp
 LINK_TERRAFORM="https://releases.hashicorp.com/terraform/1.2.9/terraform_1.2.9_linux_amd64.zip"
+"https://releases.hashicorp.com/terraform/1.2.9/terraform_1.2.9_SHA256SUMS"
 wget -O /tmp/terraform.zip $LINK_TERRAFORM
 
 
