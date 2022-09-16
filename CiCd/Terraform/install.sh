@@ -7,5 +7,9 @@ wget -O /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.12.12/terr
 wget -O terraform_SHA256SUMS -q https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_SHA256SUMS
 sha256sum -c --ignore-missing terraform_SHA256SUMS
 
+sudo unzip terraform.zip -d /usr/local/bin/
+
+Для проверки можно запросить версию Terraform.
+terraform version
 
 
