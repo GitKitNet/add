@@ -1,5 +1,5 @@
 ## wireguard-install
-[OpenVpn](../OpenVPN)
+[OpenVpn](../../OpenVPN)
 
 WireGuard [road warrior](http://en.wikipedia.org/wiki/Road_warrior_%28computing%29) installer for Ubuntu, Debian, AlmaLinux, Rocky Linux, CentOS and Fedora.
 
