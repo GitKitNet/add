@@ -6,12 +6,11 @@ This script will let you set up your own VPN server in no more than a minute, ev
 ### Installation
 Run the script and follow the assistant:
 
-`wget https://git.io/wireguard -O wireguard-install.sh && bash wireguard-install.sh`
+`wget https://raw.githubusercontent.com/GitKitNet/add/main/ToolKit/OpenVPN/wireguard/wireguard-install.sh -O wireguard-install.sh && bash wireguard-install.sh`
 
 Once it ends, you can run it again to add more users, remove some of them or even completely uninstall WireGuard.
 
-### I want to run my own VPN but don't have a server for that
-You can get a VPS from just 2€/month at [AlphaVPS](https://alphavps.com/clients/aff.php?aff=474&pid=422).
+###
 
 ### Donations
 
