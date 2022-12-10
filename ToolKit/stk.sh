@@ -74,7 +74,6 @@ function showBANNER() {
     echo -e "${BLUE}  /___/ \___/ ${GREEN}  /_/   \___/\___//_//_/\_\/_/ \__/   "
     echo -e "";
     echo -e "${BLUE}==============${GREEN}======================================";
-    echo -e "${BGCOLOR}${FGCOLOR}";
 };
 
 
