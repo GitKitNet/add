@@ -561,7 +561,8 @@ WPPass: ${wp_pass}
          Installation is complete!
 =================================================
 Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
------------------------------------------------------------------------------" >> /tmp/credentials.txt
+-----------------------------------------------------------------------------
+" >> /tmp/credentials.txt
 fi
 }
 
@@ -603,6 +604,7 @@ pm = dynamic
 eof
 sudo apt-get -y install certbot
 apt install -y python-certbot-nginx || apt-get -y install python3-certbot-nginx
+
 cat << 'eof' >> /etc/nginx/sites-available/${domain}.conf
 ### Configuration ###
     server {
@@ -622,12 +624,9 @@ cat << 'eof' >> /etc/nginx/sites-available/${domain}.conf
 
         location / {
             try_files $uri $uri/ /index.php$is_args$args;
-
                 allow all;
-
-            allow 000.000.000.000; #EXAMPLE NOT BLOCK
-                #deny all;  #Example BLOCK ALL
-
+                #allow 000.000.000.000;        #EXAMPLE NOT BLOCK
+                #deny all;                     #Example BLOCK ALL
         }
 
             location ^~ /(wp-admin|wp-login\.php) {
@@ -797,20 +796,15 @@ cat << 'eof' >> /etc/nginx/sites-available/${domain}.conf
 
         location / {
             try_files $uri $uri/ /index.php$is_args$args;
-
                 allow all;
-
-            allow 000.000.000.000; #EXAMPLE NOT BLOCK
-                #deny all;  #Example BLOCK ALL
-
+                #allow 000.000.000.000;        #EXAMPLE NOT BLOCK
+                #deny all;                     #Example BLOCK ALL
         }
 
         location ^~ /(wp-admin|wp-login\.php) {
                 allow all;
-
-            allow 000.000.000.000; #EXAMPLE NOT BLOCK
-                #deny all;  #Example BLOCK ALL
-
+                #allow 000.000.000.000;        #EXAMPLE NOT BLOCK
+                #deny all;                     #Example BLOCK ALL
         }
 
         location ~ "^\/([a-z0-9]{{28,32}})\.html" {
@@ -1317,13 +1311,11 @@ Try to connect mysql database:  mysql -h 127.0.0.1 -u root -p${db_pass}
 function CheckPack() {
 
         #WELCOME MESSAGE
-
 clear
 echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard!
 First of all, we going to check all required packeges..."
 
         #CHECKING PACKAGES
-
 echo -e "${YELLOW}Checking packages...${NC}"
 echo -e "List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache2 & php, mysql, php curl, phpmyadmin, wget, curl"
 read -r -p "Do you want to check packeges? [y/N] " response
