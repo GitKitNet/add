@@ -298,7 +298,7 @@ else
         echo "Enter DB ROOT PASSWORD: "
         read -e db_pass
 
-mysql_secure_installation <<EOF
+    mysql_secure_installation <<EOF
 y
 y
 ${db_pass}
@@ -308,15 +308,14 @@ y
 y
 y
 EOF
-fi;
+    fi;
 
-echo "
+    echo "
 ============================================
-      WordPress Install Script
+      WordPress Install Scripts
 ============================================
-      Please Enter Domain Name:
---------------------------------------------
 ";
+echo -en "Please Enter Domain Name: "
 read -e domain
 authorization="mysql -uroot -p${db_pass}"
 read -r -p "Do you want to generated automatically? [y/N] If not it will provide password.  " answer
@@ -329,9 +328,10 @@ fi;
 
 echo "Is everything ok, run install? [y/N]"
 read -e run
-if [ "$run" == n ] ; then exit;
+if [ "$run" == n ]; then
+  exit;
 else
-        echo "
+  echo "
 ==============================================
   A robot is now installing WordPress for you.
 ==============================================
@@ -340,11 +340,12 @@ else
 #set +e
 mkdir -p /var/www/${domain}
 cd /var/www/${domain}
-#Connect to mysql docker container and create database
+
+# Connect to mysql docker container and create database
 dbNameandUser=$(echo ${domain} | tr "." "_" | tr "-" "_")
 Host=\'%\'
 
-echo "--Reusing credentials----------------------"
+echo "ReUsing credentials----------------------"
 $authorization -e "
 CREATE USER 'root'@${Host} IDENTIFIED BY '${db_pass}';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@${Host} WITH GRANT OPTION;
@@ -368,17 +369,39 @@ apt-get install curl -y || apk add curl
 curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /tmp/wp-cli.phar \
     && mv /tmp/wp-cli.phar /usr/local/bin/wp
-wp core download \
-    --path=/var/www/${domain} --locale=en_US --allow-root
-wp config create \
-    --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check
-wp core install \
-    --skip-email --url=${domain} --title=${domain} --admin_user=${wp_admin} --admin_password=${wp_pass} --admin_email=admin@${domain} --allow-root --path=/var/www/${domain}
 
-# installing plugin:
+if [ -f /usr/local/bin/wp ]; then
+    read -p "WP is Existing.Press [Enter] key to continue..." fackEnterKey;
+else
+    read -p "WP NOT Existing. Press [Enter] key to continue..." fackEnterKey;
+fi; 
+
+
+
+wp core download \
+    --path=/var/www/${domain} \
+    --locale=en_US --allow-root
+wp config create \
+    --path=/var/www/${domain} \
+    --dbname=${dbNameandUser} \
+    --dbuser=${dbNameandUser} \
+    --dbpass=${dbPassword} \
+    --dbhost=localhost \
+    --allow-root --skip-check
+wp core install \
+    --skip-email \
+    --url=${domain} \
+    --title=${domain} \
+    --admin_user=${wp_admin} \
+    --admin_password=${wp_pass} \
+    --admin_email=admin@${domain} \
+    --allow-root \
+    --path=/var/www/${domain}
+
+# Installing plugin:
 wp plugin install \
     wp-sitemap-page
-# activating plugin:
+# Activating plugin:
 wp plugin activate \
     wp-sitemap-page
 
