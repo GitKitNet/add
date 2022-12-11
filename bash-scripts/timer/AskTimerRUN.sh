@@ -21,10 +21,11 @@ if [ -z "${MESSAGE}" ]; then
 MESSAGE=$( echo "Press [${NORMALREPLY_UC}${NORMALREPLY_LC} or ${TIMEOUTREPLY_UC}${TIMEOUTREPLY_LC}] to continue..." ); 
 fi;
 
-    printf "\r${MESSAGE} (Default '${TIMEOUTREPLY}' in ${i}s) ";
+    printf "\r${MESSAGE} (Default [${TIMEOUTREPLY}] in ${i}s) ";
     read -s -n 1 -t 1 waitreadyn;
     if [ $? -eq 0 ]; then break; fi;
   done;
+
   YoN="";
   if [ -z $waitreadyn ]; then
     echo -e "\nNo input entered: Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY_UC}"
@@ -35,7 +36,7 @@ fi;
    elif [[ "${waitreadyn}" -eq "" ]]; then
     echo -e "\n input entered: -ATHER- Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY_UC}";
     sleep 2;
-    READyn "TESTING for ";
+    #READyn "TESTING for ";
   fi;
 };
 READyn;
