@@ -64,16 +64,16 @@ BGCOLOR_Wh=$BGWhite;
 
 
 # - - - - - - - - - - - - - - - - -
+#figlet -f smslant S c Toolkit;
+
 function showBANNER() {
-    #figlet -f smslant S c Toolkit;
-    clear;
-    echo -e "${BLUE}==================${GREEN}=================================="
-    echo -e "${BLUE}     ____ _____  ${GREEN}______            __ __    _  __   "
-    echo -e "${BLUE}    / __// ___/ ${GREEN}/_  __/___  ___   / // /__ (_)/ /_  "
-    echo -e "${BLUE}   _\ \ / /__  ${GREEN}  / /  / _ \/ _ \ / //  '_// // __/  "
-    echo -e "${BLUE}  /___/ \___/ ${GREEN}  /_/   \___/\___//_//_/\_\/_/ \__/   "
-    echo -e "";
-    echo -e "${BLUE}==============${GREEN}======================================";
+ clear;
+ echo -e "${BLUE}=================${GREEN}================================="
+ echo -e "${BLUE}    ____ _____  ${GREEN}______            __ __    _  __  "
+ echo -e "${BLUE}   / __// ___/ ${GREEN}/_  __/___  ___   / // /__ (_)/ /_ "
+ echo -e "${BLUE}  _\ \ / /__  ${GREEN}  / /  / _ \/ _ \ / //  '_// // __/ "
+ echo -e "${BLUE} /___/ \___/ ${GREEN}  /_/   \___/\___//_//_/\_\/_/ \__/  "
+ echo -e "${BLUE}=============${GREEN}=====================================";
 };
 
 
@@ -127,53 +127,55 @@ function TIMER() {
 #            UFW
 # = = = = = = = = = = = = = = = = = = = =
 function UFW() {
-echo -e "\n${GREEN} = = = = = = = = = = \n   CONFIGURING UFW\n = = = = = = = = = = ${NC} \n"
-
+echo -e "\n${GREEN} = = = = = = = = = = \n\tCONFIGURING UFW\n = = = = = = = = = = ${NC} \n"
 if [ ! -d /etc/ufw ]; then apt-get install ufw -y; fi;
 
 CURRENT_SSH_PORT=$(grep "Port" /etc/ssh/sshd_config | awk -F " " '{print $2}')
 
-ufw logging low                 # define firewall rules
+ufw allow 22                    # default ssh port
+if [ "$CURRENT_SSH_PORT" != "22" ]; then
+  ufw allow "$CURRENT_SSH_PORT" && echo "UFW allow custom SSH port";
+fi;
+
+ufw logging low                  # define firewall rules
 ufw default allow outgoing
 ufw default deny incoming
-ufw allow 22                    # default ssh port
-if [ "$CURRENT_SSH_PORT" != "22" ]; then ufw allow "$CURRENT_SSH_PORT" && echo "UFW allow custom SSH port"; fi;
-ufw allow 53                    # dns
-ufw allow http                  # nginx
-ufw allow https                 # 
-ufw allow 123                   # ntp   
-ufw allow 68                    # dhcp client
-ufw allow 546                   # dhcp ipv6 client
-ufw allow 873                   # rsync
-ufw allow 22222                 # easyengine backend
+ufw allow 53                     # dns
+ufw allow http                   # nginx
+ufw allow https                  # 
+ufw allow 123                    # ntp   
+ufw allow 68                     # dhcp client
+ufw allow 546                    # dhcp ipv6 client
+ufw allow 873                    # rsync
+ufw allow 22222                  # easyengine backend
 
-## OPTIONAL FOR MONITORING
-#ufw allow 161                  # SNMP UDP port
-#ufw allow 1999                 # Netdata web interface
-#ufw allow 6556                 # Librenms linux agent
-#ufw allow 10050                # Zabbix-agent
+####   OPTIONAL FOR MONITORING   ####
+#ufw allow 161                   # SNMP UDP port
+#ufw allow 1999                  # Netdata web interface
+#ufw allow 6556                  # Librenms linux agent
+#ufw allow 10050                 # Zabbix-agent
 
 };
 
 # = = = = = = = = = = = = = = = = = = = =
 function LookUP() {
-	sleep 3 && clear;
-	echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
-	if [[ -f "$HOME/.ssh/${kName}" ]]; then
-		echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
-		echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
-	fi;
+  sleep 3 && clear;
+  echo -en "\n${GREEN}============    INFORMATION    ============${NC}\n";
+  if [[ -f "$HOME/.ssh/${kName}" ]]; then
+    echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
+    echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
+  fi;
 
-	if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
-		echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
-	fi;
+  if [[ -f "$HOME/.ssh/${kName}.pub" ]]; then
+    echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
+  fi;
 
-	echo -en "\n${GREEN}=======================${NC}\n";
-	pause;
-	break;
+  echo -en "\n${GREEN}=======================${NC}\n";
+  pause;
+  break;
 }
 
-# - - - - - - - - - - - - - - - - -
+
 # = = = = = = = = = = = = = = = = = = = =
 function ConvertPPK() {
 	#OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
