@@ -15,32 +15,37 @@ function READyn() {
   if [ "${TIMEOUTREPLY_UC}" == "Y" ]; then NORMALREPLY="N"; fi;
    NORMALREPLY_UC=$( echo $NORMALREPLY | awk '{print toupper($0)}' )
    NORMALREPLY_LC=$( echo $NORMALREPLY | awk '{print tolower($0)}' )
+  if [ -z "${MESSAGE}" ]; then 
+    MESSAGE= $( echo "Press to continue" );
+  fi;
+
   for (( i=$READTIMEOUT; i>=0; i--)); do
-
-if [ -z "${MESSAGE}" ]; then
-MESSAGE=$( echo "Press [${NORMALREPLY_UC}${NORMALREPLY_LC} or ${TIMEOUTREPLY_UC}${TIMEOUTREPLY_LC}] to continue..." ); 
-fi;
-
-    printf "\r${MESSAGE} (Default [${TIMEOUTREPLY}] in ${i}s) ";
+    printf "\r${MESSAGE} [${NORMALREPLY_UC}${NORMALREPLY_LC} or ${TIMEOUTREPLY_UC}${TIMEOUTREPLY_LC}] (Default: [${TIMEOUTREPLY}] in ${i}s) ";
     read -s -n 1 -t 1 waitreadyn;
     if [ $? -eq 0 ]; then break; fi;
   done;
 
   YoN="";
   if [ -z $waitreadyn ]; then
-    echo -e "\nNo input entered: Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY_UC}"
+    echo -e "\nNo input entered: Defaulting to '${TIMEOUTREPLY}'"; YoN="${TIMEOUTREPLY}"
    elif [ "${waitreadyn}" == "y" ]; then
-    echo -e "\n input entered: -YES- Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY_UC}"
+    echo -e "\n input entered: -YES- Defaulting to '${TIMEOUTREPLY}'"; YoN="${TIMEOUTREPLY}"
    elif [ "${waitreadyn}" == "n" ]; then
-    echo -e "\n input entered: -NO- Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY_UC}"
+    echo -e "\n input entered: -NO- Defaulting to '${TIMEOUTREPLY}'"; YoN="${TIMEOUTREPLY}"
    elif [[ "${waitreadyn}" -eq "" ]]; then
-    echo -e "\n input entered: -ATHER- Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY_UC}";
+    echo -e "\n input entered: -ATHER- Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY}";
     sleep 2;
-    #READyn "TESTING for ";
   fi;
 };
 READyn;
 
-#echo -e "${waitreadyn}"
+#### EXAMPLE ####
+READyn
+# OR
+READyn "Start next function" "N";
+
+echo -e "${waitreadyn}"
+
+
 
 #exit
