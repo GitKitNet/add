@@ -6,9 +6,9 @@ function READyn() {
   clear;
   READTIMEOUT=10;
   MESSAGE=$1;
-  #MESSAGE="Press [Enter] key to continue..."
   TIMEOUTREPLY=$2;
   NORMALREPLY="";
+
   if [ -z "${TIMEOUTREPLY}" ]; then TIMEOUTREPLY="Y"; fi;
    TIMEOUTREPLY_UC=$( echo $TIMEOUTREPLY | awk '{print toupper($0)}' )
    TIMEOUTREPLY_LC=$( echo $TIMEOUTREPLY | awk '{print tolower($0)}' )
@@ -16,7 +16,12 @@ function READyn() {
    NORMALREPLY_UC=$( echo $NORMALREPLY | awk '{print toupper($0)}' )
    NORMALREPLY_LC=$( echo $NORMALREPLY | awk '{print tolower($0)}' )
   for (( i=$READTIMEOUT; i>=0; i--)); do
-    printf "\r${MESSAGE} [ ${NORMALREPLY_UC}${NORMALREPLY_LC} or ${TIMEOUTREPLY_UC}${TIMEOUTREPLY_LC} ] ('${TIMEOUTREPLY_UC}' in ${i}s) ";
+
+if [ -z "${MESSAGE}" ]; then
+MESSAGE=$( echo "Press [${NORMALREPLY_UC}${NORMALREPLY_LC} or ${TIMEOUTREPLY_UC}${TIMEOUTREPLY_LC}] to continue..." ); 
+fi;
+
+    printf "\r${MESSAGE} (Default '${TIMEOUTREPLY}' in ${i}s) ";
     read -s -n 1 -t 1 waitreadyn;
     if [ $? -eq 0 ]; then break; fi;
   done;
@@ -30,11 +35,10 @@ function READyn() {
    elif [[ "${waitreadyn}" -eq "" ]]; then
     echo -e "\n input entered: -ATHER- Defaulting to '${TIMEOUTREPLY_UC}'"; YoN="${TIMEOUTREPLY_UC}";
     sleep 2;
-    #READyn "TESTING for ";
+    READyn "TESTING for ";
   fi;
 };
 READyn;
-
 
 #echo -e "${waitreadyn}"
 
