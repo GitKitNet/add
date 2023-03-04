@@ -2793,7 +2793,7 @@ function MENU_MAIN() {
 \t2. Install LEMP       ${NC} ${BLUE}
 \t3. Install LAMP       ${NC} ${Yellow}
 \t4. Control Panel      ${NC} ${MAGENTO}
-\t5. Free               ${NC} ${RED}
+\t5. OpenVPN, OpenSSL   ${NC} ${BLUE}
 \t6. Free               ${NC} ${RED}
 \t7. Free               ${NC} ${MAGENTO}
 \t8. FTP & Ather        ${NC} ${MAGENTO}
@@ -2801,6 +2801,8 @@ function MENU_MAIN() {
 \n\tq. Quit...          ${NC}";
 
 }
+
+#==============================
 
 #   Menu SSH
 function Men_SSH() {
@@ -2852,7 +2854,7 @@ function MENU_CPANEL() {
 ##   MENU 5: Web Control Panel
 function MENU_5() {
     echo -e "\n\t ${GREEN}Menu 5: FREE ${Yellow} \n";
-    echo -e "\t1. FREE                            ${PURPLE} ";
+    echo -e "\t1. Install OpenVPN Servers                   ${PURPLE} ";
     echo -e "\t2. FREE                            ${PURPLE} ";
     echo -e "\t3. FREE                            ${PURPLE} ";
     echo -e "\t4. FREE                            ${RED} ";
@@ -2999,7 +3001,8 @@ function MENU_ScriptCOMPON() {
 		echo -n -e "\n\tSelection: "
 		read -n1 opt;
 		case $opt in
-			1) echo -e "FREE $opt" ;;
+			1) echo -e "Start Install OpenVPN server"; echo "=============================="
+;;
 			2) echo -e "FREE $opt" ;;
 			3) echo -e "FREE $opt"  ;;
 			4) echo -e "FREE $opt"  ;;
