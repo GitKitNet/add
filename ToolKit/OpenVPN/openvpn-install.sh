@@ -2,14 +2,14 @@
 #
 # https://github.com/GitKitNet/add/ToolKit/OpenVPN/
 #
-# Copyright (c) 2013 Nyr. Released under the MIT License.
+# Copyright (c) 2013 ITUA. Released under the MIT License.
 
 
 # Detect Debian users running the script with "sh" instead of bash
 if readlink /proc/$$/exe | grep -q "dash"; then
 	echo 'This installer needs to be run with "bash", not "sh".'
-	exit
-fi
+	exit 0
+fi;
 
 # Discard stdin. Needed when running from an one-liner which includes a newline
 read -N 999999 -t 0.001
@@ -18,9 +18,10 @@ read -N 999999 -t 0.001
 if [[ $(uname -r | cut -d "." -f 1) -eq 2 ]]; then
 	echo "The system is running an old kernel, which is incompatible with this installer."
 	exit
-fi
+fi;
 
 # Detect OS
+# ======================
 # $os_version variables aren't always in use, but are kept here for convenience
 if grep -qs "ubuntu" /etc/os-release; then
 	os="ubuntu"
@@ -39,45 +40,39 @@ elif [[ -e /etc/fedora-release ]]; then
 	os_version=$(grep -oE '[0-9]+' /etc/fedora-release | head -1)
 	group_name="nobody"
 else
-	echo "This installer seems to be running on an unsupported distribution.
-Supported distros are Ubuntu, Debian, AlmaLinux, Rocky Linux, CentOS and Fedora."
+	echo -e -n "This installer seems to be running on an unsupported distribution.\n Supported distros are Ubuntu, Debian, AlmaLinux, Rocky Linux, CentOS and Fedora."
 	exit
-fi
+fi;
 
 if [[ "$os" == "ubuntu" && "$os_version" -lt 1804 ]]; then
-	echo "Ubuntu 18.04 or higher is required to use this installer.
-This version of Ubuntu is too old and unsupported."
+	echo -e -n "Ubuntu 18.04 or higher is required to use this installer.\nThis version of Ubuntu is too old and unsupported."
 	exit
-fi
+fi;
 
 if [[ "$os" == "debian" && "$os_version" -lt 9 ]]; then
-	echo "Debian 9 or higher is required to use this installer.
-This version of Debian is too old and unsupported."
+	echo -en "Debian 9 or higher is required to use this installer.\nThis version of Debian is too old and unsupported."
 	exit
-fi
+fi;
 
 if [[ "$os" == "centos" && "$os_version" -lt 7 ]]; then
-	echo "CentOS 7 or higher is required to use this installer.
-This version of CentOS is too old and unsupported."
+	echo -en "CentOS 7 or higher is required to use this installer.\nThis version of CentOS is too old and unsupported."
 	exit
-fi
+fi;
 
 # Detect environments where $PATH does not include the sbin directories
 if ! grep -q sbin <<< "$PATH"; then
 	echo '$PATH does not include sbin. Try using "su -" instead of "su".'
 	exit
-fi
+fi;
 
 if [[ "$EUID" -ne 0 ]]; then
 	echo "This installer needs to be run with superuser privileges."
 	exit
-fi
-
+fi;
 if [[ ! -e /dev/net/tun ]] || ! ( exec 7<>/dev/net/tun ) 2>/dev/null; then
-	echo "The system does not have the TUN device available.
-TUN needs to be enabled before running this installer."
+	echo -en "The system does not have the TUN device available.\nTUN needs to be enabled before running this installer."
 	exit
-fi
+fi;
 
 new_client () {
 	# Generates the custom client.ovpn
@@ -105,7 +100,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 		read -n1 -r -p "Press any key to install Wget and continue..."
 		apt-get update
 		apt-get install -y wget
-	fi
+	fi;
 	clear
 	echo 'Welcome to this OpenVPN road warrior installer!'
 	# If system has a single IPv4, it is selected automatically. Else, ask the user
@@ -123,7 +118,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 		done
 		[[ -z "$ip_number" ]] && ip_number="1"
 		ip=$(ip -4 addr | grep inet | grep -vE '127(\.[0-9]{1,3}){3}' | cut -d '/' -f 1 | grep -oE '[0-9]{1,3}(\.[0-9]{1,3}){3}' | sed -n "$ip_number"p)
-	fi
+	fi;
 	# If $ip is a private IP address, the server must be behind NAT
 	if echo "$ip" | grep -qE '^(10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|192\.168)'; then
 		echo
@@ -137,11 +132,11 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 			read -p "Public IPv4 address / hostname: " public_ip
 		done
 		[[ -z "$public_ip" ]] && public_ip="$get_public_ip"
-	fi
+	fi;
 	# If system has a single IPv6, it is selected automatically
 	if [[ $(ip -6 addr | grep -c 'inet6 [23]') -eq 1 ]]; then
 		ip6=$(ip -6 addr | grep 'inet6 [23]' | cut -d '/' -f 1 | grep -oE '([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}')
-	fi
+	fi;
 	# If system has multiple IPv6, ask the user to select one
 	if [[ $(ip -6 addr | grep -c 'inet6 [23]') -gt 1 ]]; then
 		number_of_ip6=$(ip -6 addr | grep -c 'inet6 [23]')
@@ -155,7 +150,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 		done
 		[[ -z "$ip6_number" ]] && ip6_number="1"
 		ip6=$(ip -6 addr | grep 'inet6 [23]' | cut -d '/' -f 1 | grep -oE '([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}' | sed -n "$ip6_number"p)
-	fi
+	fi;
 	echo
 	echo "Which protocol should OpenVPN use?"
 	echo "   1) UDP (recommended)"
